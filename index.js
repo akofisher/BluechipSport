@@ -1,3 +1,6 @@
+import "react-native-reanimated";
+import "react-native-gesture-handler";
+global.__reanimatedWorkletInit = () => {};
 import messaging from "@react-native-firebase/messaging";
 import initTranslate from "i18n/i18n";
 import { AppRegistry } from "react-native";

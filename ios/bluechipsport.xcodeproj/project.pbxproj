@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* bluechipsportTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* bluechipsportTests.m */; };
 		0DF07AB9297EF22C00D0DBB0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0DF07AB8297EF22C00D0DBB0 /* GoogleService-Info.plist */; };
+		0DF07ABB297F0B8F00D0DBB0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0DF07ABA297F0B8F00D0DBB0 /* BootSplash.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -33,13 +34,14 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* bluechipsportTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = bluechipsportTests.m; sourceTree = "<group>"; };
 		0DF07AB8297EF22C00D0DBB0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* bluechipsport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluechipsport.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DF07ABA297F0B8F00D0DBB0 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = bluechipsport/BootSplash.storyboard; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Bluechipsport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bluechipsport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = bluechipsport/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = bluechipsport/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = bluechipsport/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = bluechipsport/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = bluechipsport/main.m; sourceTree = "<group>"; };
-		3F20661F93B94433AC43EB95 /* Jost-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-VariableFont_wght.ttf"; path = "../assets/fonts/Jost-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		3F20661F93B94433AC43EB95 /* Jost-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-VariableFont_wght.ttf"; path = "../assets/fonts/Jost-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		5BBF6D8BA12EF33838C2704C /* Pods-bluechipsport.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluechipsport.release.xcconfig"; path = "Target Support Files/Pods-bluechipsport/Pods-bluechipsport.release.xcconfig"; sourceTree = "<group>"; };
 		7A4C8429401E882048940E54 /* Pods-bluechipsport-bluechipsportTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluechipsport-bluechipsportTests.release.xcconfig"; path = "Target Support Files/Pods-bluechipsport-bluechipsportTests/Pods-bluechipsport-bluechipsportTests.release.xcconfig"; sourceTree = "<group>"; };
 		819BB93AA4D85CFD6EFBE03A /* Pods-bluechipsport-bluechipsportTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluechipsport-bluechipsportTests.debug.xcconfig"; path = "Target Support Files/Pods-bluechipsport-bluechipsportTests/Pods-bluechipsport-bluechipsportTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 		13B07FAE1A68108700A75B9A /* bluechipsport */ = {
 			isa = PBXGroup;
 			children = (
+				0DF07ABA297F0B8F00D0DBB0 /* BootSplash.storyboard */,
 				0DF07AB8297EF22C00D0DBB0 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -128,7 +131,6 @@
 				3F20661F93B94433AC43EB95 /* Jost-VariableFont_wght.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -157,7 +159,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* bluechipsport.app */,
+				13B07F961A680F5B00A75B9A /* Bluechipsport.app */,
 				00E356EE1AD99517003FC87E /* bluechipsportTests.xctest */,
 			);
 			name = Products;
@@ -208,7 +210,7 @@
 			);
 			name = bluechipsport;
 			productName = bluechipsport;
-			productReference = 13B07F961A680F5B00A75B9A /* bluechipsport.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Bluechipsport.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -259,6 +261,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DF07ABB297F0B8F00D0DBB0 /* BootSplash.storyboard in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0DF07AB9297EF22C00D0DBB0 /* GoogleService-Info.plist in Resources */,
@@ -543,7 +546,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = io.bluechipsport;
-				PRODUCT_NAME = bluechipsport;
+				PRODUCT_NAME = Bluechipsport;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -569,7 +572,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = io.bluechipsport;
-				PRODUCT_NAME = bluechipsport;
+				PRODUCT_NAME = Bluechipsport;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

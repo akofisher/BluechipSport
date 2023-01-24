@@ -1,9 +1,10 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import messaging from "@react-native-firebase/messaging";
+import messaging, { firebase } from "@react-native-firebase/messaging";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { RootDrawerNavigator, WelcomeStackNavigator } from "navigation";
 import React, { useEffect, useState } from "react";
+import RNBootSplash from "react-native-bootsplash";
 import { useNotifications } from "screens/hooks/useNotifications";
 import { API } from "services";
 import { useAuth, useDevice, useLanguage, welcomeBackState } from "stores";
@@ -18,7 +19,6 @@ const MyTheme = {
 };
 
 export default function Root() {
-
   const [isLoading, setIsLoading] = useState(true);
   const { authState, checkToken, checkFirstLaunch } = useAuth();
   const { deviceId, getDeviceId } = useDevice();
@@ -30,10 +30,11 @@ export default function Root() {
     await getDeviceId();
     const isAppLaunchedBefore = await checkFirstLaunch();
     WelcomeBack(!isAppLaunchedBefore);
-  }, []);
+    await RNBootSplash.hide();
+    setIsLoading(false);
+  }, [setIsLoading]);
 
   useNotifications();
-
 
   RuntimeConsts.token = authState.token;
   RuntimeConsts.deviceId = deviceId;
@@ -60,6 +61,10 @@ export default function Root() {
   const renderStack = () => {
     // if (welcome && !authState.token) {
     //   return <WelcomeStackNavigator />;
+    // }
+
+    // if (isLoading) {
+    //   return null;
     // }
 
     return <RootDrawerNavigator />;

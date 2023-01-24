@@ -1,8 +1,8 @@
-import "react-native-gesture-handler";
+
 import crashlytics from "@react-native-firebase/crashlytics";
 import { Provider } from "aniuta";
 import React from "react";
-import { View, LogBox, StatusBar } from "react-native";
+import { View, LogBox } from "react-native";
 import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context';

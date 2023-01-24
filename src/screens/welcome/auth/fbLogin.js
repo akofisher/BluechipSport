@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FbSvg } from "assets/svgs/AllSvgs";
 // To make it work there is a need to replace expo module because it is not working after expo eject
 // import * as Facebook from "expo-facebook";
-import * as firebase from "firebase";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useAuth } from "stores";
@@ -17,9 +16,6 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 // firebase.initializeApp(firebaseConfig);
-if (firebase?.apps?.length === 0) {
-  firebase?.initializeApp(firebaseConfig);
-}
 // Facebook.initializeAsync('885996412199472', 'goal- ge');
 
 export default function FbLogin({ navigation }) {

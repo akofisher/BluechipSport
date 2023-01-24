@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "580293408385",
+    "project_id": "bluechipsport-6b8a9",
+    "storage_bucket": "bluechipsport-6b8a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:580293408385:android:cb8521df3c168698fabf80",
+        "android_client_info": {
+          "package_name": "io.bluechipsport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "580293408385-np1vohp9t7ccg0qabam7s7he1h3gs7hp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo2InVNVDwlRThHh6XN3Gcsh9Cw-xFP1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "580293408385-np1vohp9t7ccg0qabam7s7he1h3gs7hp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "580293408385-oejrja84opm1g7vijid7btmu6mbg2eqp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.bluechipsport"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
