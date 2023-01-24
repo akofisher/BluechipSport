@@ -2,7 +2,7 @@
   "scripts": {
     "start": "npx react-native start --reset-cache",
     "android": "npx react-native run-android",
-    "ios": "npx react-native run-ios --udid='296161BC-BD76-48D6-8AED-F29B785EB8C6'",
+    "ios": "npx react-native run-ios --udid='19EDA1BB-904B-456E-9846-605213571165'",
     "web": "expo start --web",
     "lint:write": "eslint src/ --fix",
     "clean": "yarn reinstall:modules && yarn clean:android && yarn clean:ios",
