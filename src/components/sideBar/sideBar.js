@@ -1,85 +1,106 @@
-import Avatar from "components/common/Avatar";
-import i18next from "i18next";
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { StyleSheet, ScrollView, TouchableOpacity, View, Image, FlatList } from "react-native";
-import FastImage from "react-native-fast-image";
-import { IsCancel, CancelSource, API } from "services";
-import { useAuth, welcomeBackState, useGlobalState, useLanguage } from "stores";
+import Avatar from 'components/common/Avatar'
+import i18next from 'i18next'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import {
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Image,
+  FlatList,
+} from 'react-native'
+import FastImage from 'react-native-fast-image'
+import { IsCancel, CancelSource, API } from 'services'
+import { useAuth, welcomeBackState, useGlobalState } from 'stores'
 
-import setting from "../../../assets/icons/setting.png";
-import Header from "../header/Header";
-import LanguageSelectModal from "screens/news/LanguageSelectModal";
-import { Icon, Text } from "components/common";
+import setting from '../../../assets/icons/setting.png'
+import Header from '../header/Header'
+import LanguageSelectModal from 'screens/news/LanguageSelectModal'
+import { Icon, Text } from 'components/common'
+import { useSelector } from 'react-redux'
+import { selectAppLanguageCodeAndIcon } from '../../store/selectors/appSelectors'
 
 const SideBar = ({ navigation }) => {
-  const { signOut } = useAuth();
-  const { WelcomeBack, welcome } = welcomeBackState();
-  const { Refresh, myRefresh } = useGlobalState();
+  const { signOut } = useAuth()
+  const { WelcomeBack, welcome } = welcomeBackState()
+  const { Refresh, myRefresh } = useGlobalState()
 
-  const { selectedLanguage } = useLanguage();
+  const selectedLanguage = useSelector(selectAppLanguageCodeAndIcon)
 
-  const bottomSheetModalRef = useRef(null);
-  const openLanguageModal = () => bottomSheetModalRef.current.present();
+  const bottomSheetModalRef = useRef(null)
+  const openLanguageModal = () => bottomSheetModalRef.current.present()
 
-  const source = CancelSource();
-  const [topLeagues, setTopLeagues] = useState();
-  const [err, serErr] = useState();
+  const source = CancelSource()
+  const [topLeagues, setTopLeagues] = useState()
+  const [err, serErr] = useState()
 
-  const [user, setUser] = useState();
-  const [team, setTeam] = useState();
+  const [user, setUser] = useState()
+  const [team, setTeam] = useState()
   const getUser = () => {
     API.checkToken({ cancelToken: source.token })
       .then((response) => {
-        setUser(response.data);
+        setUser(response.data)
       })
-      .catch((error) => [serErr(error), setUser(null)]);
-  };
+      .catch((error) => [serErr(error), setUser(null)])
+  }
 
   useEffect(() => {
-    getUser();
+    getUser()
     API.all([API.getTopLeagues(), API.getTopTeams()])
       .then((responses) => {
-        const [leaguesResponse, teamResponse] = responses;
-        setTopLeagues(leaguesResponse.data.data);
-        setTeam(teamResponse.data.data);
+        const [leaguesResponse, teamResponse] = responses
+        setTopLeagues(leaguesResponse.data.data)
+        setTeam(teamResponse.data.data)
       })
       .catch((error) => {
-        IsCancel(error);
-      });
-  }, [myRefresh]);
+        IsCancel(error)
+      })
+  }, [myRefresh])
 
   const MenuItems = ({ text, image, onPress }) => {
     return (
       <TouchableOpacity style={styles.menuItem} onPress={onPress}>
         {image != 0 && (
           <View style={styles.itemImgContainer}>
-            <FastImage style={{ width: "100%", height: "100%" }} source={{ uri: image }} />
+            <FastImage
+              style={{ width: '100%', height: '100%' }}
+              source={{ uri: image }}
+            />
           </View>
         )}
         <Text style={styles.ItemText}>{text}</Text>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   const headerRightAction = useMemo(() => {
     return {
       onPress: navigation.closeDrawer,
-      iconName: "CloseBlack",
-    };
-  }, [navigation.closeDrawer]);
+      iconName: 'CloseBlack',
+    }
+  }, [navigation.closeDrawer])
 
   const renderLanguageButton = useCallback(() => {
     return (
-      <TouchableOpacity style={styles.languageSelector} onPress={openLanguageModal}>
+      <TouchableOpacity
+        style={styles.languageSelector}
+        onPress={openLanguageModal}
+      >
         <Icon iconName={selectedLanguage.iconName} />
-        <Text style={styles.languageSelectorTitle}>{selectedLanguage.code}</Text>
+        <Text style={styles.languageSelectorTitle}>
+          {selectedLanguage.code}
+        </Text>
       </TouchableOpacity>
-    );
-  }, [selectedLanguage, openLanguageModal]);
+    )
+  }, [selectedLanguage, openLanguageModal])
 
   return (
     <View>
-      <Header mode="light" rightAction={headerRightAction} renderTitle={renderLanguageButton} />
+      <Header
+        mode="light"
+        rightAction={headerRightAction}
+        renderTitle={renderLanguageButton}
+      />
       <ScrollView style={{ marginBottom: user ? 155 : 100 }}>
         {/* <View style={styles.category}>
                <Text style={styles.categoryText}>{i18next.t("Categories}</Text>
@@ -151,29 +172,29 @@ const SideBar = ({ navigation }) => {
           <TouchableOpacity
             style={styles.authorizeBtn}
             onPress={() => {
-              WelcomeBack(true);
+              WelcomeBack(true)
             }}
           >
-            <Text>{i18next.t("Authenticate")}</Text>
+            <Text>{i18next.t('Authenticate')}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             style={styles.authorizeBtn}
             onPress={() => [signOut(), WelcomeBack(false), setUser(null)]}
           >
-            <Text>{i18next.t("LogOut")}</Text>
+            <Text>{i18next.t('LogOut')}</Text>
           </TouchableOpacity>
         )}
         {user ? (
           <TouchableOpacity
             style={styles.userContainer}
-            onPress={() => navigation.navigate("userProfile", { user })}
+            onPress={() => navigation.navigate('userProfile', { user })}
           >
             <View style={styles.userImgContainer}>
               <Avatar color="#878787" size={40} uri={user?.avatar} />
             </View>
             <View style={styles.userName}>
-              <Text style={styles.welcome}>{i18next.t("Hello")}</Text>
+              <Text style={styles.welcome}>{i18next.t('Hello')}</Text>
               <Text style={styles.name}>{user?.username}</Text>
             </View>
             <View style={styles.settings}>
@@ -186,8 +207,8 @@ const SideBar = ({ navigation }) => {
       </ScrollView>
       <LanguageSelectModal bottomSheetModalRef={bottomSheetModalRef} />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   imgContainer: {
@@ -195,32 +216,32 @@ const styles = StyleSheet.create({
     height: 17,
   },
   userContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 16,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   userImgContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     marginRight: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
   userName: {
     flex: 1,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   welcome: {
     fontSize: 12,
-    color: "#ffffff",
+    color: '#ffffff',
   },
   name: {
     fontSize: 13,
-    color: "#ffffff",
+    color: '#ffffff',
   },
   settings: {
     width: 22,
@@ -229,25 +250,25 @@ const styles = StyleSheet.create({
   },
   category: {
     height: 35,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     paddingHorizontal: 18,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   categoryText: {
     fontSize: 11,
-    color: "#7C7C7C",
+    color: '#7C7C7C',
   },
   menuItem: {
     height: 50,
-    backgroundColor: "#F4F4F4",
+    backgroundColor: '#F4F4F4',
     paddingHorizontal: 18,
-    alignItems: "center",
+    alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: "#E3E3E3",
-    flexDirection: "row",
+    borderColor: '#E3E3E3',
+    flexDirection: 'row',
   },
   ItemText: {
-    color: "#464646",
+    color: '#464646',
     fontSize: 14,
   },
   itemImgContainer: {
@@ -257,23 +278,23 @@ const styles = StyleSheet.create({
   },
   authorizeBtn: {
     marginVertical: 20,
-    backgroundColor: "#F6F6F6",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#F6F6F6',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 10,
     borderWidth: 1,
-    borderColor: "#E3E3E3",
+    borderColor: '#E3E3E3',
   },
   languageSelector: {
     left: 20,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   languageSelectorTitle: {
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     marginLeft: 8,
-    fontWeight: "500",
+    fontWeight: '500',
   },
-});
+})
 
-export default SideBar;
+export default SideBar
