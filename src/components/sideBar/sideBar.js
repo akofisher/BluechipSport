@@ -15,7 +15,7 @@ import { useAuth, welcomeBackState, useGlobalState } from 'stores'
 
 import setting from '../../../assets/icons/setting.png'
 import Header from '../header/Header'
-import LanguageSelectModal from 'screens/news/LanguageSelectModal'
+import { LanguageSelectModal } from 'screens/news/LanguageSelectModal'
 import { Icon, Text } from 'components/common'
 import { useSelector } from 'react-redux'
 import { selectAppLanguageCodeAndIcon } from '../../store/selectors/appSelectors'

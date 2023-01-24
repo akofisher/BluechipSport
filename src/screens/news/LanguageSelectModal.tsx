@@ -1,60 +1,75 @@
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
-import { RadioListItem, Text } from 'components/common'
 import React, { useCallback, useMemo } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Colors } from 'styles'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import i18next from 'i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
   selectAppAvailableLanguages,
   selectAppLanguage,
 } from '../../store/selectors/appSelectors'
 import { setAppLanguage } from '../../store/thunks/appThunks'
 import { AppLanguageCode } from '../../store/slices/appSlice'
+import { Icon, RadioListItem, Text } from '../../components/common'
+import { useAppDispatch } from '../../store'
+import { Colors } from '../../styles'
 
-const LanguageSelectModal = ({ bottomSheetModalRef }) => {
-  const snapPoints = useMemo(() => [310, 310], [])
-
-  const appLanguage = useSelector(selectAppLanguage)
-  const languages = useSelector(selectAppAvailableLanguages)
-  const dispatch = useDispatch()
-
-  const onChangeLanguage = useCallback(
-    (languageCode: AppLanguageCode) => {
-      dispatch(setAppLanguage(languageCode))
-    },
-    [dispatch],
-  )
-
-  return (
-    <BottomSheetModal
-      enablePanDowntoClose
-      backdropComponent={BottomSheetBackdrop}
-      ref={bottomSheetModalRef}
-      index={1}
-      snapPoints={snapPoints}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>{i18next.t('ChooseLanguage')}</Text>
-        {languages.map((language) => {
-          return (
-            <>
-              <RadioListItem
-                key={language.code}
-                checked={language.code === appLanguage}
-                title={language.title}
-                iconName={language.iconName}
-                onPress={() => onChangeLanguage(language.code)}
-              />
-              <View style={styles.space} />
-            </>
-          )
-        })}
-      </View>
-    </BottomSheetModal>
-  )
+interface LanguageSelectModalProps {
+  bottomSheetModalRef: React.Ref<BottomSheetModal>
 }
+
+export const LanguageSelectModal = React.memo<LanguageSelectModalProps>(
+  ({ bottomSheetModalRef }) => {
+    const snapPoints = useMemo(() => [310, 310], [])
+
+    const appLanguage = useSelector(selectAppLanguage)
+    const languages = useSelector(selectAppAvailableLanguages)
+    const dispatch = useAppDispatch()
+
+    const closeModal = useCallback(
+      // @ts-ignore
+      () => bottomSheetModalRef?.current?.close(),
+      [bottomSheetModalRef],
+    )
+
+    const onChangeLanguage = useCallback(
+      (languageCode: AppLanguageCode) => {
+        dispatch(setAppLanguage(languageCode))
+      },
+      [dispatch],
+    )
+
+    return (
+      <BottomSheetModal
+        backdropComponent={BottomSheetBackdrop}
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+      >
+        <View style={styles.container}>
+          <TouchableOpacity style={styles.close} onPress={closeModal}>
+            <Icon iconName={'CloseBlack'} />
+          </TouchableOpacity>
+          <Text style={styles.title}>{i18next.t('ChooseLanguage')}</Text>
+          {languages.map((language) => {
+            return (
+              <>
+                <RadioListItem
+                  key={language.code}
+                  checked={language.code === appLanguage}
+                  title={language.title}
+                  iconName={language.iconName}
+                  onPress={() => onChangeLanguage(language.code)}
+                />
+                <View style={styles.space} />
+              </>
+            )
+          })}
+        </View>
+      </BottomSheetModal>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -72,6 +87,8 @@ const styles = StyleSheet.create({
   space: {
     height: 18,
   },
+  close: {
+    position: 'absolute',
+    right: 14,
+  },
 })
-
-export default LanguageSelectModal

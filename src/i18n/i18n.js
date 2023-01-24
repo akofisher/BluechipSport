@@ -1,15 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { NativeModules, Platform } from 'react-native'
 
 import en from './en'
 import hi from './hi'
 import { DEFAULT_APP_LANGUAGE } from '../constants'
-
-const GetLocale = (localestring) => {
-  return localestring.split('_')[0]
-}
 
 // creating a language detection plugin using expo
 // http://i18next.com/docs/ownplugin/#languagedetector

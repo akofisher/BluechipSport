@@ -9,9 +9,10 @@ import { useNotifications } from 'screens/hooks/useNotifications'
 import { API } from 'services'
 import { useAuth, useDevice, useLanguage, welcomeBackState } from 'stores'
 import { RuntimeConsts } from 'utils'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { initAppLanguage } from '../store/thunks/appThunks'
 import { selectAppLanguage } from '../store/selectors/appSelectors'
+import { useAppDispatch } from '../store'
 
 const MyTheme = {
   ...DefaultTheme,
@@ -29,7 +30,7 @@ export default function Root() {
 
   const { WelcomeBack, welcome } = welcomeBackState()
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(async () => {
     await checkToken()

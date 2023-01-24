@@ -8,7 +8,8 @@
     "clean": "yarn reinstall:modules && yarn clean:android && yarn clean:ios",
     "reinstall:modules": "rm -rf node_modules && yarn",
     "clean:android": "cd android && ./gradlew clean && cd ..",
-    "clean:ios": "cd ios && pod install && cd .."
+    "clean:ios": "cd ios && pod install && cd ..",
+    "enableNode": "source ~/.nvm/nvm.sh && nvm use 16.10.0"
   },
   "husky": {
     "hooks": {
@@ -73,6 +74,7 @@
     "@tsconfig/react-native": "^2.0.3",
     "@types/jest": "^29.2.6",
     "@types/react": "^18.0.27",
+    "@types/react-native": "^0.71.0",
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "4.12.0",
     "@typescript-eslint/parser": "4.12.0",
