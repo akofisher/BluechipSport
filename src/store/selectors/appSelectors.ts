@@ -10,6 +10,9 @@ export const selectAppLanguageCodeAndIcon = createSelector(
   selectAppLanguage,
   selectAppAvailableLanguages,
   (appLanguage, availableLanguages) => {
-    return availableLanguages.find((language) => language.code === appLanguage)
+    return (
+      availableLanguages.find((language) => language.code === appLanguage) ||
+      availableLanguages[0]
+    )
   },
 )

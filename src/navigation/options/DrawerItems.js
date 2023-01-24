@@ -1,10 +1,9 @@
-import React from "react";
-import { useAuth } from "stores";
+import React from 'react'
 
-import SideBar from "../../components/sideBar/sideBar";
+import SideBar from '../../components/sideBar/SideBar'
 
 const DrawerItems = (props) => {
-  return <SideBar {...props} />;
-};
+  return <SideBar {...props} />
+}
 
-export default DrawerItems;
+export default DrawerItems

@@ -1,11 +1,16 @@
-import { Icon, Text } from "components/common";
-import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Colors } from "styles";
+import { Icon, Text } from 'components/common'
+import React from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Colors } from 'styles'
 
-const hitSlop = { top: 12, bottom: 12, left: 12 };
+const hitSlop = { top: 12, bottom: 12, left: 12 }
 
-const VerticalListItemFooter = ({ onCommentPress, commentsCount = 0, formattedDate, title }) => {
+const VerticalListItemFooter = ({
+  onCommentPress,
+  commentsCount = 0,
+  formattedDate,
+  title,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.tag}>
@@ -16,27 +21,31 @@ const VerticalListItemFooter = ({ onCommentPress, commentsCount = 0, formattedDa
       </Text>
       <View style={styles.footer}>
         <Text style={styles.text}>{formattedDate}</Text>
-        <TouchableOpacity onPress={onCommentPress} style={styles.comment} hitSlop={hitSlop}>
+        <TouchableOpacity
+          onPress={onCommentPress}
+          style={styles.comment}
+          hitSlop={hitSlop}
+        >
           <Icon iconName="Comment" style={styles.commentIcon} />
           <Text style={styles.text}>{commentsCount}</Text>
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     padding: 15,
   },
   footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingTop: 15,
   },
   comment: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   commentIcon: {
     marginRight: 8,
@@ -47,21 +56,21 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.textBlack,
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 15,
   },
   tag: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     padding: 3,
     backgroundColor: Colors.blurredGreen,
     marginBottom: 7,
   },
   tagText: {
-    color: Colors.green,
-    fontWeight: "600",
+    color: Colors.primary,
+    fontWeight: '600',
     fontSize: 15,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
-});
+})
 
-export default React.memo(VerticalListItemFooter);
+export default React.memo(VerticalListItemFooter)
