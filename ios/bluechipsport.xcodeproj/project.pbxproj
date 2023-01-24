@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* bluechipsportTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* bluechipsportTests.m */; };
+		0DAFB0FB297FF104009304D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0DAFB0FA297FF103009304D5 /* Assets.xcassets */; };
 		0DF07AB9297EF22C00D0DBB0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0DF07AB8297EF22C00D0DBB0 /* GoogleService-Info.plist */; };
 		0DF07ABB297F0B8F00D0DBB0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0DF07ABA297F0B8F00D0DBB0 /* BootSplash.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -33,6 +34,7 @@
 		00E356EE1AD99517003FC87E /* bluechipsportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bluechipsportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* bluechipsportTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = bluechipsportTests.m; sourceTree = "<group>"; };
+		0DAFB0FA297FF103009304D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../../../../Downloads/AppIcons (1)/Assets.xcassets"; sourceTree = "<group>"; };
 		0DF07AB8297EF22C00D0DBB0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0DF07ABA297F0B8F00D0DBB0 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = bluechipsport/BootSplash.storyboard; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Bluechipsport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bluechipsport.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +94,7 @@
 		13B07FAE1A68108700A75B9A /* bluechipsport */ = {
 			isa = PBXGroup;
 			children = (
+				0DAFB0FA297FF103009304D5 /* Assets.xcassets */,
 				0DF07ABA297F0B8F00D0DBB0 /* BootSplash.storyboard */,
 				0DF07AB8297EF22C00D0DBB0 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -265,6 +268,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0DF07AB9297EF22C00D0DBB0 /* GoogleService-Info.plist in Resources */,
+				0DAFB0FB297FF104009304D5 /* Assets.xcassets in Resources */,
 				8C4A2078CB20414AA2236D31 /* Jost-VariableFont_wght.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -531,10 +535,12 @@
 			baseConfigurationReference = A58791CEC39CCDBCDD8BA43B /* Pods-bluechipsport.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = bluechipsport/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Bluechipssport;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -547,8 +553,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = io.bluechipsport;
 				PRODUCT_NAME = Bluechipsport;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -558,9 +568,11 @@
 			baseConfigurationReference = 5BBF6D8BA12EF33838C2704C /* Pods-bluechipsport.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = bluechipsport/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Bluechipssport;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -573,7 +585,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = io.bluechipsport;
 				PRODUCT_NAME = Bluechipsport;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -639,6 +655,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Bluechipssport;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -696,6 +713,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = Bluechipssport;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
