@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import app from './slices/appSlice'
+import { app } from './slices'
+import { categories } from './slices'
 import { useDispatch } from 'react-redux'
 
 export const store = configureStore({
   reducer: {
     app,
+    categories,
   },
 })
 

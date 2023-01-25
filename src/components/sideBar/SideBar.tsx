@@ -12,15 +12,22 @@ import { SideBarLanguageButton } from './components/SideBarLanguageButton'
 import { Accordion } from './components/Accordion'
 import { IconWithTitle } from './components/IconWithTitle'
 import { MenuItem } from './components/MenuItem'
-import { sideBarData } from './mock'
 import { Button, Text } from '../common'
 import { Colors } from '../../styles'
 import Avatar from '../common/Avatar'
+import { selectCategories } from '../../store/selectors'
+import { useAppDispatch } from '../../store'
+import { fetchCategories } from '../../store/thunks'
 
 const SideBar = memo(({ navigation }) => {
+  const dispatch = useAppDispatch()
+  const selectedLanguage = useSelector(selectAppLanguageCodeAndIcon)
+  const sideBarData = useSelector(selectCategories)
   const user = true
 
-  const selectedLanguage = useSelector(selectAppLanguageCodeAndIcon)
+  useEffect(() => {
+    dispatch(fetchCategories())
+  }, [dispatch])
 
   const bottomSheetModalRef = useRef(null)
   const openLanguageModal = useCallback(
@@ -83,10 +90,6 @@ const SideBar = memo(({ navigation }) => {
             />
           )
         })}
-        <Accordion
-          title={<IconWithTitle title={'Cricket'} iconName="Cricket" />}
-          content={<MenuItem title={'APL'} onPress={() => null} />}
-        />
       </ScrollView>
       <SafeAreaView style={styles.bottomContainer} edges={['bottom']}>
         {user ? (

@@ -39,4 +39,4 @@ export const appSlice = createSlice({
 
 export const { setLanguage } = appSlice.actions
 
-export default appSlice.reducer
+export const app = appSlice.reducer

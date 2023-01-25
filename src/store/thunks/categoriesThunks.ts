@@ -1,4 +1,6 @@
-export const sideBarData = [
+import { createAsyncThunk } from '@reduxjs/toolkit'
+
+export const categoriesData = [
   {
     title: 'Cricket',
     icon: 'Cricket',
@@ -20,3 +22,10 @@ export const sideBarData = [
     menuOptions: [{ title: 'IPL' }],
   },
 ]
+
+export const fetchCategories = createAsyncThunk(
+  'categories/fetchCategories',
+  async () => {
+    return categoriesData
+  },
+)
