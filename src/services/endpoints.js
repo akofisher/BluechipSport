@@ -1,310 +1,313 @@
-const v2 = "https://api.bluechipsport.io/api/";
+const v2 = 'https://api.bluechipsport.io/api/'
 
-export const storageURL = `https://storage.bluechipsport.io`;
+export const storageURL = `https://storage.bluechipsport.io`
 
 const ENDPOINTS = {
-  checkToken: { method: "get", uri: `${v2}users/me` },
-  updateUserInfo: { method: "post", uri: `${v2}users/update` },
-  signIn: { method: "post", uri: `${v2}login/jwt` },
-  getAppleToken: { method: "get", uri: `${v2}sign-in/apple/token` },
-  signInApple: { method: "post", uri: `${v2}sign-in/apple` },
-  signUp: { method: "post", uri: `${v2}register` },
-  resetPassword: { method: "post", uri: `${v2}login/reset` },
-  changePassword: { method: "post", uri: `${v2}users/change-password` },
-  getTeamsShort: { method: "get", uri: `${v2}teams?short=1` },
-  getSubscriptionsSearch: { method: "get", uri: `${v2}search-mobile?short=1` },
-  getLeagues: { method: "get", uri: `${v2}leagues` },
-  getTopLeagues: { method: "get", uri: `${v2}leagues?is_cup=1&menu=1` },
-  getLeaguesInfo: { method: "get", uri: `${v2}leagues/info/{leagueID}?clear_cache=1` },
-  getTopTeams: { method: "get", uri: `${v2}teams` },
-  getLivescorePlayers: { method: "get", uri: `${v2}players` },
+  getCategories: { method: 'get', uri: `${v2}menu/front` },
+  checkToken: { method: 'get', uri: `${v2}users/me` },
+  updateUserInfo: { method: 'post', uri: `${v2}users/update` },
+  signIn: { method: 'post', uri: `${v2}login/jwt` },
+  getAppleToken: { method: 'get', uri: `${v2}sign-in/apple/token` },
+  signInApple: { method: 'post', uri: `${v2}sign-in/apple` },
+  signUp: { method: 'post', uri: `${v2}register` },
+  resetPassword: { method: 'post', uri: `${v2}login/reset` },
+  changePassword: { method: 'post', uri: `${v2}users/change-password` },
+  getTeamsShort: { method: 'get', uri: `${v2}teams?short=1` },
+  getSubscriptionsSearch: { method: 'get', uri: `${v2}search-mobile?short=1` },
+  getLeagues: { method: 'get', uri: `${v2}leagues` },
+  getTopLeagues: { method: 'get', uri: `${v2}leagues?is_cup=1&menu=1` },
+  getLeaguesInfo: {
+    method: 'get',
+    uri: `${v2}leagues/info/{leagueID}?clear_cache=1`,
+  },
+  getTopTeams: { method: 'get', uri: `${v2}teams` },
+  getLivescorePlayers: { method: 'get', uri: `${v2}players` },
   getLivescorePlayersShort: {
-    method: "get",
+    method: 'get',
     uri: `${v2}players?short=1`,
   },
   getSlideArticles: {
-    method: "get",
-    uri: `${v2}articles?options=paginate&category_id=2`,
+    method: 'get',
+    uri: `${v2}articles?options=paginate&category_id=2&page={page}`,
   },
   getMainArticles: {
-    method: "get",
+    method: 'get',
     uri: `${v2}articles?options=paginate&category_id=91`,
   },
   getTransfersArticles: {
-    method: "get",
+    method: 'get',
     uri: `${v2}articles?options=paginate&category_id=3`,
   },
 
   getTransferSeasons: {
-    method: "get",
+    method: 'get',
     uri: `${v2}transfer-seasons`,
   },
   getSeasonTransfers: {
-    method: "get",
+    method: 'get',
     uri: `${v2}transfers?season_id={id}`,
   },
   getLeagueTeamTransfers: {
-    method: "get",
+    method: 'get',
     uri: `${v2}transfers?league_id={league_id}&team_id={team_id}`,
   },
   getLeagueTransfers: {
-    method: "get",
+    method: 'get',
     uri: `${v2}transfers?league_id={league_id}`,
   },
   getTransferLeagues: {
-    method: "get",
+    method: 'get',
     uri: `${v2}transfers/leagues`,
   },
   getLeagueTeams: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams?league_id={id}&short=1`,
   },
   getLatestArticles: {
-    method: "get",
+    method: 'get',
     uri: `${v2}articles?options=paginate&category_id=1`,
   },
   getVideoArticles: {
-    method: "get",
+    method: 'get',
     uri: `${v2}articles?options=paginate&category_id=82`,
   },
-  getArticle: { method: "get", uri: `${v2}articles/{id}` },
-  getPolls: { method: "get", uri: `${v2}polls` },
-  answerPoll: { method: "post", uri: `${v2}polls/answer` },
-  getQuizzes: { method: "get", uri: `${v2}quizzes` },
-  startQuiz: { method: "get", uri: `${v2}quizzes/{id}/start` },
-  answerQuiz: { method: "post", uri: `${v2}quizzes/{quizId}/{sessionId}` },
+  getArticle: { method: 'get', uri: `${v2}articles/{id}` },
+  getPolls: { method: 'get', uri: `${v2}polls` },
+  answerPoll: { method: 'post', uri: `${v2}polls/answer` },
+  getQuizzes: { method: 'get', uri: `${v2}quizzes` },
+  startQuiz: { method: 'get', uri: `${v2}quizzes/{id}/start` },
+  answerQuiz: { method: 'post', uri: `${v2}quizzes/{quizId}/{sessionId}` },
   getPlayersInfo: {
-    method: "get",
+    method: 'get',
     uri: `${v2}livescoreplayer/info/{playerID}`,
   },
-  getMatchesList: { method: "get", uri: `${v2}matches}` },
+  getMatchesList: { method: 'get', uri: `${v2}matches}` },
   getLiveMatches: {
-    method: "get",
+    method: 'get',
     uri: `${v2}leagues?haveTodayMatches=1&menu=1`,
   },
-  getClubInfo: { method: "get", uri: `${v2}teams/info/{teamID}` },
-  getClub: { method: "get", uri: `${v2}teams/info/{teamID}` },
-  getClubNews: { method: "get", uri: `${v2}teams/articles/{teamID}` },
+  getClubInfo: { method: 'get', uri: `${v2}teams/info/{teamID}` },
+  getClub: { method: 'get', uri: `${v2}teams/info/{teamID}` },
+  getClubNews: { method: 'get', uri: `${v2}teams/articles/{teamID}` },
   getLiveMatchesDetail: {
-    method: "get",
+    method: 'get',
     uri: `${v2}matches?byleague=1&league={id}`,
   },
-  getSearch: { method: "get", uri: `${v2}search` },
-  MySubscriptions: { method: "get", uri: `${v2}my-subscriptions` },
+  getSearch: { method: 'get', uri: `${v2}search` },
+  MySubscriptions: { method: 'get', uri: `${v2}my-subscriptions` },
   subscriptionsSearch: {
-    method: "get",
+    method: 'get',
     uri: `${v2}my-subscriptions?search={search}`,
   },
-  getMySubscriptions: { method: "get", uri: `${v2}my-subscriptions` },
-  subscribeTeam: { method: "get", uri: `${v2}subscribe/team/{teamID}` },
-  subscribePostTeam: { method: "post", uri: `${v2}subscribe/team/{teamID}` },
-  getTeamNews: { method: "get", uri: `${v2}teams/articles/{teamID}` },
-  getLeaguesNews: { method: "get", uri: `${v2}leagues/articles/{teamID}` },
-  subscribePlayer: { method: "post", uri: `${v2}subscribe/player/{PlayerId}` },
-  getDeviceId: { method: "get", uri: `${v2}favorites/dev-id` },
-  getLeaguesList: { method: "get", uri: `${v2}leagues?is_cup=0` },
-  getCategories: { method: "get", uri: `${v2}sub-menu` },
+  getMySubscriptions: { method: 'get', uri: `${v2}my-subscriptions` },
+  subscribeTeam: { method: 'get', uri: `${v2}subscribe/team/{teamID}` },
+  subscribePostTeam: { method: 'post', uri: `${v2}subscribe/team/{teamID}` },
+  getTeamNews: { method: 'get', uri: `${v2}teams/articles/{teamID}` },
+  getLeaguesNews: { method: 'get', uri: `${v2}leagues/articles/{teamID}` },
+  subscribePlayer: { method: 'post', uri: `${v2}subscribe/player/{PlayerId}` },
+  getDeviceId: { method: 'get', uri: `${v2}favorites/dev-id` },
+  getLeaguesList: { method: 'get', uri: `${v2}leagues?is_cup=0` },
   matchsDetails: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/matches/{id}?per_page=1000&page={page}&order={order}`,
   },
   getMatchsDetails: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/players/{id}?per_page=1000&page=1`,
   },
   getTeamOverview: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/data/{id}`,
   },
   getTeamPlayers: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/stats/{id}`,
   },
   getTeamsStatistic: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/league-stats/{id}/{LeagueId}`,
   },
   getTeamsStanding: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/standings/{id}`,
   },
   getClubNameLogo: {
-    method: "get",
+    method: 'get',
     uri: `${v2}{itemType}/{id}`,
   },
   getTeamsTransfers: {
-    method: "get",
+    method: 'get',
     uri: `${v2}teams/transfers/{id}?per_page=10&page=1`,
   },
   getLivescoreplayer: {
-    method: "get",
+    method: 'get',
     uri: `${v2}livescoreplayer/info/{PlayerId}`,
   },
   getLivescorePlayerAtricles: {
-    method: "get",
+    method: 'get',
     uri: `${v2}livescoreplayer/articles/{id}`,
   },
   standingSearch: {
-    method: "get",
+    method: 'get',
     uri: `${v2}standings-mobile?search={search}`,
   },
   addOrRemoveFavoriteMatches: {
-    method: "get",
+    method: 'get',
     uri: `${v2}favorites/{action}?device_id={deviceId}&match_id={id}`,
   },
   getLiveMatchesMeetings: {
-    method: "get",
+    method: 'get',
     uri: `${v2}live-matches/h2h/{match_id}?per_page=10`,
   },
-  getLineUp: { method: "get", uri: `${v2}live-matches/players/{id}` },
+  getLineUp: { method: 'get', uri: `${v2}live-matches/players/{id}` },
   getLiveMatchesMobile: {
-    method: "get",
+    method: 'get',
     uri: `${v2}live-matches/overview-mobile/{match_id}`,
   },
 
   liveMatchStatistic: {
-    method: "get",
+    method: 'get',
     uri: `${v2}live-matches/statistics/{match_id}`,
   },
 
   liveMatchPlayer: {
-    method: "get",
+    method: 'get',
     uri: `${v2}live-matches/players/{match_id}`,
   },
 
   // *match comments*  ->
-  getMatchDiscussion: { method: "get", uri: `${v2}match/{matchID}/comments` },
-  addMatchComments: { method: "post", uri: `${v2}match/{matchID}/comments` },
+  getMatchDiscussion: { method: 'get', uri: `${v2}match/{matchID}/comments` },
+  addMatchComments: { method: 'post', uri: `${v2}match/{matchID}/comments` },
   getDiscussionReply: {
-    method: "get",
+    method: 'get',
     uri: `${v2}match/{matchID}/comments/{commentID}/replies`,
   },
   deleteMatchComment: {
-    method: "delete",
+    method: 'delete',
     uri: `${v2}match/{matchID}/comments/{commentID}`,
   },
   addMatchCommentLike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}matchcomments/like/{commentID}`,
   },
   addMatchCommentDisLike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}matchcomments/dislike/{commentID}`,
   },
   editMatchComment: {
-    method: "put",
+    method: 'put',
     uri: `${v2}match/{matchID}/comments/{commentID}`,
   },
   addMatchReply: {
-    method: "post",
+    method: 'post',
     uri: `${v2}match/{matchID}/comments/{commentID}/replies`,
   },
   addMatchReplyLike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}matchreplies/like/{commentID}`,
   },
   addMatchReplyDisike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}matchreplies/dislike/{commentID}`,
   },
   editMatchReplyComment: {
-    method: "put",
+    method: 'put',
     uri: `${v2}match/{matchID}/comments/{commentID}/replies/{replCommentID}`,
   },
   deleteMatchReplyComment: {
-    method: "delete",
+    method: 'delete',
     uri: `${v2}match/{matchID}/comments/{commentID}/replies/{replCommentID}`,
   },
   getRound: {
-    method: "get",
+    method: 'get',
     uri: `${v2}leagues/matches_round/{id}?stage={stageId}&season={seasonId}&round={roundId}`,
   },
   leaguesStandings: {
-    method: "get",
+    method: 'get',
     uri: `${v2}standings/{id}`,
   },
   leaguesStandingsAverage: {
-    method: "get",
+    method: 'get',
     uri: `${v2}seasons/{seasonID}/stats`,
   },
   leaguesTeamStandings: {
-    method: "get",
+    method: 'get',
     uri: `${v2}standings/{leagueID}`,
   },
 
   getFavoriteMatches: {
-    method: "get",
+    method: 'get',
     uri: `${v2}favorites?device_id={deviceId}`,
   },
 
   getLivematches: {
-    method: "get",
+    method: 'get',
     uri: `${v2}live-matches?byleague=1&league=0&per_page=15&page=1`,
   },
   getMatchesData: {
-    method: "get",
+    method: 'get',
     uri: `${v2}matches?byleague=1&league=0&date={id}&per_page=20&page=1&device_id={deviceId}`,
   },
   ligaStats: {
-    method: "get",
+    method: 'get',
     uri: `${v2}leagues/stats/{leagueId}`,
   },
 
   likeArticle: {
-    method: "post",
+    method: 'post',
     uri: `${v2}articles/{id}/like`,
   },
   unlikeArticle: {
-    method: "post",
+    method: 'post',
     uri: `${v2}articles/{id}/unlike`,
   },
 
   // -<---------------------
   // *news comments* ->
-  getNewsComments: { method: "get", uri: `${v2}articles/{articleId}/comments` },
-  addNewsComment: { method: "post", uri: `${v2}articles/{articleId}/comments` },
+  getNewsComments: { method: 'get', uri: `${v2}articles/{articleId}/comments` },
+  addNewsComment: { method: 'post', uri: `${v2}articles/{articleId}/comments` },
   getNewsCommentsReply: {
-    method: "get",
+    method: 'get',
     uri: `${v2}articles/{articleId}/comments/{commentID}/replies`,
   },
   deleteNewsComment: {
-    method: "delete",
+    method: 'delete',
     uri: `${v2}articles/{articleId}/comments/{commentID}`,
   },
-  addNewsCommentLike: { method: "post", uri: `${v2}comments/like/{commentID}` },
+  addNewsCommentLike: { method: 'post', uri: `${v2}comments/like/{commentID}` },
   addNewsCommentDisLike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}comments/dislike/{commentID}`,
   },
   editNewsComment: {
-    method: "put",
+    method: 'put',
     uri: `${v2}articles/{articleId}/comments/{commentID}`,
   },
   addNewsReply: {
-    method: "post",
+    method: 'post',
     uri: `${v2}articles/{articleId}/comments/{commentID}/replies`,
   },
   addNewsReplyLike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}replies/like/{replCommentID}`,
   },
   addNewsReplyDisike: {
-    method: "post",
+    method: 'post',
     uri: `${v2}replies/dislike/{replCommentID}`,
   },
   editNewsReplyComment: {
-    method: "put",
+    method: 'put',
     uri: `${v2}articles/{articleId}/comments/{commentID}/replies/{replCommentID}`,
   },
   deleteNewsReplyComment: {
-    method: "delete",
+    method: 'delete',
     uri: `${v2}articles/{articleId}/comments/{commentID}/replies/{replCommentID}`,
   },
 
   // ---------------------<-
-  getUserComments: { method: "get", uri: `${v2}my-comments` },
+  getUserComments: { method: 'get', uri: `${v2}my-comments` },
   registerNotificationToken: {
-    method: "get",
+    method: 'get',
     uri: `${v2}notifications/{deviceId}?token={token}`,
   },
 
@@ -433,6 +436,6 @@ const ENDPOINTS = {
   // post - new_polls/item/{id}
   // post - new_polls/delete/{id}
   // post - new_polls/answer
-};
+}
 
-export default ENDPOINTS;
+export default ENDPOINTS

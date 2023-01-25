@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchCategories } from '../thunks'
+import { Category } from '../transformantors'
 
 export interface CategoriesState {
-  categories: any
+  categories: Category[]
 }
 
 const initialState: CategoriesState = {

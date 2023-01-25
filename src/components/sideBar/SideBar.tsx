@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../header/Header'
 import { useSelector } from 'react-redux'
 import { selectAppLanguageCodeAndIcon } from '../../store/selectors/appSelectors'
-import { LanguageSelectModal } from '../../screens/news/LanguageSelectModal'
+import { LanguageSelectModal } from './components/LanguageSelectModal'
 import { SideBarLanguageButton } from './components/SideBarLanguageButton'
 import { Accordion } from './components/Accordion'
 import { IconWithTitle } from './components/IconWithTitle'
@@ -71,14 +71,16 @@ const SideBar = memo(({ navigation }) => {
         renderTitle={renderLanguageButton}
       />
       <ScrollView>
-        {sideBarData.map((game) => {
+        {sideBarData.map((category) => {
           return (
             <Accordion
-              key={game.title}
-              title={<IconWithTitle title={game.title} iconName={game.icon} />}
+              key={category.title}
+              title={
+                <IconWithTitle title={category.title} icon={category.icon} />
+              }
               content={
                 <View>
-                  {game.menuOptions.map((option) => (
+                  {category.menuOptions.map((option) => (
                     <MenuItem
                       title={option.title}
                       onPress={() => null}

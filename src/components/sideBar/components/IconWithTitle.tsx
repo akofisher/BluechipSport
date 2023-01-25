@@ -1,20 +1,20 @@
 import React, { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { Icon, Text } from '../../common'
-import { SvgICONSType } from '../../../../assets/svgs/svgIcons'
+import { Text } from '../../common'
 import { Colors } from '../../../styles'
+import FastImage from 'react-native-fast-image'
 
 interface IconWithTitleProps {
   title: string
-  iconName: SvgICONSType
+  icon: string | null
 }
 
 export const IconWithTitle = memo<IconWithTitleProps>((props) => {
-  const { title, iconName } = props
+  const { title, icon } = props
   return (
     <View style={styles.container}>
-      <Icon iconName={iconName} />
+      <FastImage source={{ uri: icon || '' }} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
     </View>
   )
@@ -31,4 +31,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
+  image: { height: 38, width: 38 },
 })

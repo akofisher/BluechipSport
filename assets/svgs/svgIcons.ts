@@ -18,6 +18,10 @@ export const SvgICONS = {
   Kabaddi: require('assets/svgs/kabaddi.svg').default,
   Tennis: require('assets/svgs/tennis.svg').default,
   Crown: require('assets/svgs/crown.svg').default,
+  List: require('assets/svgs/list.svg').default,
+  LisBlack: require('assets/svgs/listBlack.svg').default,
+  Rectangle: require('assets/svgs/rectangle.svg').default,
+  RectangleBlack: require('assets/svgs/rectangleBlack.svg').default,
 }
 
 export type SvgICONSType = keyof typeof SvgICONS

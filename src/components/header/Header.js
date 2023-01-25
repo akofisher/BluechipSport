@@ -91,7 +91,7 @@ const Header = React.memo((props) => {
         {_renderTitle()}
         {_renderRight()}
       </View>
-      {content ? <View>{content}</View> : null}
+      {content ? <View style={styles.content}>{content}</View> : null}
     </View>
   )
 })
@@ -99,8 +99,6 @@ const Header = React.memo((props) => {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: Colors.headerBackground,
-    paddingHorizontal: 15,
-    paddingVertical: 13,
   },
   lightWrapper: {
     backgroundColor: Colors.white,
@@ -109,6 +107,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    marginBottom: 11,
   },
   iconWrapper: {
     backgroundColor: Colors.headerIconWrapper,
@@ -131,6 +131,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textTransform: 'uppercase',
     color: Colors.white,
+  },
+  content: {
+    borderTopWidth: 1,
+    borderTopColor: '#1A2631',
   },
 })
 

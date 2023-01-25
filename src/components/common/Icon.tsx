@@ -4,7 +4,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 
 interface IconProps {
   iconName: SvgICONSType
-  style?: ViewStyle
+  style?: ViewStyle | null
   stroke?: string
   strokeWidth?: number
 }

@@ -7,12 +7,12 @@ import { useSelector } from 'react-redux'
 import {
   selectAppAvailableLanguages,
   selectAppLanguage,
-} from '../../store/selectors/appSelectors'
-import { setAppLanguage } from '../../store/thunks/appThunks'
-import { AppLanguageCode } from '../../store/slices/appSlice'
-import { Icon, RadioListItem, Text } from '../../components/common'
-import { useAppDispatch } from '../../store'
-import { Colors } from '../../styles'
+} from '../../../store/selectors/appSelectors'
+import { setAppLanguage } from '../../../store/thunks/appThunks'
+import { AppLanguageCode } from '../../../store/slices/appSlice'
+import { Icon, RadioListItem, Text } from '../../common'
+import { useAppDispatch } from '../../../store'
+import { Colors } from '../../../styles'
 
 interface LanguageSelectModalProps {
   bottomSheetModalRef: React.Ref<BottomSheetModal>

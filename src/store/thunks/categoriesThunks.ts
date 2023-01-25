@@ -1,31 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-
-export const categoriesData = [
-  {
-    title: 'Cricket',
-    icon: 'Cricket',
-    menuOptions: [{ title: 'IPL' }, { title: 'SA20' }],
-  },
-  {
-    title: 'Football',
-    icon: 'Football',
-    menuOptions: [{ title: 'IPL' }, { title: 'SA20' }, { title: 'BBL' }],
-  },
-  {
-    title: 'Kabaddi',
-    icon: 'Kabaddi',
-    menuOptions: [{ title: 'IPL' }, { title: 'SA20' }, { title: 'BBL' }],
-  },
-  {
-    title: 'Tennis',
-    icon: 'Tennis',
-    menuOptions: [{ title: 'IPL' }],
-  },
-]
+import { API } from '../../services'
+import { CategoriesResponse, prepareCategories } from '../transformantors'
 
 export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async () => {
-    return categoriesData
+    try {
+      const { data }: { data: CategoriesResponse[] } = await API.getCategories()
+      return prepareCategories(data)
+    } catch (e) {
+      console.log('fetchCategories error', e)
+      return []
+    }
   },
 )
