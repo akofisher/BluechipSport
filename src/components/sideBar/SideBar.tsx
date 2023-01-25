@@ -1,12 +1,5 @@
 import i18next from 'i18next'
-import React, {
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-  memo,
-  useState,
-} from 'react'
+import React, { useEffect, useRef, useMemo, useCallback, memo } from 'react'
 import { StyleSheet, ScrollView, TouchableOpacity, View } from 'react-native'
 
 import { SafeAreaView } from 'react-native-safe-area-context'
