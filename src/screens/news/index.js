@@ -1,5 +1,5 @@
-import NewsDetailsScreen from "./NewsDetailsScreen";
-import NewsScreen from "./NewsScreen";
-import NewsCommentsScreen from "./newsCommentsScreen";
+import NewsDetailsScreen from './NewsDetailsScreen/NewsDetailsScreen'
+import NewsScreen from './NewsScreen/NewsScreen'
+import NewsCommentsScreen from './newsCommentsScreen'
 
-export { NewsScreen, NewsDetailsScreen, NewsCommentsScreen };
+export { NewsScreen, NewsDetailsScreen, NewsCommentsScreen }

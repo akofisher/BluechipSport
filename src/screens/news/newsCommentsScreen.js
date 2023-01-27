@@ -1,8 +1,5 @@
-import Comments from "components/comments/newsComments/comments";
-import Avatar from "components/common/Avatar";
-import { Header, BackButton, Title } from "components/header";
-import i18next from "i18next";
-import React, { useState, useEffect, useRef } from "react";
+import i18next from 'i18next'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   StyleSheet,
   View,
@@ -10,54 +7,61 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-} from "react-native";
-import Icon from "react-native-vector-icons/dist/FontAwesome";
-import { CancelSource, API } from "services";
-import { useGlobalState, newsCommentId } from "stores";
-import { RuntimeConsts } from "utils";
+} from 'react-native'
+import Icon from 'react-native-vector-icons/dist/FontAwesome'
+import { CancelSource, API } from 'services'
+import { useGlobalState, newsCommentId } from 'stores'
+import { RuntimeConsts } from 'utils'
+import { Avatar } from '../../components/common'
+import Comments from '../../components/comments/discussion/comments'
+import { BackButton, Header, Title } from '../../components/header'
 
-Icon.loadFont();
+Icon.loadFont()
 
 const NewsCommentsScreen = ({ route }) => {
-  const [comments, setComments] = useState("");
-  const [content, setContent] = useState();
-  const [replyContent, setReplyContent] = useState();
-  const [userInfo, setUserInfo] = useState();
-  const [userId, setUserId] = useState();
-  const [Index, setIndex] = useState(0);
-  const [refresh, setRefresh] = useState(false);
-  const [bottomInput, setBottomInput] = useState(false);
-  const source = CancelSource();
-  const { Refresh, myRefresh } = useGlobalState();
-  const { CommentID, newsCommentID } = newsCommentId();
+  const [comments, setComments] = useState('')
+  const [content, setContent] = useState()
+  const [replyContent, setReplyContent] = useState()
+  const [userInfo, setUserInfo] = useState()
+  const [userId, setUserId] = useState()
+  const [Index, setIndex] = useState(0)
+  const [refresh, setRefresh] = useState(false)
+  const [bottomInput, setBottomInput] = useState(false)
+  const source = CancelSource()
+  const { Refresh, myRefresh } = useGlobalState()
+  const { CommentID, newsCommentID } = newsCommentId()
 
-  const { articleId } = route.params;
+  const { articleId } = route.params
 
-  const inputRef = useRef(null);
-  const flatlistRef = useRef();
+  const inputRef = useRef(null)
+  const flatlistRef = useRef()
 
   const onButtonClick = (index) => {
     if (userInfo) {
-      setBottomInput(true);
-      inputRef.current?.focus();
-      setIndex(index);
+      setBottomInput(true)
+      inputRef.current?.focus()
+      setIndex(index)
     } else {
-      alert(i18next.t("CommentsAlertText"));
+      alert(i18next.t('CommentsAlertText'))
     }
-  };
+  }
 
   const getUser = () => {
     API.checkToken({ cancelToken: source.token, params })
       .then((response) => {
-        setUserInfo(response.data);
+        setUserInfo(response.data)
       })
-      .catch((error) => alert(error));
-  };
+      .catch((error) => alert(error))
+  }
 
-  const params = content ? { content } : replyContent ? { content: replyContent } : {};
+  const params = content
+    ? { content }
+    : replyContent
+    ? { content: replyContent }
+    : {}
 
   const addNewComment = () => {
-    comments != "" && flatlistRef.current.scrollToIndex({ index: 0 });
+    comments != '' && flatlistRef.current.scrollToIndex({ index: 0 })
 
     RuntimeConsts.token != null
       ? API.addNewsComment({
@@ -66,12 +70,12 @@ const NewsCommentsScreen = ({ route }) => {
           params,
         })
           .then((response) => {
-            setUserId(response.data.author);
-            setContent("");
+            setUserId(response.data.author)
+            setContent('')
           })
           .catch((error) => console.warn(error))
-      : alert(i18next.t("CommentsAlertText"));
-  };
+      : alert(i18next.t('CommentsAlertText'))
+  }
 
   const addNewsReply = () => {
     API.addNewsReply({
@@ -80,63 +84,65 @@ const NewsCommentsScreen = ({ route }) => {
       params,
     })
       .then((response) => {
-        setUserId(response.data.author);
-        setReplyContent("");
+        setUserId(response.data.author)
+        setReplyContent('')
       })
-      .catch((error) => console.warn(error));
-    setBottomInput(false);
-  };
+      .catch((error) => console.warn(error))
+    setBottomInput(false)
+  }
 
   const deleteNewsComment = (item) => {
     API.deleteNewsComment({
       kwds: { articleId: item.article_id, commentID: item.id },
     })
       .then((response) => {
-        setRefresh(!refresh);
+        setRefresh(!refresh)
       })
-      .catch((error) => console.warn(error));
-  };
+      .catch((error) => console.warn(error))
+  }
 
   const onDisLike = (item) => {
     if (userInfo) {
       API.addNewsCommentDisLike({ kwds: { commentID: item.id } })
         .then((response) => {
-          setRefresh(!refresh);
+          setRefresh(!refresh)
         })
-        .catch((error) => console.warn(error));
+        .catch((error) => console.warn(error))
     } else {
-      alert(i18next.t("CommentsAlertText"));
+      alert(i18next.t('CommentsAlertText'))
     }
-  };
+  }
   const onLike = (item) => {
     if (userInfo) {
-      API.addNewsCommentLike({ kwds: { commentID: item.id } }).then((response) => {
-        setRefresh(!refresh);
-      });
+      API.addNewsCommentLike({ kwds: { commentID: item.id } }).then(
+        (response) => {
+          setRefresh(!refresh)
+        },
+      )
     } else {
-      alert(i18next.t("CommentsAlertText"));
+      alert(i18next.t('CommentsAlertText'))
     }
-  };
+  }
 
   useEffect(() => {
-    RuntimeConsts.token != null && getUser();
+    RuntimeConsts.token != null && getUser()
 
     API.getNewsComments({ kwds: { articleId } })
       .then((response) => {
-        setComments(response.data);
+        setComments(response.data)
       })
-      .catch((error) => console.warn(error));
-  }, [articleId, userId, refresh, myRefresh]);
+      .catch((error) => console.warn(error))
+  }, [articleId, userId, refresh, myRefresh])
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       style={[Styles.container, { paddingBottom: bottomInput ? 70 : 0 }]}
     >
       <View style={[Styles.container, { paddingBottom: bottomInput ? 70 : 0 }]}>
         <Header>
           <BackButton />
-          <Title title={i18next.t("Comments")} />
+          <Title title={i18next.t('Comments')} />
         </Header>
 
         <View style={Styles.CommInputContainer}>
@@ -147,19 +153,27 @@ const NewsCommentsScreen = ({ route }) => {
             style={Styles.commentInput}
             value={content}
             onChangeText={(text) => {
-              setContent(text);
+              setContent(text)
             }}
-            placeholder={i18next.t("WriteComment")}
+            placeholder={i18next.t('WriteComment')}
             returnKeyType="done"
             onSubmitEditing={addNewComment}
           />
 
-          <TouchableOpacity onPress={addNewComment} style={{ padding: 5, marginRight: 10 }}>
+          <TouchableOpacity
+            onPress={addNewComment}
+            style={{ padding: 5, marginRight: 10 }}
+          >
             <Icon name="send-o" size={30} color="#A9A9A9" />
           </TouchableOpacity>
         </View>
         {bottomInput && (
-          <View style={[Styles.CommInputContainer, { position: "absolute", bottom: 0 }]}>
+          <View
+            style={[
+              Styles.CommInputContainer,
+              { position: 'absolute', bottom: 0 },
+            ]}
+          >
             <View style={Styles.userPic}>
               <Avatar size={40} uri={userInfo?.avatar} />
             </View>
@@ -169,19 +183,22 @@ const NewsCommentsScreen = ({ route }) => {
               ref={inputRef}
               value={replyContent}
               onChangeText={(text) => {
-                setReplyContent(text);
+                setReplyContent(text)
               }}
-              placeholder={i18next.t("WriteComment")}
+              placeholder={i18next.t('WriteComment')}
               returnKeyType="done"
               onSubmitEditing={addNewsReply}
               onFocus={() => {
                 flatlistRef.current.scrollToIndex({
                   animated: true,
                   index: Index,
-                });
+                })
               }}
             />
-            <TouchableOpacity onPress={addNewsReply} style={{ padding: 5, marginRight: 10 }}>
+            <TouchableOpacity
+              onPress={addNewsReply}
+              style={{ padding: 5, marginRight: 10 }}
+            >
               <Icon name="send-o" size={30} color="#A9A9A9" />
             </TouchableOpacity>
           </View>
@@ -201,37 +218,37 @@ const NewsCommentsScreen = ({ route }) => {
               userInfo={userInfo}
               userId={userId}
               onDisLike={() => {
-                onDisLike(item);
+                onDisLike(item)
               }}
               onLike={() => {
-                onLike(item);
+                onLike(item)
               }}
               deleteComment={() => {
-                deleteNewsComment(item);
+                deleteNewsComment(item)
               }}
             />
           )}
         />
       </View>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
 
-export default NewsCommentsScreen;
+export default NewsCommentsScreen
 
 const Styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F4F4F4",
+    backgroundColor: '#F4F4F4',
     flex: 1,
   },
 
   CommInputContainer: {
     zIndex: 100,
-    width: "100%",
-    backgroundColor: "#ffffff",
+    width: '100%',
+    backgroundColor: '#ffffff',
     height: 70,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   commentInput: {
     flex: 1,
@@ -239,8 +256,8 @@ const Styles = StyleSheet.create({
     paddingLeft: 13,
     borderWidth: 1,
     borderRadius: 15,
-    backgroundColor: "#ECECEC",
-    borderColor: "#DDDDDD",
+    backgroundColor: '#ECECEC',
+    borderColor: '#DDDDDD',
     marginHorizontal: 15,
   },
   userPic: {
@@ -248,6 +265,6 @@ const Styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginLeft: 20,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
-});
+})

@@ -32,7 +32,7 @@ const ENDPOINTS = {
   },
   getMainArticles: {
     method: 'get',
-    uri: `${v2}articles?options=paginate&category_id=91`,
+    uri: `${v2}articles?options=paginate&category_id=1`,
   },
   getTransfersArticles: {
     method: 'get',

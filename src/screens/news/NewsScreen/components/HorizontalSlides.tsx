@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, FlatList } from 'react-native'
-import { HorizontalListItem } from '../../../components/news'
-import { Separator } from '../../../components/common'
+import { HorizontalListItem } from '../../../../components/news'
+import { Separator } from '../../../../components/common'
 
 interface HorizontalSlidesProps {
   data: any

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
-import { Header } from '../../../components/header'
+import { Header } from '../../../../components/header'
 import { CategoriesList } from './CategoriesList'
-import { Category } from '../../../store/transformantors'
+import { Category } from '../../../../store/transformantors'
 
 interface NewsScreenHeaderProps {
   navigation: any

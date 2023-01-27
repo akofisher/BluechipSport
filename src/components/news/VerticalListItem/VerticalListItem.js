@@ -149,14 +149,14 @@ const st = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     marginVertical: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 15,
   },
   item: {
     flexDirection: 'row',
     backgroundColor: Colors.white,
     borderRadius: 8,
     overflow: 'hidden',
-    margin: 10,
+    margin: 15,
     marginVertical: 7,
   },
   itemImage: {

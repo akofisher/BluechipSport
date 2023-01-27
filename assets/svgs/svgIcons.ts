@@ -11,6 +11,7 @@ export const SvgICONS = {
   English: require('assets/svgs/english.svg').default,
   Hindi: require('assets/svgs/hindi.svg').default,
   Comment: require('assets/svgs/comment.svg').default,
+  CommentWhite: require('assets/svgs/commentWhite.svg').default,
   ChevronDown: require('assets/svgs/chevronDown.svg').default,
   ChevronUp: require('assets/svgs/chevronUp.svg').default,
   Cricket: require('assets/svgs/cricket.svg').default,

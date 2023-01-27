@@ -19,6 +19,8 @@ const Button = ({
   width = '100%',
   height = 48,
   disabled = false,
+  leftContent,
+  rightContent,
 }) => {
   const [fontSize, borderRadius, fontWeight] = big
     ? [16, 6, '500']
@@ -36,19 +38,23 @@ const Button = ({
             height,
             alignItems: 'center',
             justifyContent: 'center',
+            flexDirection: 'row',
           },
           style,
         ]}
       >
+        {leftContent ? leftContent : null}
         <Text
           style={{
             color: Colors[textColor],
             fontWeight,
             fontSize,
+            marginHorizontal: 10,
           }}
         >
           {title}
         </Text>
+        {rightContent ? rightContent : null}
       </Touchable>
     </View>
   )

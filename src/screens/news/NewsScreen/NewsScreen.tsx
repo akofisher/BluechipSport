@@ -1,10 +1,8 @@
-import { Spinner } from 'components/common'
 import React, { useEffect, useCallback } from 'react'
 import { View, FlatList } from 'react-native'
-import { cxs } from 'styles'
 import { HorizontalSlides } from './components/HorizontalSlides'
 import { NewsScreenHeader } from './components/NewsScreenHeader'
-import { useAppDispatch } from '../../store'
+import { useAppDispatch } from '../../../store'
 import {
   fetchCategoryNews,
   fetchLatestNews,
@@ -12,7 +10,7 @@ import {
   fetchMoreLatestNews,
   refreshPage,
   setSelectedNewsCategory,
-} from '../../store/thunks'
+} from '../../../store/thunks'
 import { useSelector } from 'react-redux'
 import {
   selectCategoryNews,
@@ -26,10 +24,12 @@ import {
   selectNewsCategory,
   selectNewsLoading,
   selectNewsRefreshing,
-} from '../../store/selectors'
-import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVerticalList'
+} from '../../../store/selectors'
+import { NewsVerticalList } from '../../../components/NewsVerticalList/NewsVerticalList'
 import i18next from 'i18next'
-import { Category } from '../../store/transformantors'
+import { Category } from '../../../store/transformantors'
+import { cxs } from '../../../styles'
+import { Spinner } from '../../../components/common'
 
 const FLAT_LIST_ITEMS = {
   HORIZONTAL_SLIDES: 'HORIZONTAL_SLIDES',

@@ -155,7 +155,7 @@ export default {
   WriteComment: 'Leave a comment',
   Tags: 'Tags',
   Video: 'Video',
-  SimilarNews: 'Related Articles',
+  SimilarNews: 'Related News',
   FindTagAndSubscribe: 'Subscribe a tag',
   Goalkeepers: 'Goalkeepers',
   Defenders: 'Defenders',

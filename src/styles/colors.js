@@ -20,17 +20,20 @@ const Colors = {
   bluryWhite: 'rgb(255 255 255 / 70%)',
 
   primary: '#01AF70',
+  blue: '#3555FF',
   pink: '#FF0960',
   gray: '#A6A6A6',
   green: '#01AF70',
   blurredGreen: 'rgba(1, 175, 112, 0.05)',
   blurredWhite: 'rgba(255, 255, 255, 0.21)',
+  blurredBlue: 'rgba(255, 255, 255, 0.17)',
   border: '#B8B7B7',
   textBlack: '#111315',
   textGray: '#959595',
   headerBackground: '#101921',
   headerIconWrapper: '#1A2631',
   headerIconLightWrapper: '#F2F2F2',
+  background: '#F2F2F2',
 }
 
 export default Colors

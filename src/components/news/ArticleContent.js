@@ -1,41 +1,32 @@
-import dateD from "assets/icons/datee.png";
-import { AutoHeightWebView, Text } from "components/common";
-import moment from "moment";
-import React, { useCallback, useState } from "react";
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import { AutoHeightWebView, Text } from 'components/common'
+import moment from 'moment'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Colors, cxs } from '../../styles'
 
 const ArticleContent = React.memo(
-  ({ onShouldStartLoadWithRequest, hasEmbed, content, date, plainContent }) => {
-    const [fontSize, setFontSize] = useState(15);
-
-    const onIncrease = useCallback(() => {
-      fontSize != 25 && setFontSize((prev) => prev + 1);
-    }, [fontSize]);
-
-    const onDecrease = () => {
-      fontSize != 9 && setFontSize((prev) => prev - 1);
-    };
+  ({
+    onShouldStartLoadWithRequest,
+    hasEmbed,
+    content,
+    date,
+    plainContent,
+    title,
+  }) => {
+    const fontSize = 15
 
     return (
       <>
-        <View style={st.newsDateIcons}>
-          <View style={st.Icons}>
-            <Image source={dateD} />
-            <Text style={st.dateTxt}>{moment(date).format("MM.DD.YYYY")}</Text>
-          </View>
-          <View style={st.Icons}>
-            <TouchableOpacity style={st.plusIcon} onPress={onIncrease}>
-              <Text style={st.iocnTxt}>+</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={st.plusIcon} onPress={onDecrease}>
-              <Text style={st.iocnTxt}>-</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={st.header}>
+          <Text style={st.titleText}>{title || ''}</Text>
+          <Text style={st.dateText}>
+            {moment(date).format('DD MMM, yyyy, hh::mm')}
+          </Text>
         </View>
         <View style={st.paddingHorizontal}>
           {hasEmbed ? (
             <AutoHeightWebView
-              originWhitelist={["*"]}
+              originWhitelist={['*']}
               source={{
                 html: `${content}
                         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,46 +52,37 @@ const ArticleContent = React.memo(
           )}
         </View>
       </>
-    );
+    )
   },
-);
+)
 
-export default ArticleContent;
+export default ArticleContent
 
 const st = StyleSheet.create({
-  paddingHorizontal: { paddingHorizontal: 10 },
-  newsDateIcons: {
-    height: 50,
-    margin: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  header: {
+    backgroundColor: Colors.white,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
-  Icons: {
-    flexDirection: "row",
-    alignItems: "center",
+  titleText: {
+    color: Colors.textBlack,
+    fontSize: 24,
+    fontWeight: '600',
   },
-  dateTxt: {
-    marginLeft: 10,
+  dateText: {
     fontSize: 12,
+    paddingTop: 10,
+    fontWeight: '400',
+    color: Colors.textGray,
   },
-  plusIcon: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#F0F0F0",
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: 5,
-  },
-  iocnTxt: {
-    fontSize: 22,
-    color: "#000000",
-    fontWeight: "bold",
+  paddingHorizontal: {
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+    backgroundColor: Colors.background,
   },
   content: {
-    color: "#494949",
-    lineHeight: 25,
-    letterSpacing: 0.01,
+    backgroundColor: Colors.background,
+    color: '#111315',
     marginHorizontal: 10,
   },
-});
+})

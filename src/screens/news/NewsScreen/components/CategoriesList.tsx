@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import { Text } from '../../../components/common'
-import { Category } from '../../../store/transformantors'
+import { Text } from '../../../../components/common'
+import { Category } from '../../../../store/transformantors'
 
 interface CategoriesListProps {
   categories: Category[]

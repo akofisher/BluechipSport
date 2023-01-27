@@ -10,8 +10,9 @@ import { Spinner, Text } from '../common'
 import { VerticalListItem } from '../news'
 import { VerticalListModeSwitcher } from './components/VerticalListModeSwitcher'
 import i18next from 'i18next'
+import { Colors } from '../../styles'
 
-const keyExtractor = (item) => item.id
+const keyExtractor = (item: { id: string }) => item.id
 
 interface NewsVerticalListProps {
   data: any[]
@@ -66,7 +67,7 @@ export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
   return (
     <>
       <View style={styles.header}>
-        <Text>{title}</Text>
+        <Text style={styles.title}>{title}</Text>
         {withSwitcher ? (
           <VerticalListModeSwitcher
             isTileMode={true}
@@ -103,6 +104,12 @@ export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
 const styles = StyleSheet.create({
   list: { backgroundColor: '#F2F2F2', flex: 1 },
   spinner: { paddingVertical: 20 },
+  title: {
+    color: Colors.textBlack,
+    textTransform: 'uppercase',
+    fontSize: 18,
+    fontWeight: '700',
+  },
   header: {
     backgroundColor: '#F2F2F2',
     paddingTop: 15,
