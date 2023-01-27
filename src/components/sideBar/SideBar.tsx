@@ -15,14 +15,14 @@ import { MenuItem } from './components/MenuItem'
 import { Button, Text } from '../common'
 import { Colors } from '../../styles'
 import Avatar from '../common/Avatar'
-import { selectCategories } from '../../store/selectors'
+import { selectSidebarCategories } from '../../store/selectors'
 import { useAppDispatch } from '../../store'
 import { fetchCategories } from '../../store/thunks'
 
 const SideBar = memo(({ navigation }) => {
   const dispatch = useAppDispatch()
   const selectedLanguage = useSelector(selectAppLanguageCodeAndIcon)
-  const sideBarData = useSelector(selectCategories)
+  const sideBarData = useSelector(selectSidebarCategories)
   const user = true
 
   useEffect(() => {

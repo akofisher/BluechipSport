@@ -3,7 +3,7 @@ export interface CategoriesResponse {
   created_at: string
   icon: null | string
   id: number
-  location: number
+  location: string
   name: string
   new: number
   parent: number
@@ -21,20 +21,24 @@ export interface Category {
     title: string
     icon: null | string
     url: null | string
+    location: string
   }[]
 }
 
-export const prepareCategories = (
+const prepareCategoriesByLocation = (
   categories: CategoriesResponse[],
-): Category[] => {
+  location: string,
+) => {
   const parentCategories = categories.filter(
     (category) => category.parent === 0,
   )
-  return parentCategories.map((category) => {
+
+  const mappedCategories = parentCategories.map((category) => {
     return {
       id: category.id,
       title: category.name,
       icon: category.icon,
+      location: category.location,
       url: category.url,
       menuOptions: categories
         .filter((childCategory) => childCategory.parent === category.id)
@@ -42,8 +46,25 @@ export const prepareCategories = (
           id: childCategory.id,
           title: childCategory.name,
           icon: childCategory.icon,
+          location: childCategory.location,
           url: childCategory.url,
         })),
     }
   })
+  return mappedCategories.filter((category) => category.location === location)
+}
+
+// location: "1" - for Desktop
+// location: "2" - For News header
+// location: "3: - For Side bar
+export const prepareCategories = (
+  categories: CategoriesResponse[],
+): {
+  sideBar: Category[]
+  newsHeader: Category[]
+} => {
+  return {
+    sideBar: prepareCategoriesByLocation(categories, '3'),
+    newsHeader: prepareCategoriesByLocation(categories, '2'),
+  }
 }

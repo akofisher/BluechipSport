@@ -1,4 +1,7 @@
 import { RootState } from '../index'
 
-export const selectCategories = (state: RootState) =>
-  state.categories.categories
+export const selectSidebarCategories = (state: RootState) =>
+  state.categories.sideBarCategories
+
+export const selectNewsHeaderCategories = (state: RootState) =>
+  state.categories.newsHeaderCategories

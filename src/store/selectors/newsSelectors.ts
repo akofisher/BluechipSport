@@ -1,6 +1,6 @@
 import { RootState } from '../index'
 import { createSelector } from '@reduxjs/toolkit'
-import { selectCategories } from './categoriesSelectors'
+import { selectNewsHeaderCategories } from './categoriesSelectors'
 import { latestNewsCategory } from '../slices'
 
 export const selectLatestNews = (state: RootState) => state.news.latestNews
@@ -21,8 +21,9 @@ export const selectNewsCategory = (state: RootState) =>
   state.news.selectedNewsCategory
 
 export const selectNewsCategories = createSelector(
-  selectCategories,
+  selectNewsHeaderCategories,
   (categories) => {
+    console.log('categories', JSON.stringify(categories))
     return [latestNewsCategory, ...categories]
   },
 )

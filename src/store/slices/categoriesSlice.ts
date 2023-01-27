@@ -3,11 +3,13 @@ import { fetchCategories } from '../thunks'
 import { Category } from '../transformantors'
 
 export interface CategoriesState {
-  categories: Category[]
+  newsHeaderCategories: Category[]
+  sideBarCategories: Category[]
 }
 
 const initialState: CategoriesState = {
-  categories: [],
+  newsHeaderCategories: [],
+  sideBarCategories: [],
 }
 
 export const categoriesSlice = createSlice({
@@ -16,7 +18,8 @@ export const categoriesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchCategories.fulfilled, (state, action) => {
-      state.categories = action.payload
+      state.sideBarCategories = action.payload.sideBar
+      state.newsHeaderCategories = action.payload.newsHeader
     })
   },
 })

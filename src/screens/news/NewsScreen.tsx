@@ -95,7 +95,7 @@ const NewsScreen = ({ navigation }) => {
   ])
 
   const openNewsDetails = React.useCallback(
-    (id, title, mainVideoUrl) => {
+    (id: number, title: string, mainVideoUrl: string | undefined) => {
       navigation.navigate('NewsDetails', {
         articleId: id,
         title,
@@ -109,7 +109,10 @@ const NewsScreen = ({ navigation }) => {
 
   const renderItem = useCallback(
     ({ item }) => {
-      if (item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES) {
+      if (
+        item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES &&
+        !isNotLatestNewsCategorySelected
+      ) {
         return (
           <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
         )
@@ -148,13 +151,14 @@ const NewsScreen = ({ navigation }) => {
       }
     },
     [
+      isNotLatestNewsCategorySelected,
       mainNews,
       openNewsDetails,
-      isNotLatestNewsCategorySelected,
-      selectedCategoryNews,
       latestNews,
       isLoadingMoreLatestNews,
       loadMoreLatestNews,
+      selectedCategoryNews,
+      openCategoryNewsScreen,
     ],
   )
 
