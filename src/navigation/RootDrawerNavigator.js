@@ -12,6 +12,7 @@ import UserProfileScreen from 'screens/userProfile/userProfileScreen'
 import BottomTabNavigator from './BottomTabNavigator'
 import { Dimensions } from 'react-native'
 import LoginScreen from '../screens/welcome/auth/LoginScreen'
+import { RegisterScreen, ResetScreen } from '../screens/welcome/auth'
 
 const { width } = Dimensions.get('window')
 const Drawer = createDrawerNavigator()
@@ -27,6 +28,8 @@ const RootDrawerNavigator = () => {
     >
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
       <Drawer.Screen name="Login" component={LoginScreen} />
+      <Drawer.Screen name="Reset" component={ResetScreen} />
+      <Drawer.Screen name="SignUp" component={RegisterScreen} />
       <Drawer.Screen name="UserProfile" component={UserProfileScreen} />
       <Drawer.Screen name="teamScoreDrawer" component={TeamScoreDetails} />
       <Drawer.Screen name="teamScore" component={TeamScoreDetails} />

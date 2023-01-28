@@ -24,7 +24,7 @@ const SideBar = memo(({ navigation }) => {
   const dispatch = useAppDispatch()
   const selectedLanguage = useSelector(selectAppLanguageCodeAndIcon)
   const sideBarData = useSelector(selectSidebarCategories)
-  const user = true
+  const user = false
 
   useEffect(() => {
     dispatch(fetchCategories())
@@ -109,7 +109,6 @@ const SideBar = memo(({ navigation }) => {
             big
             title={i18next.t('AUTHORIZATION')}
             onPress={onSignInPress}
-            style={undefined}
           />
         )}
       </SafeAreaView>

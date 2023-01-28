@@ -49,11 +49,11 @@ export const NewsCategoryScreen = React.memo(() => {
   }, [])
 
   const openNewsDetails = useCallback(
-    (item: Article) => {
+    (id: number, title: string, videoUrl: string) => {
       navigation.navigate('NewsDetails', {
-        title: item.title,
-        articleId: item.id,
-        mainVIdeoUrl: item?.mainVideoUrl,
+        articleId: id,
+        title: title,
+        mainVIdeoUrl: videoUrl,
       })
     },
     [navigation],
