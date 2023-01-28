@@ -1,18 +1,18 @@
 import React, { useCallback } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { Text } from '../../../../components/common'
-import { Category } from '../../../../store/transformantors'
+import { NewsCategory } from '../../../../store/types'
 
 interface CategoriesListProps {
-  categories: Category[]
+  categories: NewsCategory[]
   activeCategoryId: number
-  onSelectCategory: (item: Category) => void
+  onSelectCategory: (item: NewsCategory) => void
 }
 
 export const CategoriesList = React.memo<CategoriesListProps>((props) => {
   const { categories, activeCategoryId, onSelectCategory } = props
   const renderItem = useCallback(
-    ({ item }: { item: Category }) => {
+    ({ item }: { item: NewsCategory }) => {
       const isActiveCategory = item.id === activeCategoryId
       return (
         <TouchableOpacity

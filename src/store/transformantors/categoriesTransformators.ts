@@ -1,29 +1,11 @@
-export interface CategoriesResponse {
-  blank: number
-  created_at: string
-  icon: null | string
-  id: number
-  location: string
-  name: string
-  new: number
-  parent: number
-  updated_at: string
-  url: string
-}
-
-export interface Category {
-  id: number
-  title: string
-  icon: null | string
-  url: null | string
-  menuOptions: {
-    id: number
-    title: string
-    icon: null | string
-    url: null | string
-    location: string
-  }[]
-}
+import {
+  CategoriesResponse,
+  Category,
+  NewsCategory,
+  NewsCategoryResponse,
+} from '../types'
+import i18next from 'i18next'
+import { DEFAULT_APP_LANGUAGE } from '../../constants'
 
 const prepareCategoriesByLocation = (
   categories: CategoriesResponse[],
@@ -67,4 +49,30 @@ export const prepareCategories = (
     sideBar: prepareCategoriesByLocation(categories, '3'),
     newsHeader: prepareCategoriesByLocation(categories, '2'),
   }
+}
+
+export const parseNewsCategories = (
+  categories: NewsCategoryResponse,
+): NewsCategory[] => {
+  const isEnLanguageSelected = i18next.language === DEFAULT_APP_LANGUAGE
+
+  return categories.map((category) => {
+    return {
+      id: category.id,
+      title: isEnLanguageSelected ? category.titleEn : category.titleHi,
+      mainNewsCategoryId: isEnLanguageSelected
+        ? category.mainNewsCategoryIdEn
+        : category.mainNewsCategoryIdHi,
+      latestNewsCategoryId: isEnLanguageSelected
+        ? category.latestNewsCategoryIdEn
+        : category.latestNewsCategoryIdHi,
+      subcategories: category.subcategories.map((subcategory) => ({
+        id: subcategory.id,
+        title: isEnLanguageSelected ? subcategory.titleEn : subcategory.titleHi,
+        latestNewsCategoryId: isEnLanguageSelected
+          ? subcategory.latestNewsCategoryIdEn
+          : subcategory.latestNewsCategoryIdHi,
+      })),
+    }
+  })
 }

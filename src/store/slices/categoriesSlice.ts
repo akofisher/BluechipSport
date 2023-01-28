@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchCategories } from '../thunks'
-import { Category } from '../transformantors'
+import { Category } from '../types'
 
 export interface CategoriesState {
-  newsHeaderCategories: Category[]
   sideBarCategories: Category[]
+  newsHeaderCategories: Category[]
 }
 
 const initialState: CategoriesState = {

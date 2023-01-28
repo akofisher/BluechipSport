@@ -1,7 +1,4 @@
 import { RootState } from '../index'
-import { createSelector } from '@reduxjs/toolkit'
-import { selectNewsHeaderCategories } from './categoriesSelectors'
-import { latestNewsCategory } from '../slices'
 
 export const selectLatestNews = (state: RootState) => state.news.latestNews
 export const selectMainNews = (state: RootState) => state.news.mainNews
@@ -17,19 +14,10 @@ export const selectLatestNewsCurrentPage = (state: RootState) =>
 export const selectIsLoadMoreLatestNewsAvailable = (state: RootState) =>
   state.news.latestNewsPage < state.news.latestNewsPagesTotal
 
-export const selectNewsCategory = (state: RootState) =>
+export const selectActiveNewsCategory = (state: RootState) =>
   state.news.selectedNewsCategory
 
-export const selectNewsCategories = createSelector(
-  selectNewsHeaderCategories,
-  (categories) => {
-    console.log('categories', JSON.stringify(categories))
-    return [latestNewsCategory, ...categories]
-  },
-)
+export const selectNewsCategories = (state: RootState) =>
+  state.news.newsCategories
 
 export const selectCategoryNews = (state: RootState) => state.news.categoryNews
-export const selectIsNotLatestNewsCategorySelected = createSelector(
-  selectNewsCategory,
-  (selectedNewsCategory) => selectedNewsCategory.id !== latestNewsCategory.id,
-)

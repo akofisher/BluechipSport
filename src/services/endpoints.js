@@ -4,6 +4,11 @@ export const storageURL = `https://storage.bluechipsport.io`
 
 const ENDPOINTS = {
   getCategories: { method: 'get', uri: `${v2}menu/front` },
+  getCategoryArticles: {
+    method: 'get',
+    uri: `${v2}articles?options=paginate&category_id={categoryId}&page={page}`,
+  },
+
   checkToken: { method: 'get', uri: `${v2}users/me` },
   updateUserInfo: { method: 'post', uri: `${v2}users/update` },
   signIn: { method: 'post', uri: `${v2}login/jwt` },

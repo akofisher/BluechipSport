@@ -1,38 +1,32 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { API } from '../../services'
 import { processGetArticlesResponse } from '../../screens/news/utils'
-import { Category } from '../transformantors'
-import { CategoryNews } from '../slices'
+import { Articles, CategoryNews } from '../slices'
+import { NewsCategory, NewsSubcategory } from '../types'
+import { NEWS_CATEGORIES } from '../transformantors/mocks/newsCategories'
+import { parseNewsCategories } from '../transformantors'
 
-export const fetchCategoryNews = createAsyncThunk<CategoryNews>(
-  'news/fetchCategoryNews',
-  async () => {
+export const fetchNewsCategories = createAsyncThunk<NewsCategory[]>(
+  'news/fetchNewsCategories',
+  async (_, config) => {
     try {
-      const { data }: { data: any } = await API.getSlideArticles()
-      return [
-        {
-          data: processGetArticlesResponse(data.data).slice(0, 3),
-          title: 'IPL2',
-          url: '',
-        },
-        {
-          data: processGetArticlesResponse(data.data).splice(0, 3),
-          title: 'SA 20',
-          url: '',
-        },
-      ]
+      const response = parseNewsCategories(NEWS_CATEGORIES)
+      config.dispatch(setSelectedNewsCategory(response[0]))
+      return response
     } catch (e) {
-      console.log('fetchMainNews error', e)
       return []
     }
   },
 )
 
-export const fetchMainNews = createAsyncThunk(
+export const fetchMainNews = createAsyncThunk<Articles, number>(
   'news/fetchMainNews',
-  async (_) => {
+  async (categoryId) => {
     try {
-      const { data }: { data: any } = await API.getSlideArticles()
+      // @ts-ignore
+      const { data }: { data: any } = await API.getCategoryArticles({
+        kwds: { categoryId, page: 1 },
+      })
       return processGetArticlesResponse(data.data)
     } catch (e) {
       console.log('fetchMainNews error', e)
@@ -41,13 +35,19 @@ export const fetchMainNews = createAsyncThunk(
   },
 )
 
-export const fetchLatestNews = createAsyncThunk<{
-  articles: any[]
-  latestNewsPage: number
-  latestNewsPagesTotal: number
-}>('news/fetchLatestNews', async (_) => {
+export const fetchLatestNews = createAsyncThunk<
+  {
+    articles: any[]
+    latestNewsPage: number
+    latestNewsPagesTotal: number
+  },
+  number
+>('news/fetchLatestNews', async (categoryId) => {
   try {
-    const { data }: { data: any } = await API.getSlideArticles()
+    // @ts-ignore
+    const { data }: { data: any } = await API.getCategoryArticles({
+      kwds: { categoryId, page: 1 },
+    })
 
     return {
       articles: processGetArticlesResponse(data.data),
@@ -56,7 +56,11 @@ export const fetchLatestNews = createAsyncThunk<{
     }
   } catch (e) {
     console.log('fetchLatestNews error', e)
-    return []
+    return {
+      articles: [],
+      latestNewsPage: 0,
+      latestNewsPagesTotal: 0,
+    }
   }
 })
 
@@ -66,12 +70,14 @@ export const fetchMoreLatestNews = createAsyncThunk<
     latestNewsPage: number
     latestNewsPagesTotal: number
   },
-  number
->('news/fetchMoreLatestNews', async (page: number) => {
+  { categoryId: number; page: number }
+>('news/fetchMoreLatestNews', async ({ categoryId, page }) => {
   try {
-    const { data }: { data: any } = await API.getSlideArticles({
-      kwds: { page: page },
+    // @ts-ignore
+    const { data }: { data: any } = await API.getCategoryArticles({
+      kwds: { categoryId, page },
     })
+
     return {
       articles: processGetArticlesResponse(data.data),
       latestNewsPage: data.current_page,
@@ -79,17 +85,54 @@ export const fetchMoreLatestNews = createAsyncThunk<
     }
   } catch (e) {
     console.log('fetchMoreLatestNews error', e)
+    return {
+      articles: [],
+      latestNewsPage: 0,
+      latestNewsPagesTotal: 0,
+    }
+  }
+})
+
+export const fetchCategoryNews = createAsyncThunk<
+  CategoryNews,
+  NewsSubcategory[]
+>('news/fetchCategoryNews', async (subcategories) => {
+  try {
+    const response = await Promise.all(
+      subcategories.map((subcategory) =>
+        // @ts-ignore
+        API.getCategoryArticles({
+          kwds: { categoryId: subcategory.latestNewsCategoryId, page: 1 },
+        }),
+      ),
+    )
+
+    return subcategories.map((subcategory, index) => ({
+      categoryId: subcategory.id,
+      title: subcategory.title,
+      data: processGetArticlesResponse(response[index].data.data).slice(0, 3),
+    }))
+  } catch (e) {
+    console.log('fetchCategoryNews error', e)
     return []
   }
 })
 
-export const refreshPage = createAsyncThunk(
+export const refreshPage = createAsyncThunk<any, NewsCategory>(
   'news/refreshPage',
-  async (_, { dispatch }) => {
-    await Promise.all([dispatch(fetchMainNews()), dispatch(fetchLatestNews())])
+  async (category, { dispatch }) => {
+    await Promise.all([
+      category.mainNewsCategoryId &&
+        dispatch(fetchMainNews(category.mainNewsCategoryId)),
+      dispatch(fetchLatestNews(category.latestNewsCategoryId)),
+      dispatch(fetchCategoryNews(category.subcategories)),
+    ])
   },
 )
 
-export const setSelectedNewsCategory = createAction<Category>(
+export const setSelectedNewsCategory = createAction<NewsCategory>(
   'setSelectedNewsCategory',
 )
+
+export const resetMainNews = createAction('resetMainNews')
+export const resetSubcategoriesNews = createAction('resetSubcategoriesNews')

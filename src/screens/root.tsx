@@ -47,27 +47,27 @@ export default function Root() {
   RuntimeConsts.token = authState.token
   RuntimeConsts.deviceId = deviceId
   RuntimeConsts.notificationToken = null
-  AsyncStorage.getItem('notificationToken').then((t) => {
-    RuntimeConsts.notificationToken = t
-    if (
-      !RuntimeConsts.notificationToken &&
-      typeof RuntimeConsts.deviceId === 'string'
-    ) {
-      messaging()
-        .getToken(firebase?.app().options.messagingSenderId)
-        .then(async (x) => {
-          API.registerNotificationToken({
-            kwds: {
-              deviceId: RuntimeConsts.deviceId,
-              token: x,
-            },
-          }).then(({ data }) => {
-            AsyncStorage.setItem('notificationToken', x)
-            RuntimeConsts.notificationToken = x
-          })
-        })
-    }
-  })
+  // AsyncStorage.getItem('notificationToken').then((t) => {
+  //   RuntimeConsts.notificationToken = t
+  //   if (
+  //     !RuntimeConsts.notificationToken &&
+  //     typeof RuntimeConsts.deviceId === 'string'
+  //   ) {
+  //     messaging()
+  //       .getToken(firebase?.app().options.messagingSenderId)
+  //       .then(async (x) => {
+  //         API.registerNotificationToken({
+  //           kwds: {
+  //             deviceId: RuntimeConsts.deviceId,
+  //             token: x,
+  //           },
+  //         }).then(({ data }) => {
+  //           AsyncStorage.setItem('notificationToken', x)
+  //           RuntimeConsts.notificationToken = x
+  //         })
+  //       })
+  //   }
+  // })
 
   const renderStack = () => {
     // if (welcome && !authState.token) {

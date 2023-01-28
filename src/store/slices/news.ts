@@ -1,49 +1,53 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import {
   fetchCategoryNews,
   fetchLatestNews,
   fetchMainNews,
   fetchMoreLatestNews,
+  fetchNewsCategories,
   refreshPage,
+  resetMainNews,
+  resetSubcategoriesNews,
   setSelectedNewsCategory,
 } from '../thunks'
-import { Category } from '../transformantors'
-import i18next from 'i18next'
-
-export const latestNewsCategory: Category = {
-  id: -1,
-  title: i18next.t('LAST NEWS'),
-  url: '',
-  icon: null,
-  menuOptions: [],
-}
+import { NewsCategory } from '../types'
 
 export type Articles = any[]
 
-export type CategoryNews = { data: Articles; title: string; url: string }[]
+export type CategoryNews = {
+  data: Articles
+  title: string
+  categoryId: number
+}[]
 
 export interface NewsState {
+  newsCategories: NewsCategory[]
+  selectedNewsCategory: NewsCategory | null
+
   latestNews: any[]
   mainNews: any[]
+  categoryNews: CategoryNews
+
   isRefreshing: boolean
   isLoading: boolean
   isLoadingMoreLatestNews: boolean
   latestNewsPage: number
   latestNewsPagesTotal: number
-  selectedNewsCategory: Category
-  categoryNews: CategoryNews
 }
 
 const initialState: NewsState = {
+  newsCategories: [],
+  selectedNewsCategory: null,
+
   latestNews: [],
   mainNews: [],
+  categoryNews: [],
+
   isRefreshing: false,
   isLoading: false,
   isLoadingMoreLatestNews: false,
   latestNewsPage: 1,
   latestNewsPagesTotal: 1,
-  selectedNewsCategory: latestNewsCategory,
-  categoryNews: [],
 }
 
 export const newsSlice = createSlice({
@@ -51,6 +55,21 @@ export const newsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(fetchNewsCategories.fulfilled, (state, action) => {
+      state.newsCategories = action.payload
+    })
+    builder.addCase(setSelectedNewsCategory, (state, action) => {
+      state.selectedNewsCategory = action.payload
+    })
+
+    builder.addCase(resetMainNews, (state, action) => {
+      state.mainNews = []
+    })
+
+    builder.addCase(resetSubcategoriesNews, (state, action) => {
+      state.categoryNews = []
+    })
+
     builder.addCase(fetchLatestNews.fulfilled, (state, action) => {
       state.latestNews = action.payload.articles
       state.latestNewsPage = action.payload.latestNewsPage
@@ -84,10 +103,6 @@ export const newsSlice = createSlice({
     })
     builder.addCase(refreshPage.rejected, (state) => {
       state.isRefreshing = false
-    })
-
-    builder.addCase(setSelectedNewsCategory, (state, action) => {
-      state.selectedNewsCategory = action.payload
     })
   },
 })

@@ -1,16 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { API } from '../../services'
-import {
-  CategoriesResponse,
-  Category,
-  prepareCategories,
-} from '../transformantors'
+import { prepareCategories } from '../transformantors'
+import { CategoriesResponse, Category } from '../types'
 
 export const fetchCategories = createAsyncThunk<{
   sideBar: Category[]
   newsHeader: Category[]
 }>('categories/fetchCategories', async () => {
   try {
+    // @ts-ignore
     const { data }: { data: CategoriesResponse[] } = await API.getCategories()
     return prepareCategories(data)
   } catch (e) {

@@ -8,7 +8,10 @@ import {
   fetchLatestNews,
   fetchMainNews,
   fetchMoreLatestNews,
+  fetchNewsCategories,
   refreshPage,
+  resetMainNews,
+  resetSubcategoriesNews,
   setSelectedNewsCategory,
 } from '../../../store/thunks'
 import { useSelector } from 'react-redux'
@@ -16,20 +19,19 @@ import {
   selectCategoryNews,
   selectIsLoadingMoreLatestNews,
   selectIsLoadMoreLatestNewsAvailable,
-  selectIsNotLatestNewsCategorySelected,
   selectLatestNews,
   selectLatestNewsCurrentPage,
   selectMainNews,
   selectNewsCategories,
-  selectNewsCategory,
+  selectActiveNewsCategory,
   selectNewsLoading,
   selectNewsRefreshing,
 } from '../../../store/selectors'
 import { NewsVerticalList } from '../../../components/NewsVerticalList/NewsVerticalList'
 import i18next from 'i18next'
-import { Category } from '../../../store/transformantors'
 import { cxs } from '../../../styles'
 import { Spinner } from '../../../components/common'
+import { NewsCategory, NewsSubcategory } from '../../../store/types'
 
 const FLAT_LIST_ITEMS = {
   HORIZONTAL_SLIDES: 'HORIZONTAL_SLIDES',
@@ -45,39 +47,81 @@ const NewsScreen = ({ navigation }) => {
   const mainRef = React.useRef(null)
   const dispatch = useAppDispatch()
 
+  const newsCategories = useSelector(selectNewsCategories)
   const latestNews = useSelector(selectLatestNews)
   const mainNews = useSelector(selectMainNews)
+
+  const latestNewsCurrentPage = useSelector(selectLatestNewsCurrentPage)
+  const selectedActiveNewsCategory = useSelector(selectActiveNewsCategory)
+  const selectedCategoryNews = useSelector(selectCategoryNews)
+
   const isLoading = useSelector(selectNewsLoading)
   const isLoadingMoreLatestNews = useSelector(selectIsLoadingMoreLatestNews)
   const isRefreshing = useSelector(selectNewsRefreshing)
-  const latestNewsCurrentPage = useSelector(selectLatestNewsCurrentPage)
-  const newsCategories = useSelector(selectNewsCategories)
-  const selectedActiveNewsCategory = useSelector(selectNewsCategory)
-  const selectedCategoryNews = useSelector(selectCategoryNews)
-  const isNotLatestNewsCategorySelected = useSelector(
-    selectIsNotLatestNewsCategorySelected,
-  )
+
   const isLoadMoreLatestNewsAvailable = useSelector(
     selectIsLoadMoreLatestNewsAvailable,
   )
 
   useEffect(() => {
-    dispatch(fetchLatestNews())
-    dispatch(fetchMainNews())
+    dispatch(fetchNewsCategories())
   }, [dispatch])
+
+  const handleMainNews = useCallback(
+    (categoryId?: number) => {
+      if (categoryId) {
+        return dispatch(fetchMainNews(categoryId))
+      }
+
+      dispatch(resetMainNews())
+    },
+    [dispatch],
+  )
+
+  const handleLatestNews = useCallback(
+    (categoryId?: number) => {
+      if (categoryId) {
+        return dispatch(fetchLatestNews(categoryId))
+      }
+    },
+    [dispatch],
+  )
+
+  const handleSubCategoriesNews = useCallback(
+    (subCategories: NewsSubcategory[]) => {
+      if (subCategories && subCategories.length) {
+        return dispatch(fetchCategoryNews(subCategories))
+      }
+
+      dispatch(resetSubcategoriesNews())
+    },
+    [dispatch],
+  )
 
   useEffect(() => {
-    if (isNotLatestNewsCategorySelected) {
-      dispatch(fetchCategoryNews())
+    if (selectedActiveNewsCategory) {
+      const { latestNewsCategoryId, mainNewsCategoryId, subcategories } =
+        selectedActiveNewsCategory
+
+      handleMainNews(mainNewsCategoryId)
+      handleLatestNews(latestNewsCategoryId)
+      handleSubCategoriesNews(subcategories)
     }
-  }, [dispatch, isNotLatestNewsCategorySelected])
+  }, [
+    handleLatestNews,
+    handleMainNews,
+    handleSubCategoriesNews,
+    selectedActiveNewsCategory,
+  ])
 
   const onRefresh = useCallback(() => {
-    dispatch(refreshPage())
-  }, [dispatch])
+    if (selectedActiveNewsCategory) {
+      dispatch(refreshPage(selectedActiveNewsCategory))
+    }
+  }, [dispatch, selectedActiveNewsCategory])
 
   const onSelectCategory = useCallback(
-    (category: Category) => {
+    (category: NewsCategory) => {
       dispatch(setSelectedNewsCategory(category))
     },
     [dispatch],
@@ -85,13 +129,19 @@ const NewsScreen = ({ navigation }) => {
 
   const loadMoreLatestNews = useCallback(() => {
     if (isLoadMoreLatestNewsAvailable && !isLoadingMoreLatestNews) {
-      dispatch(fetchMoreLatestNews(latestNewsCurrentPage + 1))
+      dispatch(
+        fetchMoreLatestNews({
+          page: latestNewsCurrentPage + 1,
+          categoryId: selectedActiveNewsCategory?.latestNewsCategoryId || 0,
+        }),
+      )
     }
   }, [
     dispatch,
     isLoadMoreLatestNewsAvailable,
     isLoadingMoreLatestNews,
     latestNewsCurrentPage,
+    selectedActiveNewsCategory?.latestNewsCategoryId,
   ])
 
   const openNewsDetails = React.useCallback(
@@ -105,31 +155,28 @@ const NewsScreen = ({ navigation }) => {
     [navigation],
   )
 
-  const openCategoryNewsScreen = React.useCallback((link: string) => {}, [])
+  const openCategoryNewsScreen = React.useCallback((link: number) => {}, [])
 
   const renderItem = useCallback(
     ({ item }) => {
-      if (
-        item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES &&
-        !isNotLatestNewsCategorySelected
-      ) {
+      if (item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES) {
         return (
           <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
         )
       }
 
       if (item.key === FLAT_LIST_ITEMS.LAST_NEWS) {
-        if (isNotLatestNewsCategorySelected) {
+        if (selectedCategoryNews.length) {
           return (
             <>
-              {selectedCategoryNews.map((section) => (
+              {selectedCategoryNews.map((category) => (
                 <NewsVerticalList
                   isFullSizeItem={false}
-                  data={section.data}
+                  data={category.data}
                   isLoadingMore={false}
                   openDetails={openNewsDetails}
-                  title={section.title}
-                  link={section.url}
+                  title={category.title}
+                  link={category.categoryId}
                   onShowMore={openCategoryNewsScreen}
                 />
               ))}
@@ -151,7 +198,6 @@ const NewsScreen = ({ navigation }) => {
       }
     },
     [
-      isNotLatestNewsCategorySelected,
       mainNews,
       openNewsDetails,
       latestNews,
@@ -167,7 +213,7 @@ const NewsScreen = ({ navigation }) => {
       <NewsScreenHeader
         navigation={navigation}
         categories={newsCategories}
-        activeCategoryId={selectedActiveNewsCategory.id}
+        activeCategoryId={selectedActiveNewsCategory?.id || 0}
         onSelectCategory={onSelectCategory}
       />
       {isLoading ? (
@@ -175,6 +221,7 @@ const NewsScreen = ({ navigation }) => {
       ) : (
         <FlatList
           ref={mainRef}
+          extraData={selectedActiveNewsCategory?.id}
           keyExtractor={(item) => item.key}
           data={FLAT_LIST_DATA}
           renderItem={renderItem}

@@ -23,7 +23,8 @@ interface NewsVerticalListProps {
   title: string
   withSwitcher?: boolean
   withShowMore?: boolean
-  link?: string
+  onShowMore?: (categoryId: number) => void
+  link?: number
 }
 
 export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
