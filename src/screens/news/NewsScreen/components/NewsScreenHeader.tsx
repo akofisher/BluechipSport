@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { Header } from '../../../../components/header'
 import { CategoriesList } from './CategoriesList'
 import { Category } from '../../../../store/transformantors'
+import { SvgICONSType } from '../../../../../assets/svgs/svgIcons'
 
 interface NewsScreenHeaderProps {
   navigation: any
@@ -18,7 +19,7 @@ export const NewsScreenHeader = React.memo<NewsScreenHeaderProps>(
     )
 
     const renderListHeader = useCallback(() => {
-      const rightAction = [
+      const rightAction: { iconName: SvgICONSType; onPress: () => void }[] = [
         {
           onPress: onSearchPress,
           iconName: 'Search',

@@ -27,7 +27,7 @@ export const SideBarLanguageButton = memo<SideBarLanguageButtonProps>(
 
 const styles = StyleSheet.create({
   languageSelector: {
-    left: 20,
+    right: -70,
     flexDirection: 'row',
     alignItems: 'center',
   },

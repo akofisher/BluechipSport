@@ -24,7 +24,7 @@ export const NEWS_CATEGORIES: NewsCategoryResponse = [
         id: 5,
         titleEn: 'IPL',
         titleHi: 'आईपीएल (इंडियन प्रीमियर लीग)',
-        latestNewsCategoryIdEn: 5,
+        latestNewsCategoryIdEn: 2,
         latestNewsCategoryIdHi: 33,
       },
       {

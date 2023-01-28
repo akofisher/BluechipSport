@@ -108,7 +108,7 @@ export const fetchCategoryNews = createAsyncThunk<
     )
 
     return subcategories.map((subcategory, index) => ({
-      categoryId: subcategory.id,
+      categoryId: subcategory.latestNewsCategoryId,
       title: subcategory.title,
       data: processGetArticlesResponse(response[index].data.data).slice(0, 3),
     }))

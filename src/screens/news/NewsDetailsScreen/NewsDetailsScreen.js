@@ -20,7 +20,7 @@ const keyExtractor = (item, index) => {
   return item?.id + index.toString() + Math.random() * 100
 }
 
-const NewsDetailsScreen = ({ route, navigation }) => {
+export const NewsDetailsScreen = ({ route, navigation }) => {
   const { articleId } = route.params
   const [id, setId] = useState()
 
@@ -116,7 +116,7 @@ const NewsDetailsScreen = ({ route, navigation }) => {
     <View style={cxs.flex}>
       <Header leftAction={headerLeftAction} rightAction={headerRightAction} />
       {!state.article ? (
-        <View style={st.spinnerContainer}>
+        <View style={styles.spinnerContainer}>
           <Spinner />
         </View>
       ) : (
@@ -132,10 +132,10 @@ const NewsDetailsScreen = ({ route, navigation }) => {
                 {!state?.article?.quiz &&
                 !state?.article?.poll &&
                 route.params?.mainVideoUrl ? (
-                  <View style={[st.image, st.video]}>
+                  <View style={[styles.image, styles.video]}>
                     <VideoPlayer
                       uri={route.params.mainVideoUrl}
-                      style={[st.image, st.video]}
+                      style={[styles.image, styles.video]}
                       posterUri={imageURI}
                     />
                   </View>
@@ -144,7 +144,7 @@ const NewsDetailsScreen = ({ route, navigation }) => {
                     source={{
                       uri: imageURI,
                     }}
-                    style={st.image}
+                    style={styles.image}
                   />
                 ) : null}
                 {state?.article?.quiz ? (
@@ -200,15 +200,15 @@ const NewsDetailsScreen = ({ route, navigation }) => {
                     plainContent={state?.article?.plainContent}
                   />
                 )}
-                <View style={st.commentsButton}>
+                <View style={styles.commentsButton}>
                   <Button
                     onPress={navigateToComments}
                     title={i18next.t('Comments')}
                     color={'blue'}
                     leftContent={<Icon iconName={'CommentWhite'} />}
                     rightContent={
-                      <View style={st.commentsCount}>
-                        <Text style={st.commentsCountText}>
+                      <View style={styles.commentsCount}>
+                        <Text style={styles.commentsCountText}>
                           {state.comentCount}
                         </Text>
                       </View>
@@ -226,9 +226,7 @@ const NewsDetailsScreen = ({ route, navigation }) => {
   )
 }
 
-export default NewsDetailsScreen
-
-const st = StyleSheet.create({
+const styles = StyleSheet.create({
   spinnerContainer: {
     flex: 1,
     justifyContent: 'center',

@@ -1,10 +1,22 @@
-import { Icon, Text } from 'components/common'
-import React, { useCallback } from 'react'
+import React, { ReactNode, useCallback } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Colors } from 'styles'
+import { Icon, Text } from '../common'
+import { Colors } from '../../styles'
+import { SvgICONSType } from '../../../assets/svgs/svgIcons'
 
-const Header = React.memo((props) => {
+interface HeaderProps {
+  content?: ReactNode
+  leftAction?: { iconName: SvgICONSType; onPress: () => void }
+  rightAction?:
+    | { iconName: SvgICONSType; onPress: () => void }
+    | { iconName: SvgICONSType; onPress: () => void }[]
+  title?: string
+  mode?: 'black' | 'light'
+  renderTitle?: () => ReactNode
+}
+
+const Header = React.memo<HeaderProps>((props) => {
   const {
     content,
     leftAction,
@@ -19,7 +31,7 @@ const Header = React.memo((props) => {
   const isLightMode = mode === 'light'
 
   const renderIcon = useCallback(
-    (iconName, onPress) => {
+    (iconName: SvgICONSType, onPress: () => void) => {
       return (
         <TouchableOpacity
           onPress={onPress}
@@ -53,7 +65,11 @@ const Header = React.memo((props) => {
       return null
     }
 
-    return <Text style={styles.title}>{title}</Text>
+    return (
+      <Text style={styles.title} numberOfLines={1}>
+        {title}
+      </Text>
+    )
   }, [title, renderTitle])
 
   const _renderRight = useCallback(() => {
@@ -61,7 +77,7 @@ const Header = React.memo((props) => {
       return null
     }
 
-    if (rightAction.length) {
+    if (Array.isArray(rightAction) && rightAction.length) {
       const [
         { iconName: iconName1, onPress: onPress1 },
         { iconName: iconName2, onPress: onPress2 },
@@ -72,10 +88,11 @@ const Header = React.memo((props) => {
           {renderIcon(iconName2, onPress2)}
         </View>
       )
+    } else {
+      // @ts-ignore
+      const { iconName, onPress } = rightAction
+      return renderIcon(iconName, onPress)
     }
-
-    const { iconName, onPress } = rightAction
-    return renderIcon(iconName, onPress)
   }, [rightAction, renderIcon])
 
   return (
@@ -87,9 +104,9 @@ const Header = React.memo((props) => {
       ]}
     >
       <View style={styles.header}>
-        {_renderLeft()}
-        {_renderTitle()}
-        {_renderRight()}
+        <View style={styles.leftContent}>{_renderLeft()}</View>
+        <View style={styles.centerContent}>{_renderTitle()}</View>
+        <View style={styles.rightContent}>{_renderRight()}</View>
       </View>
       {content ? <View style={styles.content}>{content}</View> : null}
     </View>
@@ -103,6 +120,9 @@ const styles = StyleSheet.create({
   lightWrapper: {
     backgroundColor: Colors.white,
   },
+  leftContent: { flex: 1 },
+  centerContent: { flex: 2, alignItems: 'center' },
+  rightContent: { flex: 1, alignItems: 'flex-end' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

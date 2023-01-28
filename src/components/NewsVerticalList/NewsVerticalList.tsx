@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import {
   FlatList,
+  ListRenderItem,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -11,6 +12,7 @@ import { VerticalListItem } from '../news'
 import { VerticalListModeSwitcher } from './components/VerticalListModeSwitcher'
 import i18next from 'i18next'
 import { Colors } from '../../styles'
+import { Article } from '../../store/slices'
 
 const keyExtractor = (item: { id: string }) => item.id
 
@@ -20,11 +22,11 @@ interface NewsVerticalListProps {
   isFullSizeItem: boolean
   isLoadingMore?: boolean
   fetchMore?: () => void
-  title: string
   withSwitcher?: boolean
   withShowMore?: boolean
-  onShowMore?: (categoryId: number) => void
-  link?: number
+  title: string
+  categoryId?: number
+  onShowMore?: (categoryId: number, title: string) => void
 }
 
 export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
@@ -37,7 +39,7 @@ export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
     title,
     withSwitcher,
     onShowMore,
-    link,
+    categoryId,
   } = props
   const [isTillMoveActive, setIsTillMoveActive] = useState(isFullSizeItem)
 
@@ -47,12 +49,12 @@ export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
   )
 
   const onShowMorePress = useCallback(
-    () => onShowMore(link),
-    [onShowMore, link],
+    () => onShowMore && onShowMore(categoryId || 0, title),
+    [onShowMore, categoryId, title],
   )
 
   const renderItem = useCallback(
-    ({ item, index }) => {
+    ({ item, index }: ListRenderItem<Article>) => {
       return (
         <VerticalListItem
           {...item}

@@ -32,6 +32,7 @@ import i18next from 'i18next'
 import { cxs } from '../../../styles'
 import { Spinner } from '../../../components/common'
 import { NewsCategory, NewsSubcategory } from '../../../store/types'
+import { useNavigation } from '@react-navigation/native'
 
 const FLAT_LIST_ITEMS = {
   HORIZONTAL_SLIDES: 'HORIZONTAL_SLIDES',
@@ -43,9 +44,10 @@ const FLAT_LIST_DATA = [
   { key: FLAT_LIST_ITEMS.LAST_NEWS },
 ]
 
-const NewsScreen = ({ navigation }) => {
+export const NewsScreen = () => {
   const mainRef = React.useRef(null)
   const dispatch = useAppDispatch()
+  const navigation = useNavigation()
 
   const newsCategories = useSelector(selectNewsCategories)
   const latestNews = useSelector(selectLatestNews)
@@ -155,10 +157,18 @@ const NewsScreen = ({ navigation }) => {
     [navigation],
   )
 
-  const openCategoryNewsScreen = React.useCallback((link: number) => {}, [])
+  const openCategoryNewsScreen = React.useCallback(
+    (categoryId: number, title: string) => {
+      navigation.navigate('NewsCategory', {
+        categoryId,
+        title,
+      })
+    },
+    [navigation],
+  )
 
   const renderItem = useCallback(
-    ({ item }) => {
+    ({ item }: { item: { key: string } }) => {
       if (item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES) {
         return (
           <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
@@ -176,7 +186,7 @@ const NewsScreen = ({ navigation }) => {
                   isLoadingMore={false}
                   openDetails={openNewsDetails}
                   title={category.title}
-                  link={category.categoryId}
+                  categoryId={category.categoryId}
                   onShowMore={openCategoryNewsScreen}
                 />
               ))}
@@ -224,13 +234,11 @@ const NewsScreen = ({ navigation }) => {
           extraData={selectedActiveNewsCategory?.id}
           keyExtractor={(item) => item.key}
           data={FLAT_LIST_DATA}
-          renderItem={renderItem}
           refreshing={isRefreshing}
           onRefresh={onRefresh}
+          renderItem={renderItem}
         />
       )}
     </View>
   )
 }
-
-export default NewsScreen

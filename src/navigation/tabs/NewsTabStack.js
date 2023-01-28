@@ -1,15 +1,19 @@
-import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
-import React from "react";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack'
+import React from 'react'
 import {
   LiveScoreDetails,
   LivescoreScreen,
   TeamScoreDetails,
   PlayerScoreDetails,
   LeagueScoreDetails,
-} from "screens/livescrore";
-import { NewsScreen, NewsDetailsScreen } from "screens/news";
+} from 'screens/livescrore'
+import { NewsScreen, NewsDetailsScreen } from 'screens/news'
+import { NewsCategoryScreen } from '../../screens/news'
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 const NewsTabStack = () => {
   return (
@@ -20,6 +24,7 @@ const NewsTabStack = () => {
       headerMode="none"
     >
       <Stack.Screen name="News" component={NewsScreen} />
+      <Stack.Screen name="NewsCategory" component={NewsCategoryScreen} />
 
       <Stack.Screen
         name="NewsDetails"
@@ -36,7 +41,7 @@ const NewsTabStack = () => {
       <Stack.Screen name="teamScore" component={TeamScoreDetails} />
       <Stack.Screen name="playerScore" component={PlayerScoreDetails} />
     </Stack.Navigator>
-  );
-};
+  )
+}
 
-export default NewsTabStack;
+export default NewsTabStack

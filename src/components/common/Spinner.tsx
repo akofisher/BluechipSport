@@ -1,27 +1,43 @@
-import * as React from "react";
-import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
-import { Colors } from "styles";
+import * as React from 'react'
+import {
+  Animated,
+  Easing,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
+import { Colors } from '../../styles'
 
-const DURATION = 2400;
+const DURATION = 2400
+
+interface ActivityIndicatorProps {
+  animating?: boolean
+  color?: string
+  hidesWhenStopped?: boolean
+  size?: string
+  style?: StyleProp<ViewStyle>
+}
 
 // ActivityIndicator from react-native-paper thanks to library 🙌.
-const ActivityIndicator = React.memo(
+const ActivityIndicator = React.memo<ActivityIndicatorProps>(
   ({
     animating = true,
     color: indicatorColor,
     hidesWhenStopped = true,
-    size: indicatorSize = "small",
+    size: indicatorSize = 'small',
     style,
     ...rest
   }) => {
-    const { current: timer } = React.useRef(new Animated.Value(0));
+    const { current: timer } = React.useRef(new Animated.Value(0))
     const { current: fade } = React.useRef(
       new Animated.Value(!animating && hidesWhenStopped ? 0 : 1),
-    );
+    )
 
-    const rotation = React.useRef(undefined);
+    const rotation = React.useRef(undefined)
 
-    const scale = 1.0;
+    const scale = 1.0
 
     const startRotation = React.useCallback(() => {
       // Show indicator
@@ -30,21 +46,21 @@ const ActivityIndicator = React.memo(
         toValue: 1,
         isInteraction: false,
         useNativeDriver: true,
-      }).start();
+      }).start()
 
       // Circular animation in loop
       if (rotation.current) {
-        timer.setValue(0);
+        timer.setValue(0)
         // $FlowFixMe
-        Animated.loop(rotation.current).start();
+        Animated.loop(rotation.current).start()
       }
-    }, [scale, fade, timer]);
+    }, [scale, fade, timer])
 
     const stopRotation = () => {
       if (rotation.current) {
-        rotation.current.stop();
+        rotation.current.stop()
       }
-    };
+    }
 
     React.useEffect(() => {
       if (rotation.current === undefined) {
@@ -53,14 +69,14 @@ const ActivityIndicator = React.memo(
           duration: DURATION,
           easing: Easing.linear,
           // Animated.loop does not work if useNativeDriver is true on web
-          useNativeDriver: Platform.OS !== "web",
+          useNativeDriver: Platform.OS !== 'web',
           toValue: 1,
           isInteraction: false,
-        });
+        })
       }
 
       if (animating) {
-        startRotation();
+        startRotation()
       } else if (hidesWhenStopped) {
         // Hide indicator first and then stop rotation
         Animated.timing(fade, {
@@ -68,29 +84,29 @@ const ActivityIndicator = React.memo(
           toValue: 0,
           useNativeDriver: true,
           isInteraction: false,
-        }).start(stopRotation);
+        }).start(stopRotation)
       } else {
-        stopRotation();
+        stopRotation()
       }
-    }, [animating, fade, hidesWhenStopped, startRotation, scale, timer]);
+    }, [animating, fade, hidesWhenStopped, startRotation, scale, timer])
 
-    const color = indicatorColor || Colors.primary;
+    const color = indicatorColor || Colors.primary
     const size =
-      typeof indicatorSize === "string"
-        ? indicatorSize === "small"
+      typeof indicatorSize === 'string'
+        ? indicatorSize === 'small'
           ? 24
           : 48
         : indicatorSize
         ? indicatorSize
-        : 24;
+        : 24
 
-    const frames = (60 * DURATION) / 1000;
-    const easing = Easing.bezier(0.4, 0.0, 0.7, 1.0);
+    const frames = (60 * DURATION) / 1000
+    const easing = Easing.bezier(0.4, 0.0, 0.7, 1.0)
     const containerStyle = {
       width: size,
       height: size / 2,
-      overflow: "hidden",
-    };
+      overflow: 'hidden',
+    }
 
     return (
       <View
@@ -100,25 +116,33 @@ const ActivityIndicator = React.memo(
         accessibilityRole="progressbar"
         accessibilityState={{ busy: animating }}
       >
-        <Animated.View style={[{ width: size, height: size, opacity: fade }]} collapsable={false}>
+        <Animated.View
+          style={[{ width: size, height: size, opacity: fade }]}
+          collapsable={false}
+        >
           {[0, 1].map((index) => {
             // Thanks to https://github.com/n4kz/react-native-indicators for the great work
             const inputRange = Array.from(
               new Array(frames),
               (_, frameIndex) => frameIndex / (frames - 1),
-            );
-            const outputRange = Array.from(new Array(frames), (_, frameIndex) => {
-              let progress = (2 * frameIndex) / (frames - 1);
-              const rotation = index ? +(360 - 15) : -(180 - 15);
+            )
+            const outputRange = Array.from(
+              new Array(frames),
+              (_, frameIndex) => {
+                let progress = (2 * frameIndex) / (frames - 1)
+                const rotation = index ? +(360 - 15) : -(180 - 15)
 
-              if (progress > 1.0) {
-                progress = 2.0 - progress;
-              }
+                if (progress > 1.0) {
+                  progress = 2.0 - progress
+                }
 
-              const direction = index ? -1 : +1;
+                const direction = index ? -1 : +1
 
-              return `${direction * (180 - 30) * easing(progress) + rotation}deg`;
-            });
+                return `${
+                  direction * (180 - 30) * easing(progress) + rotation
+                }deg`
+              },
+            )
 
             const layerStyle = {
               width: size,
@@ -127,11 +151,14 @@ const ActivityIndicator = React.memo(
                 {
                   rotate: timer.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [`${0 + 30 + 15}deg`, `${2 * 360 + 30 + 15}deg`],
+                    outputRange: [
+                      `${0 + 30 + 15}deg`,
+                      `${2 * 360 + 30 + 15}deg`,
+                    ],
                   }),
                 },
               ],
-            };
+            }
 
             const viewportStyle = {
               width: size,
@@ -144,9 +171,9 @@ const ActivityIndicator = React.memo(
                   rotate: timer.interpolate({ inputRange, outputRange }),
                 },
               ],
-            };
+            }
 
-            const offsetStyle = index ? { top: size / 2 } : null;
+            const offsetStyle = index ? { top: size / 2 } : null
 
             const lineStyle = {
               width: size,
@@ -154,12 +181,15 @@ const ActivityIndicator = React.memo(
               borderColor: color,
               borderWidth: size / 10,
               borderRadius: size / 2,
-            };
+            }
 
             return (
               <Animated.View key={index} style={[styles.layer]}>
                 <Animated.View style={layerStyle}>
-                  <Animated.View style={[containerStyle, offsetStyle]} collapsable={false}>
+                  <Animated.View
+                    style={[containerStyle, offsetStyle]}
+                    collapsable={false}
+                  >
                     <Animated.View style={viewportStyle}>
                       <Animated.View style={containerStyle} collapsable={false}>
                         <Animated.View style={lineStyle} />
@@ -168,26 +198,26 @@ const ActivityIndicator = React.memo(
                   </Animated.View>
                 </Animated.View>
               </Animated.View>
-            );
+            )
           })}
         </Animated.View>
       </View>
-    );
+    )
   },
-);
+)
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   layer: {
     ...StyleSheet.absoluteFillObject,
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-});
+})
 
-export default ActivityIndicator;
+export default ActivityIndicator

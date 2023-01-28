@@ -18,6 +18,7 @@ import Avatar from '../common/Avatar'
 import { selectSidebarCategories } from '../../store/selectors'
 import { useAppDispatch } from '../../store'
 import { fetchCategories } from '../../store/thunks'
+import { SvgICONSType } from '../../../assets/svgs/svgIcons'
 
 const SideBar = memo(({ navigation }) => {
   const dispatch = useAppDispatch()
@@ -46,12 +47,13 @@ const SideBar = memo(({ navigation }) => {
 
   useEffect(() => {}, [])
 
-  const headerRightAction = useMemo(() => {
-    return {
-      onPress: navigation.closeDrawer,
-      iconName: 'CloseBlack',
-    }
-  }, [navigation.closeDrawer])
+  const headerRightAction: { onPress: () => void; iconName: SvgICONSType } =
+    useMemo(() => {
+      return {
+        onPress: navigation.closeDrawer,
+        iconName: 'CloseBlack',
+      }
+    }, [navigation.closeDrawer])
 
   const renderLanguageButton = useCallback(() => {
     return (

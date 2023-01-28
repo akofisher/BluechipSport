@@ -12,7 +12,8 @@ import {
 } from '../thunks'
 import { NewsCategory } from '../types'
 
-export type Articles = any[]
+export type Article = any
+export type Articles = Article[]
 
 export type CategoryNews = {
   data: Articles

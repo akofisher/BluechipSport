@@ -1,5 +1,5 @@
 import i18next from 'i18next'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import {
   StyleSheet,
   View,
@@ -18,7 +18,7 @@ import { BackButton, Header, Title } from '../../components/header'
 
 Icon.loadFont()
 
-const NewsCommentsScreen = ({ route }) => {
+const NewsCommentsScreen = ({ route, navigation }) => {
   const [comments, setComments] = useState('')
   const [content, setContent] = useState()
   const [replyContent, setReplyContent] = useState()
@@ -134,17 +134,21 @@ const NewsCommentsScreen = ({ route }) => {
       .catch((error) => console.warn(error))
   }, [articleId, userId, refresh, myRefresh])
 
+  const headerLeftAction = useMemo(
+    () => ({
+      onPress: navigation.goBack,
+      iconName: 'ArrowRight',
+    }),
+    [navigation.goBack],
+  )
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       style={[Styles.container, { paddingBottom: bottomInput ? 70 : 0 }]}
     >
       <View style={[Styles.container, { paddingBottom: bottomInput ? 70 : 0 }]}>
-        <Header>
-          <BackButton />
-          <Title title={i18next.t('Comments')} />
-        </Header>
-
+        <Header leftAction={headerLeftAction} />
         <View style={Styles.CommInputContainer}>
           <View style={Styles.userPic}>
             <Avatar size={40} uri={userInfo?.avatar} />
