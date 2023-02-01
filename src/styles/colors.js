@@ -8,7 +8,7 @@ const Colors = {
   textDefault: '#414141',
   textTitle: '#636363',
   inputBorder: '#DCDCDC',
-  inputBackround: '#ECECEC',
+  inputBackround: '#D1D1D1',
   iconColor: '#A1A1A1',
   separator: '#f2f2f2',
   white: '#fff',

@@ -1,22 +1,42 @@
 import Avatar from 'components/common/Avatar'
 import React, { useState, useEffect, useCallback } from 'react'
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { CancelSource, API } from 'services'
 import { hideUserInfo, useGlobalState } from 'stores'
 
-import { Icon, Text } from '../../components/common'
+import { Button, Icon, Text, TextInput } from '../../components/common'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Header } from '../../components/header'
+import i18next from 'i18next'
+import { useAuth } from '../../stores'
 
 const UserProfileScreen = ({ navigation, route }) => {
   const { Refresh, myRefresh } = useGlobalState()
 
-  const { user } = route.params || { avatar: '' }
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+
+  const { user, signOut } = useAuth()
   const source = CancelSource()
 
   const goToNews = useCallback(() => {
     navigation.navigate('News')
   }, [navigation])
+
+  const onLogOut = useCallback(async () => {
+    await signOut()
+    goToNews()
+  }, [goToNews, signOut])
 
   const { userInfoOnInput } = hideUserInfo()
   const [base64Icon, setBase64Icon] = useState()
@@ -49,26 +69,52 @@ const UserProfileScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <TouchableOpacity style={styles.close} onPress={goToNews}>
-        <Icon iconName={'CloseBlack'} stroke={'#F2F2F2'} strokeWidth={32} />
-      </TouchableOpacity>
-
-      <View
-        style={[
-          userInfoOnInput
-            ? styles.userDetailContainer
-            : styles.userDetailContainerHide,
-        ]}
-      >
-        <View style={{ alignItems: 'center' }}>
-          <TouchableOpacity style={styles.userImg} onPress={pickImage}>
-            <Avatar size={78} uri={user?.avatar} />
-          </TouchableOpacity>
-          <Text>PROFILE</Text>
-        </View>
-      </View>
-    </SafeAreaView>
+    <>
+      <>
+        <Header withoutNavigation />
+        <TouchableOpacity style={styles.close} onPress={goToNews}>
+          <Icon iconName={'CloseBlack'} stroke={'#F2F2F2'} strokeWidth={32} />
+        </TouchableOpacity>
+        <KeyboardAvoidingView style={styles.container}>
+          <View style={styles.content}>
+            <ScrollView keyboardShouldPersistTaps="handled">
+              {/*<TextInput*/}
+              {/*  placeholder={i18next.t('Email')}*/}
+              {/*  onChangeText={(text) => setEmail(text)}*/}
+              {/*  value={email}*/}
+              {/*/>*/}
+              {/*<View style={styles.divider} />*/}
+              {/*<TextInput*/}
+              {/*  placeholder={i18next.t('Username')}*/}
+              {/*  onChangeText={setUsername}*/}
+              {/*  value={username}*/}
+              {/*/>*/}
+              {/*<View style={styles.divider} />*/}
+              {/*<TextInput*/}
+              {/*  isPassword={true}*/}
+              {/*  placeholder={i18next.t('Password')}*/}
+              {/*  onChangeText={setPassword}*/}
+              {/*  value={password}*/}
+              {/*/>*/}
+              {/*<View style={styles.divider} />*/}
+              {/*<TextInput*/}
+              {/*  isPassword={true}*/}
+              {/*  placeholder={i18next.t('Repeat Password')}*/}
+              {/*  onChangeText={setConfirmPassword}*/}
+              {/*  value={'confirmPassword'}*/}
+              {/*/>*/}
+              <View style={styles.divider} />
+              <View style={styles.divider} />
+              <Button
+                color={'pink'}
+                title={i18next.t('LOG OUT')}
+                onPress={onLogOut}
+              />
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
+      </>
+    </>
   )
 }
 
@@ -120,12 +166,47 @@ const styles = StyleSheet.create({
     height: 67,
     backgroundColor: '#ffffff',
   },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   content: {
-    backgroundColor: '#F4F4F4',
-    paddingBottom: 120,
+    paddingHorizontal: 35,
+  },
+  labels: {
+    alignItems: 'center',
+  },
+  title: {
+    color: '#000000',
+    fontSize: 21,
+    fontWeight: '700',
+  },
+  questionBlock: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 18,
+    marginBottom: 33,
+  },
+  question: {
+    color: '#111315',
+    fontSize: 13,
+    fontWeight: '400',
+    marginRight: 4,
+  },
+  linkText: {
+    color: '#111315',
+    fontSize: 15,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
+  divider: {
+    height: 15,
   },
   close: {
     alignSelf: 'flex-end',
-    paddingHorizontal: 15,
+    top: 60,
+    right: 15,
+    position: 'absolute',
+    zIndex: 1000,
   },
 })

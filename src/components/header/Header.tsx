@@ -14,6 +14,7 @@ interface HeaderProps {
   title?: string
   mode?: 'black' | 'light'
   renderTitle?: () => ReactNode
+  withoutNavigation?: boolean
 }
 
 const Header = React.memo<HeaderProps>((props) => {
@@ -24,6 +25,7 @@ const Header = React.memo<HeaderProps>((props) => {
     rightAction,
     mode = 'black',
     renderTitle,
+    withoutNavigation,
   } = props
 
   const insets = useSafeAreaInsets()
@@ -103,11 +105,14 @@ const Header = React.memo<HeaderProps>((props) => {
         { paddingTop: insets.top },
       ]}
     >
-      <View style={styles.header}>
-        <View style={styles.leftContent}>{_renderLeft()}</View>
-        <View style={styles.centerContent}>{_renderTitle()}</View>
-        <View style={styles.rightContent}>{_renderRight()}</View>
-      </View>
+      {withoutNavigation ? null : (
+        <View style={styles.header}>
+          <View style={styles.leftContent}>{_renderLeft()}</View>
+          <View style={styles.centerContent}>{_renderTitle()}</View>
+          <View style={styles.rightContent}>{_renderRight()}</View>
+        </View>
+      )}
+
       {content ? <View style={styles.content}>{content}</View> : null}
     </View>
   )

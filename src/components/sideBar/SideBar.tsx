@@ -19,16 +19,18 @@ import { selectSidebarCategories } from '../../store/selectors'
 import { useAppDispatch } from '../../store'
 import { fetchCategories } from '../../store/thunks'
 import { SvgICONSType } from '../../../assets/svgs/svgIcons'
+import { useAuth } from '../../stores'
 
 const SideBar = memo(({ navigation }) => {
   const dispatch = useAppDispatch()
   const selectedLanguage = useSelector(selectAppLanguageCodeAndIcon)
   const sideBarData = useSelector(selectSidebarCategories)
-  const user = false
+  const { user, checkToken } = useAuth()
 
   useEffect(() => {
+    checkToken()
     dispatch(fetchCategories())
-  }, [dispatch])
+  }, [dispatch, checkToken])
 
   const bottomSheetModalRef = useRef(null)
   const openLanguageModal = useCallback(
@@ -101,8 +103,8 @@ const SideBar = memo(({ navigation }) => {
             style={styles.bottomUser}
             onPress={onMyAccountPress}
           >
-            <Avatar uri={''} withEditIcon={true} />
-            <Text style={styles.bottomUserName}>Rage King</Text>
+            <Avatar uri={user.avatar} withEditIcon={true} />
+            <Text style={styles.bottomUserName}>{user?.username || ''}</Text>
           </TouchableOpacity>
         ) : (
           <Button

@@ -1,59 +1,53 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TextInput as RNTextInput } from "react-native";
-import { cxs, Colors } from "styles";
+import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Colors } from 'styles'
+import { FloatingLabelInput } from 'react-native-floating-label-input'
 
-import IconPressable from "./IconPressable";
-
-const TextInput = ({ style, iconLeft = null, iconRight = null, ...rest }) => {
-  const [focused, setFocused] = useState(false);
-
+const TextInput = ({
+  onChangeText,
+  placeholder,
+  isPassword,
+  value,
+  onTogglePassword,
+  customPasswordHideShowComponent,
+}) => {
+  const _onChangeText = (text) => {
+    onChangeText(text)
+  }
   return (
-    <View
-      style={[
-        styles.wrapper,
-        cxs.row,
-        cxs.alignCenter,
-        {
-          borderColor: focused ? Colors.primary : Colors.inputBorder,
-        },
-        style,
-      ]}
-    >
-      {iconLeft && (
-        <IconPressable
-          style={[cxs.pl15]}
-          color={focused ? Colors.primary : Colors.iconColor}
-          {...iconLeft}
-        />
-      )}
-      <RNTextInput
-        placeholderTextColor={Colors.textSecondary}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        style={[cxs.h50, cxs.flex, cxs.defaultFont, cxs.px15, styles.textInput]}
-        {...rest}
-      />
-      {iconRight && (
-        <IconPressable
-          style={cxs.pr15}
-          color={focused ? Colors.primary : Colors.iconColor}
-          {...iconRight}
-        />
-      )}
-    </View>
-  );
-};
+    <FloatingLabelInput
+      value={value}
+      isPassword={isPassword}
+      customHidePasswordComponent={customPasswordHideShowComponent || <View />}
+      customShowPasswordComponent={customPasswordHideShowComponent || <View />}
+      onTogglePassword={onTogglePassword}
+      onChangeText={_onChangeText}
+      label={placeholder}
+      inputStyles={styles.value}
+      containerStyles={styles.container}
+      customLabelStyles={{
+        fontSizeBlurred: 13,
+        fontSizeFocused: 12,
+        colorFocused: Colors.textSecondary,
+        colorBlurred: Colors.textSecondary,
+        topBlurred: -7,
+        topFocused: -17,
+        leftBlurred: -1,
+      }}
+    />
+  )
+}
 
 const styles = StyleSheet.create({
-  wrapper: {
-    overflow: "hidden",
-    backgroundColor: Colors.inputBackround,
-    borderRadius: 10,
+  container: {
+    height: 48,
+    paddingTop: 15,
+    backgroundColor: '#ECECEC',
+    borderColor: '#D1D1D1',
     borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 13,
   },
-  textInput: {
-    color: Colors.textSecondary,
-  },
-});
+})
 
-export default TextInput;
+export default TextInput

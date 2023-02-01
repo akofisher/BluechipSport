@@ -1,58 +1,123 @@
-import { Text, TextInput, Button, KeyboardShiftlessView } from "components/common";
-import { Header, Footer, Pager } from "components/welcome";
-import i18next from "i18next";
-import React, { useState } from "react";
-import { ScrollView } from "react-native";
-import { useAuth, welcomeBackState } from "stores";
-import { cxs } from "styles";
+import { Text, TextInput, Button } from 'components/common'
+import i18next from 'i18next'
+import React, { useCallback, useEffect, useState } from 'react'
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { Header } from '../../../components/header'
+import { Icon } from '../../../components/common'
+import { useAuth } from '../../../stores'
 
-function ResetScreen({ route, navigation }) {
-  const { skipAuth, resetPassword } = useAuth();
-  const { WelcomeBack, welcome } = welcomeBackState();
-  const [email, setEmail] = useState();
+function ResetScreen({ navigation }) {
+  const { resetPassword } = useAuth()
+
+  const [email, setEmail] = useState('')
+
+  const reset = useCallback(() => {
+    setEmail('')
+  }, [])
+
+  const goToNews = useCallback(() => {
+    navigation.navigate('News')
+  }, [navigation])
+
+  const onLinkPress = useCallback(() => {
+    navigation.navigate('Login')
+  }, [navigation])
+
+  const onConfirmPress = useCallback(async () => {
+    await resetPassword({ email })
+    reset()
+    // onLinkPress()
+  }, [resetPassword, email, reset, onLinkPress])
 
   return (
-    <KeyboardShiftlessView>
-      <Header>
-        <Text style={cxs.welcomeTextLead}>{i18next.t("PassRecovery")}</Text>
-        <Text style={cxs.welcomeTextSecondary}>
-          {i18next.t("PleaseIndicateEmailForRegistration")}
-        </Text>
-      </Header>
-      <ScrollView style={[cxs.p25]} keyboardShouldPersistTaps="handled">
-        <TextInput
-          style={[cxs.my5]}
-          placeholder={i18next.t("YourMail")}
-          iconLeft={{ name: "envelope" }}
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-        />
-
-        <Button
-          onPress={() => {
-            resetPassword({ email }) && navigation.navigate("Login");
-          }}
-          title={i18next.t("SendPassword")}
-          width="100%"
-          style={cxs.my20}
-        />
-      </ScrollView>
-      <Footer style={{ paddingBottom: 40 }}>
-        <Button
-          title={i18next.t("ContinueWithoutAuthentication")}
-          color=""
-          textColor="textSecondary"
-          onPress={() => {
-            skipAuth();
-            WelcomeBack(false);
-          }}
-        />
-        <Pager active={3} />
-      </Footer>
-    </KeyboardShiftlessView>
-  );
+    <>
+      <Header withoutNavigation />
+      <TouchableOpacity style={styles.close} onPress={goToNews}>
+        <Icon iconName={'CloseBlack'} stroke={'#F2F2F2'} strokeWidth={32} />
+      </TouchableOpacity>
+      <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.labels}>
+            <Text style={styles.title}>{i18next.t('RESET PASSWORD')}</Text>
+            <View style={styles.questionBlock}>
+              <Text style={styles.question}>
+                {i18next.t('Have an account?')}
+              </Text>
+              <TouchableOpacity onPress={onLinkPress}>
+                <Text style={styles.linkText}>{i18next.t('Login')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <TextInput
+              placeholder={i18next.t('Email')}
+              onChangeText={setEmail}
+              value={email}
+            />
+            <View style={styles.divider} />
+            <View style={styles.divider} />
+            <Button
+              color={'pink'}
+              title={i18next.t('RESET')}
+              onPress={onConfirmPress}
+            />
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
+    </>
+  )
 }
 
-export default ResetScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  content: {
+    paddingHorizontal: 35,
+  },
+  labels: {
+    alignItems: 'center',
+  },
+  title: {
+    color: '#000000',
+    fontSize: 21,
+    fontWeight: '700',
+  },
+  questionBlock: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 18,
+    marginBottom: 33,
+  },
+  question: {
+    color: '#111315',
+    fontSize: 13,
+    fontWeight: '400',
+    marginRight: 4,
+  },
+  linkText: {
+    color: '#111315',
+    fontSize: 15,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
+  divider: {
+    height: 15,
+  },
+  close: {
+    alignSelf: 'flex-end',
+    top: 60,
+    right: 15,
+    position: 'absolute',
+    zIndex: 1000,
+  },
+})
+
+export default ResetScreen

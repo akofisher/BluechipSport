@@ -9531,6 +9531,11 @@ react-native-flipper@^0.34.0:
   resolved "https://registry.npmjs.org/react-native-flipper/-/react-native-flipper-0.34.0.tgz"
   integrity sha512-48wgm29HJTOlZ0DibBsvXueEOY0EPIVL0wWKbwRfgrk86+luSEuLW3aZC50oJa95zSFb9qYShTV/6dWqh4Jamg==
 
+react-native-floating-label-input@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-floating-label-input/-/react-native-floating-label-input-1.4.2.tgz#4db85aca6ef8509f0c4fb369b55b1fd1915ebe1e"
+  integrity sha512-fHN+gQC+ghZgRuB+gJfNNo5IJRDy0grOia0gJpEmXbx9YqPud6nonQYunGWaHc9/b9GpL5n1q4VgWvZDTV+QLQ==
+
 react-native-gesture-handler@1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.8.0.tgz#18f61f51da50320f938957b0ee79bc58f47449dc"
