@@ -32,7 +32,7 @@ function ResetScreen({ navigation }) {
   const onConfirmPress = useCallback(async () => {
     await resetPassword({ email })
     reset()
-    // onLinkPress()
+    onLinkPress()
   }, [resetPassword, email, reset, onLinkPress])
 
   return (
