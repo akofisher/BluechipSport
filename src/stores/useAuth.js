@@ -84,7 +84,9 @@ const useAuth = createStore({
             setAuthState({ ...initialState })
           }
         })
-        .catch(() => alert(Strings.IncorrectData))
+        .catch((e) => {
+          alert(e.response?.data?.error)
+        })
     }
 
     const signUp = async ({ email, username, password, confirm_password }) => {
@@ -99,7 +101,7 @@ const useAuth = createStore({
           }
         })
         .catch((error) =>
-          alert(error.response.data.message || Strings.IncorrectData),
+          alert(error.response?.data?.message || error.response?.data?.error),
         )
     }
 
@@ -124,6 +126,33 @@ const useAuth = createStore({
         .catch((error) => {
           alert('Something went wrong:')
         })
+    }
+
+    const updateProfile = async (payload) => {
+      return API.updateUserInfo({
+        data: {
+          ...payload,
+        },
+      })
+        .then((result) => {
+          const { data } = result
+          let user = { ...authState.user }
+          if (payload.avatarFile) {
+            user.avatar = data.avatar
+          }
+          if (payload.username) {
+            user.username = data.username
+          }
+          if (payload.email) {
+            user.email = data.email
+          }
+          setAuthState({ user, token: authState.token })
+          return AsyncStorage.setItem(
+            '@user',
+            JSON.stringify({ user, token: authState.token }),
+          )
+        })
+        .catch((e) => alert(e.response?.data?.message))
     }
 
     const changePassword = async ({
@@ -159,6 +188,7 @@ const useAuth = createStore({
       resetPassword,
       changePassword,
       checkFirstLaunch,
+      updateProfile,
     }
   },
 })

@@ -28,7 +28,6 @@ const SideBar = memo(({ navigation }) => {
   const { user, checkToken } = useAuth()
 
   useEffect(() => {
-    checkToken()
     dispatch(fetchCategories())
   }, [dispatch, checkToken])
 

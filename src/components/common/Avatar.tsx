@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { storageURL } from 'services/endpoints'
 import Icon from './Icon'
@@ -8,10 +8,11 @@ interface AvatarProps {
   size?: number
   uri: string
   withEditIcon?: boolean
+  onPress?: () => void
 }
 
 const Avatar = React.memo<AvatarProps>((props) => {
-  const { size = 38, uri, withEditIcon } = props
+  const { size = 38, uri, withEditIcon, onPress } = props
 
   const containerStyle = [
     styles.container,
@@ -21,7 +22,7 @@ const Avatar = React.memo<AvatarProps>((props) => {
     },
   ]
   return (
-    <View>
+    <TouchableOpacity onPress={onPress}>
       {uri ? (
         <FastImage
           style={containerStyle}
@@ -37,7 +38,7 @@ const Avatar = React.memo<AvatarProps>((props) => {
           <Icon iconName={'Edit'} stroke="#F2F2F2" strokeWidth={14} />
         </View>
       ) : null}
-    </View>
+    </TouchableOpacity>
   )
 })
 

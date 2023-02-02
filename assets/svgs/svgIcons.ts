@@ -23,6 +23,7 @@ export const SvgICONS = {
   LisBlack: require('assets/svgs/listBlack.svg').default,
   Rectangle: require('assets/svgs/rectangle.svg').default,
   RectangleBlack: require('assets/svgs/rectangleBlack.svg').default,
+  Logout: require('assets/svgs/logout.svg').default,
 }
 
 export type SvgICONSType = keyof typeof SvgICONS

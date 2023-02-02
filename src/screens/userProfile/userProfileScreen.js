@@ -1,5 +1,5 @@
 import Avatar from 'components/common/Avatar'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   View,
   TouchableOpacity,
@@ -13,21 +13,27 @@ import { CancelSource, API } from 'services'
 import { hideUserInfo, useGlobalState } from 'stores'
 
 import { Button, Icon, Text, TextInput } from '../../components/common'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Header } from '../../components/header'
 import i18next from 'i18next'
 import { useAuth } from '../../stores'
+import { Colors } from '../../styles'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const UserProfileScreen = ({ navigation, route }) => {
   const { Refresh, myRefresh } = useGlobalState()
+  const { user, signOut, updateProfile } = useAuth()
 
   const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('user.username')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
 
-  const { user, signOut } = useAuth()
-  const source = CancelSource()
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email)
+      setUsername(user.username)
+      setPassword('')
+    }
+  }, [user])
 
   const goToNews = useCallback(() => {
     navigation.navigate('News')
@@ -37,6 +43,33 @@ const UserProfileScreen = ({ navigation, route }) => {
     await signOut()
     goToNews()
   }, [goToNews, signOut])
+
+  const isSaveEnabled = useMemo(() => {
+    if (user) {
+      const isUserNameChanged = username !== user.username
+      const isEmailNameChanged = email !== user.email
+      const isPasswordChanged = !!password
+
+      return isUserNameChanged || isEmailNameChanged || isPasswordChanged
+    }
+    return false
+  }, [user, email, password, username])
+
+  const onSavePress = useCallback(async () => {
+    const payload = {}
+    if (username !== user.username) {
+      payload.username = username
+    }
+
+    if (email !== user.email) {
+      payload.email = email
+    }
+
+    if (!!password) {
+      payload.password = password
+    }
+    await updateProfile(payload)
+  }, [email, password, updateProfile, user?.email, user?.username, username])
 
   const { userInfoOnInput } = hideUserInfo()
   const [base64Icon, setBase64Icon] = useState()
@@ -53,9 +86,8 @@ const UserProfileScreen = ({ navigation, route }) => {
       (result) => {
         if (!result.didCancel) {
           API.updateUserInfo({
-            cancelToken: source.token,
             data: {
-              avatar_new: `data:image/png;base64,${result.assets[0].base64}`,
+              avatar_new: result.assets[0].uri,
             },
           })
             .then((response) => {
@@ -68,6 +100,8 @@ const UserProfileScreen = ({ navigation, route }) => {
     )
   }
 
+  const { bottom } = useSafeAreaInsets()
+
   return (
     <>
       <>
@@ -75,44 +109,52 @@ const UserProfileScreen = ({ navigation, route }) => {
         <TouchableOpacity style={styles.close} onPress={goToNews}>
           <Icon iconName={'CloseBlack'} stroke={'#F2F2F2'} strokeWidth={32} />
         </TouchableOpacity>
-        <KeyboardAvoidingView style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <View style={{ alignItems: 'center' }}>
+            <Avatar uri={user?.avatar} size={78} onPress={pickImage} />
+            <Text style={styles.profileLabel}>{i18next.t('PROFILE')}</Text>
+          </View>
           <View style={styles.content}>
             <ScrollView keyboardShouldPersistTaps="handled">
-              {/*<TextInput*/}
-              {/*  placeholder={i18next.t('Email')}*/}
-              {/*  onChangeText={(text) => setEmail(text)}*/}
-              {/*  value={email}*/}
-              {/*/>*/}
-              {/*<View style={styles.divider} />*/}
-              {/*<TextInput*/}
-              {/*  placeholder={i18next.t('Username')}*/}
-              {/*  onChangeText={setUsername}*/}
-              {/*  value={username}*/}
-              {/*/>*/}
-              {/*<View style={styles.divider} />*/}
-              {/*<TextInput*/}
-              {/*  isPassword={true}*/}
-              {/*  placeholder={i18next.t('Password')}*/}
-              {/*  onChangeText={setPassword}*/}
-              {/*  value={password}*/}
-              {/*/>*/}
-              {/*<View style={styles.divider} />*/}
-              {/*<TextInput*/}
-              {/*  isPassword={true}*/}
-              {/*  placeholder={i18next.t('Repeat Password')}*/}
-              {/*  onChangeText={setConfirmPassword}*/}
-              {/*  value={'confirmPassword'}*/}
-              {/*/>*/}
+              <TextInput
+                placeholder={i18next.t('Email')}
+                onChangeText={setEmail}
+                value={email}
+              />
+              <View style={styles.divider} />
+              <TextInput
+                placeholder={i18next.t('Username')}
+                onChangeText={setUsername}
+                value={username}
+              />
+              <View style={styles.divider} />
+              <TextInput
+                isPassword={true}
+                placeholder={i18next.t('Password')}
+                onChangeText={setPassword}
+                value={password}
+              />
+              <View style={styles.divider} />
               <View style={styles.divider} />
               <View style={styles.divider} />
               <Button
-                color={'pink'}
-                title={i18next.t('LOG OUT')}
-                onPress={onLogOut}
+                title={i18next.t('SAVE')}
+                onPress={onSavePress}
+                disabled={!isSaveEnabled}
               />
+              <View style={styles.divider} />
+              <View style={styles.divider} />
+              <View style={styles.divider} />
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
+        <TouchableOpacity
+          onPress={onLogOut}
+          style={[styles.logout, { paddingBottom: bottom }]}
+        >
+          <Icon iconName={'Logout'} />
+          <Text style={styles.logoutText}>{i18next.t('LOG OUT')}</Text>
+        </TouchableOpacity>
       </>
     </>
   )
@@ -145,22 +187,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  userName: {
+  profileLabel: {
+    fontSize: 21,
     color: '#000000',
-    fontSize: 16,
-    marginBottom: 26,
-  },
-  editIcon: {
-    width: 39,
-    height: 39,
-    borderRadius: 19.5,
-    backgroundColor: '#E53C48',
-    position: 'absolute',
-    right: 0,
-    top: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 100,
+    fontWeight: '700',
+    marginTop: 25,
+    marginBottom: 35,
   },
   tabs: {
     height: 67,
@@ -208,5 +240,15 @@ const styles = StyleSheet.create({
     right: 15,
     position: 'absolute',
     zIndex: 1000,
+  },
+  logoutText: {
+    marginLeft: 5,
+    color: Colors.textBlack,
+    fontWeight: '600',
+  },
+  logout: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 })
