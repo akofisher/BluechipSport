@@ -141,10 +141,9 @@ const styles = StyleSheet.create({
   },
   close: {
     alignSelf: 'flex-end',
-    top: 60,
+    top: 45,
     right: 15,
     position: 'absolute',
-    zIndex: 1000,
   },
 })
 

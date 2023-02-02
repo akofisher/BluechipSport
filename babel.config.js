@@ -1,33 +1,33 @@
 module.exports = function (api) {
-  api.cache(true);
+  api.cache(true)
   return {
-    presets: ["babel-preset-expo"],
+    presets: ['babel-preset-expo'],
     plugins: [
-      "react-native-reanimated/plugin",
       [
-        "module-resolver",
+        'module-resolver',
         {
-          root: ["./src"],
+          root: ['./src'],
           alias: {
-            navigation: "./src/navigation",
-            components: "./src/components",
-            hooks: "./src/hooks",
-            screens: "./src/screens",
-            stores: "./src/stores",
-            styles: "./src/styles",
-            utils: "./src/utils",
-            localization: "./src/localization",
-            services: "./src/services",
-            assets: "./assets",
-            env: "./env",
+            navigation: './src/navigation',
+            components: './src/components',
+            hooks: './src/hooks',
+            screens: './src/screens',
+            stores: './src/stores',
+            styles: './src/styles',
+            utils: './src/utils',
+            localization: './src/localization',
+            services: './src/services',
+            assets: './assets',
+            env: './env',
           },
         },
       ],
+      'react-native-reanimated/plugin',
     ],
     env: {
       production: {
-        plugins: ["transform-remove-console"],
+        plugins: ['transform-remove-console'],
       },
     },
-  };
-};
+  }
+}

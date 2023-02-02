@@ -236,10 +236,9 @@ const styles = StyleSheet.create({
   },
   close: {
     alignSelf: 'flex-end',
-    top: 60,
+    top: 40,
     right: 15,
     position: 'absolute',
-    zIndex: 1000,
   },
   logoutText: {
     marginLeft: 5,
@@ -250,5 +249,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
+    paddingBottom: 15,
   },
 })
