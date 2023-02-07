@@ -3,6 +3,7 @@ import moment from 'moment'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Colors, cxs } from '../../styles'
+import AdBanner from '../AdMob/AdBanner'
 
 const ArticleContent = React.memo(
   ({
@@ -22,6 +23,7 @@ const ArticleContent = React.memo(
           <Text style={st.dateText}>
             {moment(date).format('DD MMM, yyyy, hh::mm')}
           </Text>
+          <AdBanner />
         </View>
         <View style={st.paddingHorizontal}>
           {hasEmbed ? (

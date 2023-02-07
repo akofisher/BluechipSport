@@ -130,8 +130,8 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
             ListHeaderComponent={() => (
               <>
                 {!state?.article?.quiz &&
-                !state?.article?.poll &&
-                route.params?.mainVideoUrl ? (
+                  !state?.article?.poll &&
+                  route.params?.mainVideoUrl ? (
                   <View style={[styles.image, styles.video]}>
                     <VideoPlayer
                       uri={route.params.mainVideoUrl}

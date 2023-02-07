@@ -33,6 +33,7 @@ import { cxs } from '../../../styles'
 import { Spinner } from '../../../components/common'
 import { NewsCategory, NewsSubcategory } from '../../../store/types'
 import { useNavigation } from '@react-navigation/native'
+import AdBanner from '../../../components/AdMob/AdBanner'
 
 const FLAT_LIST_ITEMS = {
   HORIZONTAL_SLIDES: 'HORIZONTAL_SLIDES',
@@ -195,15 +196,18 @@ export const NewsScreen = () => {
         }
 
         return (
-          <NewsVerticalList
-            isFullSizeItem={true}
-            data={latestNews}
-            isLoadingMore={isLoadingMoreLatestNews}
-            fetchMore={loadMoreLatestNews}
-            openDetails={openNewsDetails}
-            title={i18next.t('LAST NEWS')}
-            withSwitcher={true}
-          />
+          <>
+            <AdBanner />
+            <NewsVerticalList
+              isFullSizeItem={true}
+              data={latestNews}
+              isLoadingMore={isLoadingMoreLatestNews}
+              fetchMore={loadMoreLatestNews}
+              openDetails={openNewsDetails}
+              title={i18next.t('LAST NEWS')}
+              withSwitcher={true}
+            />
+          </>
         )
       }
     },
