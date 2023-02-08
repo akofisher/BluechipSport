@@ -278,4 +278,7 @@ export default {
   ChooseLanguage: 'Choose a Language',
   'LAST NEWS': 'LAST NEWS',
   'MORE NEWS': 'MORE NEWS',
+  //NEW
+  SearchTeam: 'Search Cricket or Football team',
+  //NEW
 }
