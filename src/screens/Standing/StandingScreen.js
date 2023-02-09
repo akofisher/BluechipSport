@@ -1,11 +1,4 @@
-import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
-import Standing from "components/Livescore/Details/standingsDetails/Standing";
-import ScrollViewHorizontalCommon from "components/Livescore/commonDetails/ScrollViewHorizontalCommon";
-import PopLeagueMatchs from "components/PopularLeague/Matchs/PopLeagueMatchs";
-import { Spinner } from "components/common";
-import SearchBox from "components/common/SearchBox";
 import { Header } from "components/header";
-import i18next from "i18next";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
@@ -16,107 +9,69 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { StandingPlayerStatistic } from "screens/Standing/StandingPlayerStatistic";
-import { API } from "services";
-import Colors from "styles/colors";
-import cxs from "styles/cxs";
+import { DawnStandingSvg, UpStandingSvg } from "../../../assets/svgs/AllSvgs";
+import { ICONS } from "../../../assets/icons";
+import { SvgICONS } from "../../../assets/svgs/svgIcons";
 
-import { ArrowDownSvg } from "../../../assets/svgs/AllSvgs";
 
-const TYPES = {
-  STANDING: i18next.t("Table"),
-  MATHCES: i18next.t("Matches"),
-  STAT: i18next.t("Statistics"),
-};
 
-const details = [TYPES.STANDING, TYPES.MATHCES, TYPES.STAT];
 
 export default function StandingScreen({ navigation, route }) {
-  const [standing, setStanding] = useState(null);
-  const [leagues, setLeagues] = useState(null);
-  const [activeLeague, setActiveLeague] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [search, setSearch] = useState("");
-  const [visibleDetails, setVisibleDetails] = useState(TYPES.STANDING);
-  const [err, setErr] = useState();
+  const IDS = [1, 2, 3, 4, 5, 6]
 
-  const bottomSheetModalRef = useRef(null);
-  const presentLeagueModal = () => bottomSheetModalRef.current.present();
-  const close = () => bottomSheetModalRef.current.close();
-  const snapPoints = useMemo(() => ["10%", "75%"], []);
 
-  useEffect(() => {
-    setIsLoading(true);
-    API.getLeaguesList()
-      .then(({ data }) => {
-        setActiveLeague(data.data[0]);
-        setLeagues(data.data);
-      })
-      .catch((error) => {
-        setErr(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const TeamCards = ({ id }) => {
+    return (
+      <View style={styles.CardCont}>
+        <View style={styles.CardHead}>
+          <View style={styles.LeftHead}>
+            <View style={styles.CupIconCont}>
+              <UpStandingSvg />
+              <DawnStandingSvg />
+            </View>
+            <Text style={styles.MatchHeadTxt}>IPL FINAL - {id}</Text>
+          </View>
+          <View style={styles.RightHead}>
+            <Text style={styles.TimeTxt}>12 AM UTC</Text>
+            <Text style={styles.DateTxt}>12;12;21</Text>
+          </View>
+        </View>
+        <View style={styles.SecTeamBigCont}>
 
-  useEffect(() => {
-    if (!activeLeague) {
-      return;
-    }
+          <View style={styles.TeamsLogosCont}>
+            <View style={styles.TeamCont}>
+              <View style={styles.TeamLogoCont}></View>
+              <Text style={styles.TeamNameTxt}>Dinamo</Text>
+            </View>
+            <Text style={styles.TeamVs}>VS</Text>
+            <View style={styles.TeamCont}>
+              <View style={styles.TeamLogoCont}></View>
+              <Text style={styles.TeamNameTxt}>Torpedo</Text>
+            </View>
+          </View>
+          <View style={styles.TeamsBets}>
+            <TouchableOpacity style={styles.BetsBtn}>
+              <Text style={styles.BetsText}>1.16</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.BetsBtn} >
+              <Text style={styles.BetsText}>1.89</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.ButtonCont}>
+            <TouchableOpacity style={styles.AddTeamBtn} onPress={() => navigation.navigate("prediction")}>
+              <Text style={styles.AddBtnTxt}>VIEW PREDICTION</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    )
+  }
 
-    setIsLoading(true);
-    API.leaguesTeamStandings({ kwds: { leagueID: activeLeague.league_id } })
-      .then(({ data }) => {
-        setStanding(data[0]?.standings, { isLoading: false });
-      })
-      .catch((error) => {
-        console.warn(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [activeLeague]);
+  // const bottomSheetModalRef = useRef(null);
+  // const presentLeagueModal = () => bottomSheetModalRef.current.present();
+  // const close = () => bottomSheetModalRef.current.close();
+  // const snapPoints = useMemo(() => ["10%", "75%"], []);
 
-  const leaguesFiltered = leagues?.filter((item) => {
-    if (!search) {
-      return true;
-    }
-    return item.name?.includes(search) || item.country_name?.includes(search);
-  });
-
-  const renderContent = () => {
-    if (!activeLeague) {
-      return null;
-    }
-
-    if (visibleDetails === TYPES.MATHCES) {
-      return <PopLeagueMatchs id={activeLeague.league_id} navigation={navigation} />;
-    }
-
-    if (visibleDetails === TYPES.STANDING) {
-      return (
-        <Standing
-          err={err}
-          containerStyle={cxs.pt0}
-          LeagueId={activeLeague.league_id}
-          standing={standing}
-          navigation={navigation}
-          screenName={route.name}
-        />
-      );
-    }
-
-    if (visibleDetails === TYPES.STAT) {
-      return (
-        <StandingPlayerStatistic
-          leagueId={activeLeague.league_id}
-          seasonId={activeLeague.current_season_id}
-          navigation={navigation}
-        />
-      );
-    }
-  };
 
   const onSearchPress = React.useCallback(() => navigation.navigate("searchScreen"), []);
   const headerRightActions = useMemo(
@@ -133,97 +88,168 @@ export default function StandingScreen({ navigation, route }) {
     [navigation.openDrawer, onSearchPress],
   );
 
+
+
+
+
+
   return (
     <View style={{ flex: 1, backgroundColor: "#E5E5E5" }}>
       <Header rightAction={headerRightActions} />
-      <TouchableOpacity
-        onPress={presentLeagueModal}
-        style={[cxs.row, cxs.px20, cxs.alignCenter, cxs.justifyBetween]}
-      >
-        <View style={[cxs.row, cxs.alignCenter]}>
-          <Image
-            source={{ uri: activeLeague?.icon }}
-            style={[{ width: 30, height: 30 }, cxs.m10]}
-          />
-          <Text>{activeLeague?.name}</Text>
-        </View>
-        <ArrowDownSvg />
-      </TouchableOpacity>
-      {isLoading ? (
-        <Spinner style={cxs.flex} />
-      ) : (
-        <ScrollView style={{ backgroundColor: Colors.white, borderRadius: 25 }}>
-          <ScrollViewHorizontalCommon
-            details={details}
-            setVisibleDetail={setVisibleDetails}
-            visibleDetail={visibleDetails}
-          />
-          {renderContent()}
-        </ScrollView>
-      )}
-      <BottomSheetModal
-        backdropComponent={BottomSheetBackdrop}
-        ref={bottomSheetModalRef}
-        index={1}
-        enablePanDowntoClose
-        snapPoints={snapPoints}
-      >
-        <View style={[cxs.px15, cxs.flex]}>
-          <SearchBox
-            setSearch={setSearch}
-            search={search}
-            placeholder={i18next.t("EnterLeagueName")}
-            onChangeText={setSearch}
-            onClear={() => setSearch("")}
-            style={{
-              marginTop: 32,
-              backgroundColor: "white",
-            }}
-          />
-          <FlatList
-            style={{ flex: 1 }}
-            data={leaguesFiltered}
-            initialNumToRender={10}
-            renderItem={({ item }) => {
-              return (
-                <TouchableOpacity
-                  style={styles.leagueItem}
-                  key={item.league_id + item.priority}
-                  onPress={() => {
-                    setActiveLeague(item);
-                    close();
-                  }}
-                >
-                  <Image source={{ uri: item.icon }} style={styles.selectorIcon} />
-                  <Text style={styles.fontWeight700}>{item.name}</Text>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
-      </BottomSheetModal>
+      <ScrollView contentContainerStyle={styles.Container}>
+
+        {IDS.map((id, idx) => {
+          return (
+            <TeamCards id={id} key={idx} />
+          )
+        })}
+
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  leagueItem: {
-    flex: 1,
-    flexDirection: "row",
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    padding: 13,
-    marginVertical: 5,
-    alignItems: "center",
+  Container: {
+    paddingVertical: 24,
+    paddingHorizontal: 15,
+    width: '100%',
   },
-  selectorIcon: {
-    width: 25,
-    height: 25,
-    marginHorizontal: 10,
+  CardCont: {
+    width: 360,
+    height: 276,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 7,
+    marginBottom: 15,
   },
-  fontWeight700: {
-    fontWeight: "700",
+  CardHead: {
+    height: 46,
+    borderBottomColor: '#EAEAEA',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  LeftHead: {
+    width: '50%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  RightHead: {
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  CupIconCont: {
+    width: 26,
+    height: 26,
+    borderRadius: 50,
+    borderColor: 'transparent',
+    backgroundColor: '#FF0960',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  IconSvg: {
+    color: 'white',
+    width: 15,
+    height: 15,
+    tintColor: '#FFFFFF',
+  },
+  MatchHeadTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
     fontSize: 12,
+    lineHeight: 17,
+    color: '#111315',
   },
+  TimeTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
+    fontSize: 11,
+    lineHeight: 12,
+    color: '#111315',
+    marginBottom: 4,
+  },
+  DateTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 11,
+    lineHeight: 12,
+    color: '#959595',
+  },
+  TeamsLogosCont: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  TeamCont: {
+    width: '45%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  TeamLogoCont: {
+    width: 50,
+    height: 50,
+    borderRadius: 20,
+    backgroundColor: 'black',
+  },
+  TeamNameTxt: {
+    marginTop: 15.5,
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 18.2,
+    color: '#111315',
+  },
+  TeamVs: {
+    fontFamily: 'Jost',
+    fontWeight: '700',
+    fontSize: 15,
+    lineHeight: 21,
+    color: '#111315',
+  },
+  SecTeamBigCont: {
+    padding: 15,
+  },
+  TeamsBets: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 13,
+  },
+  BetsBtn: {
+    width: 158,
+    height: 38,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  BetsText: {
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 18.2,
+    color: '#111315',
+  },
+  AddTeamBtn: {
+    width: 330,
+    height: 48,
+    borderRadius: 6,
+    backgroundColor: '#01AF70',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  AddBtnTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
+    fontSize: 14,
+    lineHeight: 19.6,
+    textAlign: 'center',
+    color: '#FFFFFF',
+  },
+
+
+
 });
