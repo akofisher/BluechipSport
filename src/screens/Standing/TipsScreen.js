@@ -16,7 +16,7 @@ import { SvgICONS } from "../../../assets/svgs/svgIcons";
 
 
 
-export default function StandingScreen({ navigation, route }) {
+export default function TipsScreen({ navigation, route }) {
   const IDS = [1, 2, 3, 4, 5, 6]
 
 

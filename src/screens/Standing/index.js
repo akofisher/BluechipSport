@@ -1,3 +1,3 @@
-import StandingScreen from "./StandingScreen";
+import TipsScreen from "./TipsScreen";
 
-export { StandingScreen };
+export { TipsScreen };

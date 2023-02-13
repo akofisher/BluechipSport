@@ -1,6 +1,6 @@
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import React from "react";
-import { StandingScreen } from "screens/Standing";
+import { TipsScreen } from "screens/Standing";
 import { LiveScoreDetails, PlayerScoreDetails, TeamScoreDetails } from "screens/livescrore";
 import { NewsDetailsScreen, NewsScreen } from "screens/news";
 import PredictionScreen from "../../screens/Standing/PredictionScreen";
@@ -15,7 +15,7 @@ const TablesTabStack = () => {
       }}
       headerMode="none"
     >
-      <Stack.Screen name="standing" component={StandingScreen} />
+      <Stack.Screen name="TipsScreen" component={TipsScreen} />
       <Stack.Screen name="prediction" component={PredictionScreen} />
       {/* <Stack.Screen name="News" component={NewsScreen} /> */}
       {/* <Stack.Screen name="liveScoreDetails" component={LiveScoreDetails} /> */}

@@ -7,7 +7,7 @@ import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVertical
 import stadium from "../../../assets/icons/play.png";
 import { ArrowDownSvg } from '../../../assets/svgs/AllSvgs'
 
-const VideosScreen = ({ navigation }) => {
+const PlayerScreen = ({ navigation }) => {
   const [activeC, setActiveC] = useState(0)
   const IDS = [1, 2, 3, 4, 5, 6]
   const PCareerStats = [
@@ -227,7 +227,7 @@ const VideosScreen = ({ navigation }) => {
   )
 }
 
-export default VideosScreen
+export default PlayerScreen
 
 const styles = StyleSheet.create({
   flex: {
