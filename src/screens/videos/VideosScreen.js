@@ -5,10 +5,69 @@ import { API } from 'services'
 import { cxs } from 'styles'
 import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVerticalList'
 import stadium from "../../../assets/icons/play.png";
+import { ArrowDownSvg } from '../../../assets/svgs/AllSvgs'
 
 const VideosScreen = ({ navigation }) => {
   const [activeC, setActiveC] = useState(0)
   const IDS = [1, 2, 3, 4, 5, 6]
+  const PCareerStats = [
+    {
+      Title: 'Matches',
+      Score: 2,
+    },
+    {
+      Title: 'Innings',
+      Score: 2,
+    },
+    {
+      Title: 'Runs Scored',
+      Score: 17,
+    },
+    {
+      Title: 'Not Outs',
+      Score: 0,
+    },
+    {
+      Title: 'Highest Inning Score',
+      Score: 13,
+    },
+    {
+      Title: 'Strike Rate',
+      Score: 68,
+    },
+    {
+      Title: 'Balls Faced',
+      Score: 25,
+    },
+    {
+      Title: 'Average',
+      Score: 8.5,
+    },
+    {
+      Title: '4S',
+      Score: 0,
+    },
+    {
+      Title: '6S',
+      Score: 1,
+    },
+    {
+      Title: '50s',
+      Score: 8.5,
+    },
+    {
+      Title: '100S',
+      Score: 0,
+    },
+    {
+      Title: 'Fow Score',
+      Score: 79,
+    },
+    {
+      Title: 'Fow Balls',
+      Score: 11.5,
+    },
+  ]
   const actClas = {
     fontFamily: 'Jost',
     fontWeight: '500',
@@ -33,6 +92,45 @@ const VideosScreen = ({ navigation }) => {
     }),
     [navigation.goBack],
   );
+
+  const CareerStats = () => {
+    return (
+      <View style={styles.CareerCont}>
+        <View style={styles.CareerFirsCont}>
+          <TouchableOpacity style={styles.CareerDrowDawn}>
+            <View style={styles.CareerDropTitle}>
+              <Text style={styles.DropDawnTitle}>Tournament</Text>
+              <Text style={styles.DropDawnTxt}>T20I</Text>
+            </View>
+            <ArrowDownSvg width={15} height={8} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.CareerDrowDawn}>
+            <View style={styles.CareerDropTitle}>
+              <Text style={styles.DropDawnTitle}>Season</Text>
+              <Text style={styles.DropDawnTxt}>2019</Text>
+            </View>
+            <ArrowDownSvg width={15} height={8} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.CareerSecCont}>
+
+          <Text style={styles.PStatsHead}>
+            Batting & Fielding Performance
+          </Text>
+          {PCareerStats.map((val, idx) => {
+            return (
+              <View style={styles.PStatsCont} key={idx}>
+                <Text style={styles.PStatsTitle}>{val.Title}</Text>
+                <Text style={styles.PStatsScore}>{val.Score}</Text>
+              </View>
+            )
+          })}
+
+
+        </View>
+      </View>
+    )
+  }
 
   const Cards = ({ id }) => {
     return (
@@ -118,6 +216,11 @@ const VideosScreen = ({ navigation }) => {
         {activeC == 1 ? (
           <PlayerBio />
         ) : null}
+        {activeC == 2 ? (
+          <CareerStats />
+        ) : (
+          null
+        )}
       </ScrollView>
 
     </View>
@@ -253,7 +356,90 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 21.68,
     color: '#111315',
+  }, //Player Bio
+  //Career Stats
+  CareerCont: {
+    width: '100%',
+    height: '100%',
+  },
+  CareerFirsCont: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  CareerDrowDawn: {
+    width: 172,
+    height: 46,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+  },
+  DropDawnTitle: {
+    fontFamily: 'Jost',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 13,
+    color: '#959595',
+    marginVertical: 3,
+  },
+  DropDawnTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
+    fontSize: 15,
+    lineHeight: 16,
+    color: '#111315',
+  },
+  CareerSecCont: {
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    flexWrap: 'wrap',
+    marginVertical: 16,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  PStatsHead: {
+    width: '100%',
+    height: 44,
+    backgroundColor: '#3555FF',
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 18.2,
+    color: '#FFFFFF',
+    justifyContent: 'flex-start',
+    padding: 13,
+  },
+  PStatsCont: {
+    width: '50%',
+    height: 44,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+    borderColor: '#EAEAEA',
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+  },
+  PStatsTitle: {
+    fontFamily: 'Jost',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 16.8,
+    color: '#111315',
+  },
+  PStatsScore: {
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 21,
+    color: '#111315',
   },
 
+  //Career Stats
 
 })
