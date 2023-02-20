@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
-import { View, FlatList } from 'react-native'
+import { View, FlatList, Text } from 'react-native'
 import { HorizontalSlides } from './components/HorizontalSlides'
 import { NewsScreenHeader } from './components/NewsScreenHeader'
 import { useAppDispatch } from '../../../store'
@@ -172,7 +172,10 @@ export const NewsScreen = () => {
     ({ item }: { item: { key: string } }) => {
       if (item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES) {
         return (
-          <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
+          <>
+            <Text>ola</Text>
+            <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
+          </>
         )
       }
 

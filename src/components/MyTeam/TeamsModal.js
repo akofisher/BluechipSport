@@ -48,7 +48,6 @@ export default function TeamsModal({ bottomSheetModalRef }) {
                     <SearchIcon color='#5E5E5E' />
                     <TextInput
                         autoCapitalize='none'
-                        autoCorrect='false'
                         style={styles.teamsSearch}
                         value={searchRes}
                         defaultValue={''}
@@ -64,6 +63,9 @@ export default function TeamsModal({ bottomSheetModalRef }) {
 
                     />
                 </View>
+                <TouchableOpacity style={styles.CloseBtn} onPress={() => closeModal()}>
+                    <Text style={styles.CloseBtnTxt}> X</Text>
+                </TouchableOpacity>
                 <ScrollView contentContainerStyle={styles.TeamsCont}>
                     {IDS.map((id, idx) => {
                         return (
@@ -126,6 +128,8 @@ const styles = StyleSheet.create({
         color: '#111315',
         width: '100%',
         height: '100%',
+        zIndex: 999999999,
+        position: 'relative',
     },
     TeamsCont: {
         display: 'flex',
@@ -163,6 +167,21 @@ const styles = StyleSheet.create({
         lineHeight: 15.5,
         color: '#111315',
 
+    },
+    CloseBtn: {
+        width: 20,
+        height: 20,
+        position: 'absolute',
+        top: 0,
+        right: 20,
+        zIndex: 9999999999999,
+    },
+    CloseBtnTxt: {
+        fontFamily: 'Jost',
+        fontWeight: '900',
+        fontSize: 18,
+        lineHeight: 19,
+        color: '#111315',
     },
 
 

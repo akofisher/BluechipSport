@@ -1,13 +1,18 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import {
-  ViewPropTypes,
-  ColorPropType,
+
   StyleSheet,
   Animated,
   Easing,
   PanResponder,
+  Platform,
 } from "react-native";
+// import {
+//   ViewPropTypes,
+//   ColorPropType,
+// } from "deprecated-react-native-prop-types";
+
 
 const SCALE = 6 / 5;
 
@@ -17,14 +22,14 @@ export default class extends Component {
     height: PropTypes.number,
     value: PropTypes.bool,
     disabled: PropTypes.bool,
-    circleColorActive: ColorPropType,
-    circleColorInactive: ColorPropType,
-    backgroundActive: ColorPropType,
-    backgroundInactive: ColorPropType,
+    circleColorActive: "white",
+    circleColorInactive: "white",
+    backgroundActive: "#43d551",
+    backgroundInactive: "#dddddd",
     onAsyncPress: PropTypes.func,
     onSyncPress: PropTypes.func,
-    style: ViewPropTypes.style,
-    circleStyle: ViewPropTypes.style,
+    style: PropTypes.style,
+    circleStyle: PropTypes.style,
     renderCircleContentActive: PropTypes.func,
     renderCircleContentInactive: PropTypes.func,
     onDragStart: PropTypes.func,

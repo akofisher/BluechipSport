@@ -20,6 +20,7 @@ build/
 !default.mode1v3
 *.mode2v3
 !default.mode2v3
+ios/.xcode.env.local
 *.perspectivev3
 !default.perspectivev3
 xcuserdata
@@ -35,6 +36,7 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
+*.hprof
 
 # node.js
 node_modules/
@@ -45,6 +47,17 @@ buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
+
+
+# Ruby / CocoaPods
+/ios/Pods/
+/vendor/bundle/
+
+
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
 
 .expo
 

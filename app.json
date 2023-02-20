@@ -1,6 +1,10 @@
 {
-   "expo": {
-     "name": "Bluechipsport",
-     "slug": "bluechipsport-app"
-   }
+  "expo": {
+    "name": "Bluechipsport",
+    "slug": "bluechipsport-app"
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-2968554543353090~5449217317",
+    "ios_app_id": "ca-app-pub-2968554543353090~5449217317"
+  }
 }
