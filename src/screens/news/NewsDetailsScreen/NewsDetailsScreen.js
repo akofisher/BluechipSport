@@ -13,6 +13,7 @@ import ArticleContent from '../../../components/news/ArticleContent'
 import NewsDetailsFooter from './components/NewsDetailsFooter'
 import Button from '../../../components/common/Button'
 import i18next from 'i18next'
+import { useGlobalState } from '../../../stores'
 
 const LINK_PREFIX = ''
 
@@ -23,6 +24,8 @@ const keyExtractor = (item, index) => {
 export const NewsDetailsScreen = ({ route, navigation }) => {
   const { articleId } = route.params
   const [id, setId] = useState()
+  const [load, setLoad] = useState(false)
+  const { Refresh, myRefresh } = useGlobalState();
 
   const [state, setState] = useState({
     article: null,
@@ -44,6 +47,7 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
   }
 
   useEffect(() => {
+    setLoad(true)
     const req = API.getArticle({ kwds: { id: articleId } })
       .then(({ data }) => {
         const articles = {
@@ -69,13 +73,15 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
           comentCount: data.comments_count,
           linkedNews: data.linked_news,
         })
+
+        setLoad(false)
       })
       .catch((error) => {
         console.warn(error)
       })
 
     return req.cancelRequest
-  }, [id])
+  }, [id, myRefresh])
 
   const onShare = async () => {
     try {
@@ -115,7 +121,7 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
   return (
     <View style={cxs.flex}>
       <Header leftAction={headerLeftAction} rightAction={headerRightAction} />
-      {!state.article ? (
+      {!state.article || load == true ? (
         <View style={styles.spinnerContainer}>
           <Spinner />
         </View>
@@ -216,7 +222,6 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
               big={true}
             />
           </View>
-
 
           <NewsDetailsFooter />
 

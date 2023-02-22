@@ -15,6 +15,7 @@ import { Colors, cxs } from 'styles'
 
 import VerticalListItemHeader from './VerticalListItemHeader'
 import VerticalListItemFooter from './VerticalListItemFooter'
+import { useGlobalState } from '../../../stores'
 
 const { width: deviceWidth } = Dimensions.get('window')
 
@@ -38,6 +39,8 @@ const VerticalListItem = React.memo((props) => {
   } = props
   const navigation = useNavigation()
 
+  const { Refresh, myRefresh } = useGlobalState();
+
   const formattedDate = moment(publishDate).format('DD MMMM YYYY, HH:mm')
   const imageURI = `${storageURL}/size/timthumb.php?src=/uploads/posts/${image}&w=450`
 
@@ -51,6 +54,7 @@ const VerticalListItem = React.memo((props) => {
       title,
       mainVideoUrl,
     })
+    Refresh(!myRefresh);
   }, [id, title, mainVideoUrl])
 
   const onSharePress = useCallback(() => {
@@ -70,7 +74,7 @@ const VerticalListItem = React.memo((props) => {
       <>
         <TouchableOpacity
           style={st.fullSizeItem}
-          onPress={() => onPress()}
+          onPress={onPress}
           key={id + 'full' + listKey + index}
           activeOpacity={0.7}
         >
@@ -94,7 +98,7 @@ const VerticalListItem = React.memo((props) => {
   return (
     <TouchableOpacity
       style={st.item}
-      onPress={() => onPress()}
+      onPress={onPress}
       key={id + listKey + index}
     >
       <FastImage style={st.itemImage} source={{ uri: imageURI }} />
