@@ -10,7 +10,7 @@ export default function AdBanner() {
     return (
 
         <BannerAd
-            unitId={adUnitId}
+            unitId={TestIds.BANNER}
             size={BannerAdSize.FULL_BANNER}
             requestOptions={{
                 requestNonPersonalizedAdsOnly: true,

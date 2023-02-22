@@ -30,7 +30,7 @@ const VerticalListItem = React.memo((props) => {
     isPopularLeague,
     isTeamNews,
     isFullSize,
-    onPress: onPressProp,
+    // onPress: onPressProp,
     mainVideoUrl,
     index,
     listKey = '',
@@ -41,9 +41,17 @@ const VerticalListItem = React.memo((props) => {
   const formattedDate = moment(publishDate).format('DD MMMM YYYY, HH:mm')
   const imageURI = `${storageURL}/size/timthumb.php?src=/uploads/posts/${image}&w=450`
 
+  // const onPress = useCallback(() => {
+  //   onPressProp(id, title, mainVideoUrl)
+  // }, [onPressProp, id, title, mainVideoUrl])
+
   const onPress = useCallback(() => {
-    onPressProp(id, title, mainVideoUrl)
-  }, [onPressProp, id, title, mainVideoUrl])
+    navigation.navigate('NewsDetails', {
+      articleId: id,
+      title,
+      mainVideoUrl,
+    })
+  }, [id, title, mainVideoUrl])
 
   const onSharePress = useCallback(() => {
     Share.share({
@@ -62,7 +70,7 @@ const VerticalListItem = React.memo((props) => {
       <>
         <TouchableOpacity
           style={st.fullSizeItem}
-          onPress={onPress}
+          onPress={() => onPress()}
           key={id + 'full' + listKey + index}
           activeOpacity={0.7}
         >
@@ -86,7 +94,7 @@ const VerticalListItem = React.memo((props) => {
   return (
     <TouchableOpacity
       style={st.item}
-      onPress={onPress}
+      onPress={() => onPress()}
       key={id + listKey + index}
     >
       <FastImage style={st.itemImage} source={{ uri: imageURI }} />

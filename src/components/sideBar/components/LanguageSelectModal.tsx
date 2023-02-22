@@ -51,9 +51,9 @@ export const LanguageSelectModal = React.memo<LanguageSelectModalProps>(
             <Icon iconName={'CloseBlack'} />
           </TouchableOpacity>
           <Text style={styles.title}>{i18next.t('ChooseLanguage')}</Text>
-          {languages.map((language) => {
+          {languages.map((language, idx) => {
             return (
-              <>
+              <View key={idx}>
                 <RadioListItem
                   key={language.code}
                   checked={language.code === appLanguage}
@@ -61,8 +61,8 @@ export const LanguageSelectModal = React.memo<LanguageSelectModalProps>(
                   iconName={language.iconName}
                   onPress={() => onChangeLanguage(language.code)}
                 />
-                <View style={styles.space} />
-              </>
+                <View style={styles.space} ></View>
+              </View>
             )
           })}
         </View>

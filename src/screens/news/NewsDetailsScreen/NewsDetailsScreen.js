@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { View, StyleSheet, Share, SectionList } from 'react-native'
+import { View, StyleSheet, Share, ScrollView } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { API } from 'services'
 import { Colors, cxs } from 'styles'
@@ -46,7 +46,7 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
   useEffect(() => {
     const req = API.getArticle({ kwds: { id: articleId } })
       .then(({ data }) => {
-        const article = {
+        const articles = {
           id: data.id.toString(),
           title: data.title.replace(/<br.*?>/gi, '\n').replace(/\\/g, ''),
           content: data.content
@@ -65,7 +65,7 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
         }
 
         setState({
-          article,
+          article: articles,
           comentCount: data.comments_count,
           linkedNews: data.linked_news,
         })
@@ -120,107 +120,107 @@ export const NewsDetailsScreen = ({ route, navigation }) => {
           <Spinner />
         </View>
       ) : (
-        <>
-          <SectionList
-            sections={null}
+        <ScrollView>
+          {/* <SectionList
+            sections={state.article}
             keyExtractor={keyExtractor}
             renderItem={({ item }) => item?.renderItem(item)}
             stickySectionHeadersEnabled={false}
             contentContainerStyle={{ backgroundColor: Colors.background }}
-            ListHeaderComponent={() => (
-              <>
-                {!state?.article?.quiz &&
-                  !state?.article?.poll &&
-                  route.params?.mainVideoUrl ? (
-                  <View style={[styles.image, styles.video]}>
-                    <VideoPlayer
-                      uri={route.params.mainVideoUrl}
-                      style={[styles.image, styles.video]}
-                      posterUri={imageURI}
-                    />
-                  </View>
-                ) : !state?.article?.quiz && !state?.article?.poll ? (
-                  <FastImage
-                    source={{
-                      uri: imageURI,
-                    }}
-                    style={styles.image}
-                  />
-                ) : null}
-                {state?.article?.quiz ? (
-                  <View
-                    style={[
-                      cxs.py10,
-                      cxs.pb0,
-                      cxs.mb10,
-                      { backgroundColor: 'white' },
-                    ]}
-                  >
-                    <View style={[cxs.px20]}>
-                      <Quiz
-                        quiz={state.article.quiz}
-                        image={imageURI}
-                        shareLink={state?.article?.shareLink}
-                      />
-                    </View>
-                  </View>
-                ) : state?.article?.poll ? (
-                  <View
-                    style={[
-                      cxs.py10,
-                      cxs.pb0,
-                      cxs.mb10,
-                      { backgroundColor: 'white' },
-                    ]}
-                  >
-                    <View style={[cxs.px20]}>
-                      <Poll poll={state.article.poll} />
-                    </View>
-                  </View>
-                ) : (
-                  <ArticleContent
-                    onShouldStartLoadWithRequest={(event) => {
-                      const linkedNews = state?.linkedNews
+            ListHeaderComponent={() => ( */}
 
-                      for (let i = 0; i < linkedNews?.length; i++) {
-                        linkedNews[i].link ===
-                          event.url.replace(LINK_PREFIX, '/news/') &&
-                          navigation.push('NewsDetails', {
-                            title: linkedNews[i].text,
-                            articleId: linkedNews[i].id,
-                          })
-                        setId(linkedNews[i].id)
-                      }
-                      return event.mainDocumentURL === 'about:blank'
-                    }}
-                    title={state?.article?.title}
-                    hasEmbed={state?.article?.hasEmbed}
-                    content={state?.article?.content}
-                    date={state?.article?.date}
-                    plainContent={state?.article?.plainContent}
-                  />
-                )}
-                <View style={styles.commentsButton}>
-                  <Button
-                    onPress={navigateToComments}
-                    title={i18next.t('Comments')}
-                    color={'blue'}
-                    leftContent={<Icon iconName={'CommentWhite'} />}
-                    rightContent={
-                      <View style={styles.commentsCount}>
-                        <Text style={styles.commentsCountText}>
-                          {state.comentCount}
-                        </Text>
-                      </View>
-                    }
-                    big={true}
-                  />
+          {!state?.article.quiz &&
+            !state?.article.poll &&
+            route.params?.mainVideoUrl ? (
+            <View style={[styles.image, styles.video]}>
+              <VideoPlayer
+                uri={route.params.mainVideoUrl}
+                style={[styles.image, styles.video]}
+                posterUri={imageURI}
+              />
+            </View>
+          ) : !state?.article.quiz && !state?.article.poll ? (
+            <FastImage
+              source={{
+                uri: imageURI,
+              }}
+              style={styles.image}
+            />
+          ) : null}
+          {state?.article.quiz ? (
+            <View
+              style={[
+                cxs.py10,
+                cxs.pb0,
+                cxs.mb10,
+                { backgroundColor: 'white' },
+              ]}
+            >
+              <View style={[cxs.px20]}>
+                <Quiz
+                  quiz={state.article.quiz}
+                  image={imageURI}
+                  shareLink={state?.article.shareLink}
+                />
+              </View>
+            </View>
+          ) : state?.article.poll ? (
+            <View
+              style={[
+                cxs.py10,
+                cxs.pb0,
+                cxs.mb10,
+                { backgroundColor: 'white' },
+              ]}
+            >
+              <View style={[cxs.px20]}>
+                <Poll poll={state.article.poll} />
+              </View>
+            </View>
+          ) : (
+            <ArticleContent
+              onShouldStartLoadWithRequest={(event) => {
+                const linkedNews = state?.linkedNews
+
+                for (let i = 0; i < linkedNews?.length; i++) {
+                  linkedNews[i].link ===
+                    event.url.replace(LINK_PREFIX, '/news/') &&
+                    navigation.push('NewsDetails', {
+                      title: linkedNews[i].text,
+                      articleId: linkedNews[i].id,
+                    })
+                  setId(linkedNews[i].id)
+                }
+                return event.mainDocumentURL === 'about:blank'
+              }}
+              title={state?.article.title}
+              hasEmbed={state?.article.hasEmbed}
+              content={state?.article.content}
+              date={state?.article.date}
+              plainContent={state?.article.plainContent}
+            />
+          )}
+          <View style={styles.commentsButton}>
+            <Button
+              onPress={navigateToComments}
+              title={i18next.t('Comments')}
+              color={'blue'}
+              leftContent={<Icon iconName={'CommentWhite'} />}
+              rightContent={
+                <View style={styles.commentsCount}>
+                  <Text style={styles.commentsCountText}>
+                    {state.comentCount}
+                  </Text>
                 </View>
-              </>
-            )}
-            ListFooterComponent={() => <NewsDetailsFooter />}
-          />
-        </>
+              }
+              big={true}
+            />
+          </View>
+
+
+          <NewsDetailsFooter />
+
+        </ScrollView>
       )}
     </View>
   )

@@ -11,17 +11,22 @@ const useAuth = createStore({
     const initialState = {
       user: null,
       token: null,
-      authSkipped: false,
+      authSkipped: true,
     }
     const [authState, setAuthState] = useState({ ...initialState })
     const [isAppLaunchedBefore, setIsAppLaunchedBefore] = useState(false)
 
-    useEffect(async () => {
+    const GetUSR = async () => {
       const userData = await AsyncStorage.getItem('@user')
       if (userData) {
         const { token, user } = JSON.parse(userData)
+        console.log(token, 'AKOOO')
         setAuthState({ user, token })
       }
+    }
+
+    useEffect(() => {
+      GetUSR()
     }, [])
 
     const skipAuth = () => {

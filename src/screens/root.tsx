@@ -32,7 +32,7 @@ export default function Root() {
 
   const dispatch = useAppDispatch()
 
-  useEffect(async () => {
+  const FuncGroup = async () => {
     await checkToken()
     await getDeviceId()
     const isAppLaunchedBefore = await checkFirstLaunch()
@@ -40,6 +40,10 @@ export default function Root() {
     await RNBootSplash.hide()
     dispatch(initAppLanguage())
     setIsLoading(false)
+  }
+
+  useEffect(() => {
+    FuncGroup()
   }, [setIsLoading, dispatch, initAppLanguage])
 
   useNotifications()

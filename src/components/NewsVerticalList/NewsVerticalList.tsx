@@ -61,6 +61,7 @@ export const NewsVerticalList = React.memo<NewsVerticalListProps>((props) => {
           index={index}
           isFullSize={isTillMoveActive}
           onPress={openDetails}
+
         />
       )
     },

@@ -22,7 +22,7 @@ export const HorizontalSlides = React.memo<HorizontalSlidesProps>(
           renderItem={({ item }) => (
             <HorizontalListItem
               itemData={item}
-              onPress={(item) =>
+              onPress={() =>
                 openNewsDetails(item.id, item.title, item?.mainVideoUrl)
               }
             />
