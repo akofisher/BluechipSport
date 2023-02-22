@@ -3,14 +3,16 @@ import { Provider } from 'aniuta'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import React from 'react'
-import { View, LogBox } from 'react-native'
+import { View, LogBox, StatusBar } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
 import { Root } from 'screens'
 import { cxs } from 'styles'
 
+
 import 'stores'
 import { store } from './src/store'
+import { Colors } from './src/styles'
 
 enableScreens()
 
@@ -32,6 +34,11 @@ class App extends React.Component {
         <Provider>
           <SafeAreaProvider>
             <View style={cxs.flex}>
+              <StatusBar
+                animated={true}
+                backgroundColor={Colors.headerBackground}
+                barStyle={'light-content'}
+              />
               <Root />
             </View>
           </SafeAreaProvider>

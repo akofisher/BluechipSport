@@ -21,7 +21,7 @@ const ArticleContent = React.memo(
         <View style={st.header}>
           <Text style={st.titleText}>{title || ''}</Text>
           <Text style={st.dateText}>
-            {moment(date).format('DD MMM, yyyy, hh::mm')}
+            {moment(date).format('DD MMM, yyyy, hh:mm')}
           </Text>
           <AdBanner />
         </View>
