@@ -15,6 +15,7 @@ export const SvgICONS = {
   ChevronDown: require('assets/svgs/chevronDown.svg').default,
   ChevronUp: require('assets/svgs/chevronUp.svg').default,
   Cricket: require('assets/svgs/cricket.svg').default,
+  CricketWhite: require('assets/svgs/CricketWhite.svg').default,
   Football: require('assets/svgs/football.svg').default,
   Kabaddi: require('assets/svgs/kabaddi.svg').default,
   Tennis: require('assets/svgs/tennis.svg').default,
@@ -24,6 +25,7 @@ export const SvgICONS = {
   Rectangle: require('assets/svgs/rectangle.svg').default,
   RectangleBlack: require('assets/svgs/rectangleBlack.svg').default,
   Logout: require('assets/svgs/logout.svg').default,
+  Calendar: require('assets/svgs/Calendar.svg').default,
 }
 
 export type SvgICONSType = keyof typeof SvgICONS

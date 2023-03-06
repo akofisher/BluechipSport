@@ -9,6 +9,7 @@ import {
 } from "screens/livescrore";
 import { NewsDetailsScreen } from "screens/news";
 import { searchScreen } from "screens/searchScreen/searchScreen";
+import MatchDetailsScreen from "../../screens/Match Details/MatchDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const LivescoreTabStack = () => {
       headerMode="none"
     >
       <Stack.Screen name="Livescore" component={LivescoreScreen} />
+      <Stack.Screen name="MatchDetails" component={MatchDetailsScreen} />
       <Stack.Screen name="liveScoreDetails" component={LiveScoreDetails} />
       <Stack.Screen name="teamScore" component={TeamScoreDetails} />
       <Stack.Screen name="playerScore" component={PlayerScoreDetails} />

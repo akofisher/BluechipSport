@@ -1,9 +1,9 @@
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import React from "react";
-import { TipsScreen } from "screens/Standing";
+import { TipsScreen } from "screens/Tips";
 import { LiveScoreDetails, PlayerScoreDetails, TeamScoreDetails } from "screens/livescrore";
 import { NewsDetailsScreen, NewsScreen } from "screens/news";
-import PredictionScreen from "../../screens/Standing/PredictionScreen";
+import PredictionScreen from "../../screens/Tips/PredictionScreen";
 
 const Stack = createStackNavigator();
 

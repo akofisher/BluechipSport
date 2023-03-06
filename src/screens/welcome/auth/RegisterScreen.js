@@ -31,11 +31,11 @@ function RegisterScreen({ navigation }) {
     navigation.navigate('News')
   }, [navigation])
 
-  useEffect(() => {
-    if (user) {
-      goToNews()
-    }
-  }, [goToNews, user])
+  // useEffect(() => {
+  //   if (user) {
+  //     goToNews()
+  //   }
+  // }, [user])
 
   const onLinkPress = useCallback(() => {
     navigation.navigate('Login')
@@ -148,6 +148,8 @@ const styles = StyleSheet.create({
     height: 15,
   },
   close: {
+    width: 32,
+    height: 32,
     alignSelf: 'flex-end',
     top: 45,
     right: 15,

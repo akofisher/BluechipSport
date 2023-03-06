@@ -27,11 +27,11 @@ function LoginScreen({ navigation }) {
     navigation.goBack()
   }, [navigation])
 
-  useEffect(() => {
-    if (user) {
-      goToNews()
-    }
-  }, [goToNews, user])
+  // useEffect(() => {
+  //   if (user) {
+  //     goToNews()
+  //   }
+  // }, [user])
 
   const goToResetPassword = useCallback(() => {
     navigation.navigate('Reset')
@@ -140,6 +140,8 @@ const styles = StyleSheet.create({
     height: 15,
   },
   close: {
+    width: 32,
+    height: 32,
     alignSelf: 'flex-end',
     top: 45,
     right: 15,

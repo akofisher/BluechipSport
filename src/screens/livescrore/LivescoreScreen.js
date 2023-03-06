@@ -12,134 +12,117 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
+import { styles } from "react-native-floating-label-input/src/styles";
 import Entypo from "react-native-vector-icons/dist/Entypo";
 // eslint-disable-next-line import/order
 import { API } from "services";
 
 import { useFavoriteMatch, useDevice } from "stores";
 import { cxs, Colors } from "styles";
+import { ArrowDownSvg, LiveStreamSvg } from "../../../assets/svgs/AllSvgs";
+import { SvgICONSType } from '../../../assets/svgs/svgIcons'
+import { Icon } from "../../components/common";
 
-import LiveScoreScreenComponent from "../../components/Livescore/LiveScoreScreen/LiveScoreScreenComponent";
-
-// eslint-disable-next-line import/order
-import { useIsFocused } from "@react-navigation/native";
-const { width } = Dimensions.get("window");
 
 Entypo.loadFont();
 
 const LivescoreScreen = ({ navigation }) => {
-  const [match, setMatch] = useState({ isLoading: true, data: null });
-  const [player, setPlayer] = useState({ isLoading: true, data: null });
-  const [loading, setLoading] = useState(true);
-  const [tabs, setTabs] = useState("tab1");
-  const [activeDay, setActiveDay] = useState(moment(new Date()).format("DD"));
-  const [dayData, satDayData] = useState(moment(new Date()).format("YY-MM-DD"));
-  const currentDate = moment().format("YYYY-MM-DD");
-  const [selectedDate, setSelectedDate] = useState(currentDate);
-  const [triggerrer, setTriggerrer] = useState();
-  const [favoriteMatches, setFavoriteMatches] = useState();
+  const IDS = [1, 2, 3, 4, 5, 6]
 
-  const { matchid } = useFavoriteMatch();
-  const { deviceId } = useDevice();
-  // *calendar date*
-  const dataL = [];
-  const dataR = [];
-
-  for (let i = 7; i > 0; i--) {
-    dataL.push(moment(new Date()).subtract(i, "days"));
-  }
-  for (let i = 0; i < 8; i++) {
-    dataR.push(moment(new Date()).add(i, "days"));
-  }
-  const CalendarData = dataL.concat(dataR);
-  // --------------------
-
-  const CalendarItem = ({ item, index, calendarFlatList }) => {
+  const LiveStreamBtn = () => {
     return (
-      <View style={{ justifyContent: "center" }}>
-        <TouchableOpacity
-          onPress={() => {
-            calendarFlatList?.current?.scrollToOffset({
-              offset: index > 3 ? (index - 4) * 50 + 40 : 0,
-            });
+      <TouchableOpacity style={Styles.LiveStreamCont}>
+        <LiveStreamSvg width={'11'} height={'11'} fill={'rgba(1, 175, 112, 1)'} />
+        <Text style={Styles.LiveStreamTxt}>LIVE STREAM</Text>
+      </TouchableOpacity>
+    )
+  }
 
-            setActiveDay(moment(item).format("DD"));
-            satDayData(moment(item).format("YY-MM-DD"));
-            getMatchesData(moment(item).format("YY-MM-DD"));
-            setLoading(true);
-          }}
-          style={
-            activeDay == moment(item).format("DD") ? Styles.calendarActiveDay : Styles.calendarDay
-          }
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 24,
-              color: activeDay == moment(item).format("DD") ? "#E53C48" : "#868686",
-            }}
-          >
-            {moment(item).format("DD")}
-          </Text>
-          <Text
-            style={{
-              fontSize: 11,
-              color: activeDay == moment(item).format("DD") ? "#3E3E3E" : "#868686",
-            }}
-          >
-            {moment(item).format("ddd")}
-          </Text>
-        </TouchableOpacity>
+  const LiveBtn = () => {
+    return (
+      <TouchableOpacity style={Styles.LiveCont}>
+        <View style={Styles.LiveDot}></View>
+        <Text style={Styles.LiveTxt}>LIVE</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  const Cards = ({ id }) => {
+    return (
+      <View style={Styles.CardMainCont}>
+        <View style={Styles.CardMainHeader}>
+          <View style={Styles.HeaderLogo}></View>
+          <Text style={Styles.HeaderTitle}>{id} - Indian Premier League</Text>
+        </View>
+        <View style={Styles.CardBodyCont}>
+          <View style={Styles.TeamsCont}>
+
+            <View style={Styles.LiveDateHead}>
+              <View style={Styles.Flexible}>
+                <LiveBtn />
+                <LiveStreamBtn />
+              </View>
+              <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
+            </View>
+
+            <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
+              <View style={Styles.Team}>
+                <View style={Styles.Team}>
+                  <View style={Styles.TeamLogo}></View>
+                  <Text style={Styles.TeamName}>Gujarat Titaniki</Text>
+                </View>
+                <Text style={Styles.TeamScores}>133/3 (18.1)</Text>
+              </View>
+              <View style={Styles.Team}>
+                <View style={Styles.Team}>
+                  <View style={Styles.TeamLogo}></View>
+                  <Text style={Styles.TeamName}>Rajastan Royals</Text>
+                </View>
+                <Text style={Styles.TeamScores}>130/9 (20.0)</Text>
+              </View>
+            </TouchableOpacity>
+
+          </View>
+          <View style={Styles.TeamsSecCont}>
+
+            <View style={Styles.LiveDateHead}>
+              {id % 2 == 0 ? (
+                <Text style={Styles.TimeTxt}>18:00</Text>
+              ) : (
+                <>
+                  <View style={Styles.Flexible}>
+                    <LiveBtn />
+                  </View>
+                  <Text style={Styles.MatchDtTxt}>Break</Text>
+                </>
+              )}
+
+            </View>
+
+            <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
+              <View style={Styles.Team}>
+                <View style={Styles.Team}>
+                  <View style={Styles.TeamLogo}></View>
+                  <Text style={Styles.TeamName}>Gujarat Titaniki</Text>
+                </View>
+                <Text style={Styles.TeamScores}>-</Text>
+              </View>
+              <View style={Styles.Team}>
+                <View style={Styles.Team}>
+                  <View style={Styles.TeamLogo}></View>
+                  <Text style={Styles.TeamName}>Rajastan Royals</Text>
+                </View>
+                <Text style={Styles.TeamScores}>-</Text>
+              </View>
+            </TouchableOpacity>
+
+          </View>
+
+        </View>
       </View>
-    );
-  };
+    )
+  }
 
-  const getFavoriteMatches = () => {
-    API.getFavoriteMatches({ kwds: { deviceId } })
-      .then(({ data }) => {
-        setFavoriteMatches(data);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-  };
-
-  const getLiveMatches = () => {
-    API.getLivematches()
-      .then(({ data }) => {
-        setPlayer(data, { isLoading: false });
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-  };
-
-  const getMatchesData = (id) => {
-    API.getMatchesData({ kwds: { id, deviceId } })
-      .then(({ data }) => {
-        setMatch(data, { isLoading: false });
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-  };
-
-  const calendarFlatList = useRef(null);
-
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    getMatchesData(dayData);
-    getLiveMatches();
-    getFavoriteMatches();
-  }, [tabs, triggerrer, isFocused]);
-
-  useEffect(() => {
-    calendarFlatList.current.scrollToOffset({
-      offset: width / 2 - 10,
-    });
-  }, []);
 
   const onSearchPress = React.useCallback(() => navigation.navigate("searchScreen"), []);
   const headerRightActions = useMemo(
@@ -160,83 +143,28 @@ const LivescoreScreen = ({ navigation }) => {
     <View style={Styles.liveScoreScreenBackground}>
       <Header rightAction={headerRightActions} />
       <View style={Styles.tabsContainer}>
-        <TouchableOpacity
-          style={Styles.tabs}
-          onPress={() => {
-            setTabs("tab1");
-          }}
-        >
-          <Text style={Styles.tabsText}>{i18next.t("Score")}</Text>
-          {tabs === "tab1" && <Entypo name="triangle-up" size={22} color="#E5E5E5" />}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={Styles.tabs}
-          onPress={() => {
-            setTabs("tab2");
-          }}
-        >
-          <Text style={Styles.tabsText}>{i18next.t("Current")}</Text>
-          {tabs === "tab2" && <Entypo name="triangle-up" size={22} color="#E5E5E5" />}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={Styles.tabs}
-          onPress={() => {
-            setTabs("tab3");
-          }}
-        >
-          <Text style={Styles.tabsText}>{i18next.t("Favorites")}</Text>
-          {tabs === "tab3" && <Entypo name="triangle-up" size={22} color="#E5E5E5" />}
-        </TouchableOpacity>
-      </View>
-      <ScrollView>
-        {tabs === "tab1" && (
-          <View style={{ height: 130 }}>
-            <FlatList
-              ref={calendarFlatList}
-              style={{ flex: 1, height: 65 }}
-              bounces={false}
-              horizontal
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              extraData={CalendarData}
-              data={CalendarData}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <CalendarItem calendarFlatList={calendarFlatList} index={index} item={item} />
-              )}
-            />
-          </View>
-        )}
+        <TouchableOpacity style={Styles.DropDownMenu} onPress={() => null}>
+          <View style={Styles.SecCont}>
 
-        {match.isLoading || loading ? (
-          <Spinner style={{ flex: 1 }} />
-        ) : tabs === "tab1" ? (
-          <LiveScoreScreenComponent
-            setTriggerrer={setTriggerrer}
-            match={match}
-            navigation={navigation}
-            triggerrer={triggerrer}
-          />
-        ) : tabs === "tab2" ? (
-          <View style={{ marginTop: 35 }}>
-            <LiveScoreScreenComponent
-              setTriggerrer={setTriggerrer}
-              match={player}
-              navigation={navigation}
-              triggerrer={triggerrer}
-            />
+            <Icon iconName={'CricketWhite'} style={Styles.DrpIcon} />
+            <Text style={Styles.DropDownTxt}>Cricket</Text>
           </View>
-        ) : tabs === "tab3" ? (
-          <LiveScoreScreenComponent
-            setTriggerrer={setTriggerrer}
-            match={favoriteMatches}
-            isFavoriteTab
-            triggerrer={triggerrer}
-            navigation={navigation}
-          />
-        ) : (
-          <View />
-        )}
+          <ArrowDownSvg width={15} height={8} />
+        </TouchableOpacity>
+        <TouchableOpacity style={Styles.DropDownMenuSec} onPress={() => null}>
+          <Icon iconName={'Calendar'} style={Styles.DrpIcon} />
+          <Text style={Styles.DropDownTxtSec}>Today - 12 Jan</Text>
+          <ArrowDownSvg width={15} height={8} />
+        </TouchableOpacity>
+
+      </View>
+      <ScrollView contentContainerStyle={Styles.MainCont}>
+        {IDS.map((id, idx) => {
+          return (
+
+            <Cards id={id} key={idx} />
+          )
+        })}
       </ScrollView>
     </View>
   );
@@ -250,45 +178,189 @@ const Styles = StyleSheet.create({
     flex: 1,
   },
   tabsContainer: {
-    width: "100%",
+    minWidth: '100%',
     height: 55,
     backgroundColor: Colors.darkBlue,
     paddingHorizontal: 20,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    borderTopColor: '#1A2631',
+    borderTopWidth: 1,
   },
-  tabs: {
-    height: "100%",
-    marginTop: 18,
-    alignItems: "center",
-    justifyContent: "space-between",
+  MainCont: {
+    alignItems: 'center',
+    paddingBottom: 30,
   },
-  tabsText: {
-    color: "#fff",
-    fontSize: 15,
+  DropDownMenu: {
+    width: '50%',
+    height: 54,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 17,
   },
-  calendarActiveDay: {
-    borderWidth: 1,
-    borderTopWidth: 5,
-    borderBottomWidth: 5,
+  DropDownMenuSec: {
+    width: '50%',
+    height: 54,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 19,
+    borderLeftColor: '#1A2631',
     borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderRadius: 10,
-    height: 70,
-    borderColor: "#E53C48",
-    backgroundColor: "#ffffff",
-    width: 51,
-    justifyContent: "center",
-    alignItems: "center",
   },
-  calendarDay: {
-    borderWidth: 1,
-    borderColor: "#EFEFEF",
-    height: 65,
-    backgroundColor: "#ffffff",
-    width: 51,
-    justifyContent: "center",
-    alignItems: "center",
+  SecCont: {
+    flexDirection: 'row',
   },
+  DropDownTxt: {
+    color: '#FFFFFF',
+    fontFamily: 'Jost',
+    fontSize: 15,
+    fontWeight: '500',
+    paddingLeft: 12,
+  },
+  DropDownTxtSec: {
+    color: '#FFFFFF',
+    fontFamily: 'Jost',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  //Cards
+  CardBodyCont: {
+    width: 360,
+    height: 224,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+  },
+  HeaderLogo: {
+    width: 24,
+    height: 24,
+    backgroundColor: 'blue',
+    borderRadius: 50,
+    marginRight: 10,
+  },
+  CardMainHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  HeaderTitle: {
+    color: '#111315',
+    fontFamily: 'Jost',
+    fontSize: 13,
+    lineHeight: 18.2,
+    fontWeight: '700',
+  },
+  TeamsCont: {
+    width: '100%',
+    height: '50%',
+    paddingHorizontal: 15,
+    paddingVertical: 14,
+    borderBottomColor: '#EAEAEA',
+    borderBottomWidth: 1,
+  },
+  TeamsSecCont: {
+    paddingHorizontal: 15,
+    paddingVertical: 14,
+  },
+  Team: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  TeamLogo: {
+    width: 24,
+    height: 24,
+    borderRadius: 50,
+    backgroundColor: 'black',
+    marginBottom: 8,
+    marginRight: 10,
+  },
+  TeamName: {
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 21,
+    color: '#111315',
+  },
+  TeamScores: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
+    fontSize: 15,
+    lineHeight: 21,
+    color: '#111315',
+  },
+  MatchDtTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 16.8,
+    color: 'rgba(255, 9, 96, 1)',
+  },
+  //Cards
+  //LIVE
+  LiveDateHead: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    justifyContent: 'space-between',
+  },
+  LiveCont: {
+    width: 46,
+    height: 17,
+    backgroundColor: 'rgba(255, 9, 96, 0.13)',
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  LiveDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 50,
+    backgroundColor: '#FF0960',
+    marginRight: 5,
+  },
+  LiveTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16.8,
+    color: 'rgba(255, 9, 96, 1)',
+  },
+  TimeTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 16.8,
+    color: '#111315',
+
+  },
+  //LIVE
+  //LIVE STREAM
+  LiveStreamCont: {
+    width: 107,
+    height: 17,
+    backgroundColor: 'rgba(1, 175, 112, 0.13)',
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    marginLeft: 5,
+  },
+  LiveStreamIcon: {},
+  LiveStreamTxt: {
+    fontFamily: 'Jost',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16.8,
+    color: 'rgba(1, 175, 112, 1)',
+    marginLeft: 7.5,
+  },
+  Flexible: {
+    flexDirection: 'row',
+  }
+  //LIVE STREAM
+
 });

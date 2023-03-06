@@ -3,7 +3,7 @@ import { SearchBox, Spinner, Text } from "components/common";
 import { Header } from "components/header";
 import { LeaguesItem, NewsItems, PlayersItem, TagsItem } from "components/searchComponent/index";
 import i18next from "i18next";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   FlatList,
   TouchableOpacity,
@@ -58,12 +58,20 @@ const SearchScreen = ({ navigation, route }) => {
     return source.cancel;
   }, [q]);
 
+  const headerLeftAction = useMemo(
+    () => ({
+      onPress: navigation.goBack,
+      iconName: "ArrowRight",
+    }),
+    [navigation.goBack],
+  );
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <Header>
+      <Header leftAction={headerLeftAction}>
         <View style={{ flex: 1, marginHorizontal: 20, marginBottom: 15 }}>
           <SearchBox
             dark

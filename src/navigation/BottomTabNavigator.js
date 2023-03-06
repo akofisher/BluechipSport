@@ -8,6 +8,7 @@ import Colors from "styles/colors";
 
 import { ICONS } from "../../assets/icons";
 
+
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
@@ -61,10 +62,10 @@ const BottomTabNavigator = () => {
         labelStyle: { fontSize: 11, fontWeight: "500", fontFamily: "Jost" },
       }}
     >
-      {TABS.map((tab) => {
+      {TABS.map((tab, idx) => {
         return (
           <Tab.Screen
-            key={tab.name}
+            key={idx}
             name={tab.name}
             component={tab.stack}
             options={{

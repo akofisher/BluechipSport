@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
-import { View, FlatList, Text } from 'react-native'
+import { View, FlatList } from 'react-native'
 import { HorizontalSlides } from './components/HorizontalSlides'
 import { NewsScreenHeader } from './components/NewsScreenHeader'
 import { useAppDispatch } from '../../../store'
@@ -172,10 +172,7 @@ export const NewsScreen = () => {
     ({ item }: { item: { key: string } }) => {
       if (item.key === FLAT_LIST_ITEMS.HORIZONTAL_SLIDES) {
         return (
-          <>
-            {/* <Text>ola</Text> */}
-            <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
-          </>
+          <HorizontalSlides data={mainNews} openNewsDetails={openNewsDetails} />
         )
       }
 
@@ -183,16 +180,15 @@ export const NewsScreen = () => {
         if (selectedCategoryNews.length) {
           return (
             <>
-              {/* <Text>ola</Text> */}
               {selectedCategoryNews.map((category) => (
                 <NewsVerticalList
                   isFullSizeItem={false}
                   data={category.data}
                   isLoadingMore={false}
+                  openDetails={openNewsDetails}
                   title={category.title}
                   categoryId={category.categoryId}
                   onShowMore={openCategoryNewsScreen}
-                // openDetails={openNewsDetails}
                 />
               ))}
             </>
@@ -202,15 +198,14 @@ export const NewsScreen = () => {
         return (
           <>
             <AdBanner />
-            {/* <Text>ola</Text> */}
             <NewsVerticalList
               isFullSizeItem={true}
               data={latestNews}
               isLoadingMore={isLoadingMoreLatestNews}
               fetchMore={loadMoreLatestNews}
+              openDetails={openNewsDetails}
               title={i18next.t('LAST NEWS')}
-            // openDetails={openNewsDetails}
-            // withSwitcher={true}
+              withSwitcher={true}
             />
           </>
         )

@@ -16,10 +16,6 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 // firebase.initializeApp(firebaseConfig);
-// firebase.analytics();
-// var storage = firebase.storage();
-// var storageRef = firebase.storage().ref();
-// firebase.initializeApp(firebaseConfig);
 // Facebook.initializeAsync('885996412199472', 'goal- ge');
 
 export default function FbLogin({ navigation }) {
