@@ -50,7 +50,7 @@ const Quiz = ({ quiz, image, shareLink, title }) => {
       .catch((err) => {
         if (!isUserLoggedIn && is_challenge) {
           Alert.alert("", "გაიარეთ ავტორიზაცია", [
-            { text: "დახურვა", onPress: () => {} },
+            { text: "დახურვა", onPress: () => { } },
             {
               text: "შესვლა",
               onPress: () => WelcomeBack(true),
@@ -128,6 +128,7 @@ const Quiz = ({ quiz, image, shareLink, title }) => {
 
       return (
         <TouchableOpacity
+          key={id}
           onPress={() => onAnswerPress(id)}
           disabled={isLoading || quizSessionData?.show_results}
           style={[
@@ -138,8 +139,8 @@ const Quiz = ({ quiz, image, shareLink, title }) => {
                 ? isRightAnswer
                   ? "#A5EAAC"
                   : userChoiceDidNotMatch
-                  ? "rgba(229, 60, 72, 0.2)"
-                  : "#F4F4F4"
+                    ? "rgba(229, 60, 72, 0.2)"
+                    : "#F4F4F4"
                 : "#F4F4F4",
               borderRadius: 6,
               justifyContent: "center",

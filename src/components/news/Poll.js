@@ -86,7 +86,7 @@ const Poll = ({ poll: { id, question, user_id, created_at, updated_at, answers =
       ) : (
         state.answers.map(
           ({ id, poll_id, answer, created_at, updated_at, users_count, percentage }, i) => (
-            <View>
+            <View key={id}>
               <TouchableOpacity
                 onPress={() => onAnswerPress(id)}
                 disabled={state.isLoading || state.finalAnswerId}

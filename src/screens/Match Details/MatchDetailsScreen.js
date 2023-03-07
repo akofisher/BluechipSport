@@ -14,6 +14,73 @@ const MatchDetailsScreen = ({ navigation }) => {
     const [activeC, setActiveC] = useState(0)
     const IDS = [1, 2, 3, 4, 5, 6]
     const SQ = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const Runs = [2, 2, 0, 1, '1w', 0, 6]
+    const Player = [
+        {
+            name: 'Thomas Shelby',
+            point: 20,
+            number: 15
+        },
+        {
+            name: 'John Shelby',
+            point: 23,
+            number: 11
+        },
+        {
+            name: 'Erick Shelby',
+            point: 27,
+            number: 8
+        },
+
+    ]
+    const LinesP = [
+        {
+            name: 'Thomas Shelby',
+            mich: 'kuznetsa',
+        },
+        {
+            name: 'Thomas asda',
+            mich: 'fashata',
+        },
+        {
+            name: 'Thomas trelo',
+            mich: 'drakoni',
+        },
+        {
+            name: 'Thomas maqmani',
+            mich: 'trakoni',
+        },
+        {
+            name: 'Thomas mechurchle',
+            mich: 'elfi',
+        },
+        {
+            name: 'Thomas gandegili',
+            mich: 'goblini',
+        },
+        {
+            name: 'Thomas mamao',
+            mich: 'moroshkina',
+        },
+        {
+            name: 'Thomas maqmani',
+            mich: 'trakoni',
+        },
+        {
+            name: 'Thomas mechurchle',
+            mich: 'elfi',
+        },
+        {
+            name: 'Thomas gandegili',
+            mich: 'goblini',
+        },
+        {
+            name: 'Thomas mamao',
+            mich: 'moroshkina',
+        },
+
+
+    ]
 
     const Points = {
         first: '133/3',
@@ -27,15 +94,16 @@ const MatchDetailsScreen = ({ navigation }) => {
         lineHeight: 15,
         color: '#FF0960',
     }
-
-    const TeamScoresFail = {
-        fontFamily: 'Jost',
-        fontWeight: '600',
-        fontSize: 15,
-        lineHeight: 21,
-        color: '#111315',
-        opacity: 0.4,
+    const GreenRuns = {
+        width: 18,
+        height: 18,
+        backgroundColor: '#01AF70',
+        marginRight: 6,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignContent: 'center',
     }
+
 
     const actBtn = {
         height: '100%',
@@ -64,34 +132,153 @@ const MatchDetailsScreen = ({ navigation }) => {
         )
     }
 
-    const MatchInfo = ({ id }) => {
+    const MatchInfo = () => {
         return (
-            <View key={id}>
-                <Text>MATCH INFO</Text>
+            <View style={styles.PlayerBioCont}>
+                {LinesP.map((val, idx) => {
+                    return (
+                        <View style={styles.BioConts} key={idx}>
+                            <Text style={styles.BioDesc}>{val.mich}</Text>
+                            <Text style={styles.BioInfo}>{val.name}</Text>
+                        </View>
+
+                    )
+                })}
             </View>
         )
     }
 
-    const Live = ({ id }) => {
+    const Live = () => {
         return (
-            <View key={id}>
-                <Text>LIVE</Text>
+            <View style={styles.LiveScreenCont}>
+                <View style={styles.LiveVideoCont}>
+                    <View style={styles.LiveVideo}></View>
+                </View>
+                <View style={styles.LiveDetailsCont}>
+                    <View style={styles.LiveScoreTxtCont}>
+                        <View style={styles.LiveScoreTxtContSec}>
+                            <Text style={styles.OversTxt}>OVERS:</Text>
+                            <Text style={styles.PointTxt}>7</Text>
+                        </View>
+                        <View style={styles.LiveScoreTxtContSec}>
+                            <Text style={styles.OversTxt}>SCORE:</Text>
+                            <Text style={styles.PointTxt}>60/1</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.LiveRunCont}>
+                        <View style={styles.RunsCont}>
+                            {Runs.map((val, idx) => {
+                                return (
+                                    <TouchableOpacity style={Runs.length - 1 == idx ? GreenRuns : styles.Runs}>
+
+                                        <Text style={styles.RunsTxt} key={idx}>{val}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })}
+                        </View>
+                        <View style={styles.TotalRunsCont}>
+                            <Text style={styles.PointTxt}>12</Text>
+                            <Text style={styles.OversTxt}>RUNS</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.PlayersPointCont}>
+                        <View style={styles.PlayersLeftCont}>
+                            {Player.map((val, idx) => {
+                                if (idx % 2 == 0)
+                                    return (
+                                        <View key={idx} style={styles.PlayerCont}>
+                                            <Text style={styles.PlayerName}>{val.name}</Text>
+                                            <View style={styles.LiveScoreTxtContSec}>
+                                                <Text style={styles.PlayerPoint}>{val.point}</Text>
+                                                <Text style={styles.PlayerNumber}>({val.number})</Text>
+                                            </View>
+                                        </View>
+                                    )
+                            })}
+                        </View>
+                        <View style={styles.PlayersRightCont}>
+                            {Player.map((val, idx) => {
+                                if (idx % 2 == 1)
+                                    return (
+                                        <View key={idx} style={styles.PlayerCont}>
+                                            <Text style={styles.PlayerName}>{val.name}</Text>
+                                            <View style={styles.LiveScoreTxtContSec}>
+                                                <Text style={styles.PlayerPoint}>{val.point}</Text>
+                                                <Text style={styles.PlayerNumber}>({val.number})</Text>
+                                            </View>
+                                        </View>
+                                    )
+                            })}
+                        </View>
+                    </View>
+                    <View style={styles.InformationCont}>
+                        <View style={styles.InformationLeftCont}>
+                            <Text style={styles.PointTxt}>6.6</Text>
+                            <TouchableOpacity style={GreenRuns}>
+
+                                <Text style={styles.RunsTxt} >6</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.InformationRightCont}>
+                            <Text style={styles.DetailsBigTxt}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+                                molestiae quas vel sint commodi repudiandae consequuntur voluptatum Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+                                molestiae quas vel sint commodi repudiandae consequuntur voluptatum Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+                                molestiae quas vel sint commodi repudiandae consequuntur voluptatum</Text>
+                        </View>
+                    </View>
+                </View>
             </View>
         )
     }
 
-    const LineUps = ({ sq }) => {
+    const LineUps = () => {
         return (
-            <View key={sq}>
-                <Text>LineUps</Text>
+            <View style={styles.LineUpsCont}>
+                <View style={styles.LineUpsTeamsCont}>
+                    <View style={styles.LineUpsTeam}>
+                        <View style={styles.LineUpsTeamLogo}></View>
+                        <Text style={styles.LineUpsTeamName}>Gujarateli Titanebi</Text>
+                    </View>
+                    <Text style={styles.LineUpsVs}>VS</Text>
+                    <View style={styles.LineUpsTeam}>
+                        <Text style={styles.LineUpsTeamName}>Samtrediis Dinamo</Text>
+                        <View style={styles.LineUpsTeamLogo}></View>
+                    </View>
+                </View>
+                <View style={styles.PlayersListCont}>
+                    <View style={styles.LeftPlayers}>
+                        {LinesP.map((val, idx) => {
+                            return (
+                                <View style={styles.PlayerContL} key={idx}>
+                                    <Text style={styles.PlayerLName}>{val.name}</Text>
+                                    <Text style={styles.PlayerRangL}>{val.mich}</Text>
+                                </View>
+                            )
+                        })}
+                    </View>
+                    <View style={styles.RightPlayers}>
+                        {LinesP.map((val, idx) => {
+                            return (
+                                <View style={styles.PlayerContL} key={idx}>
+                                    <Text style={styles.PlayerLName}>{val.name}</Text>
+                                    <Text style={styles.PlayerRang}>{val.mich}</Text>
+                                </View>
+                            )
+                        })}
+                    </View>
+
+
+                </View>
             </View>
         )
     }
 
     const ScoreCard = ({ id }) => {
         return (
-            <View key={id}>
-                <Text>SCORE CARD</Text>
+            <View style={styles.ScoreCardCont}>
+
             </View>
         )
     }
@@ -141,26 +328,18 @@ const MatchDetailsScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <ScrollView contentContainerStyle={styles.PScreenContent}>
-                {activeC == 0 ? IDS.map((id, idx) => {
-                    return (
-                        <Live id={id} key={idx} />
+                {activeC == 0 ? (
+
+                    <Live />
+                ) : null
+                }
+                {activeC == 1 ?
+                    (
+                        <LineUps />
                     )
-                }) : null}
-                {activeC == 1 ? (
-                    SQ.map((val, idx) => {
-                        return (
-
-                            <LineUps sq={val} key={idx} />
-                        )
-                    })
-                ) : null}
+                    : null}
                 {activeC == 2 ? (
-                    IDS.map((val, idx) => {
-                        return (
-
-                            <MatchInfo key={idx} id={val} />
-                        )
-                    })
+                    <MatchInfo />
                 ) : (
                     null
                 )}
@@ -285,5 +464,262 @@ const styles = StyleSheet.create({
         color: 'rgba(255, 9, 96, 1)',
     },
     //LIVE
+    //LIVE SCREEN
+    LiveVideoCont: {
+        width: 360,
+        height: 200,
+        borderRadius: 6,
+        backgroundColor: 'gray',
+        marginBottom: 21,
+    },
+    LiveDetailsCont: {
+        width: 360,
+        borderRadius: 6,
+        backgroundColor: '#FFFFFF',
+        paddingVertical: 14,
+    },
+
+    LiveScoreTxtCont: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 14,
+    },
+    LiveScoreTxtContSec: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    OversTxt: {
+        fontFamily: 'Jost',
+        fontWeight: '600',
+        fontSize: 11,
+        lineHeight: 15.4,
+        color: '#959595',
+    },
+    PointTxt: {
+        fontFamily: 'Jost',
+        fontWeight: '600',
+        fontSize: 15,
+        lineHeight: 21,
+        color: '#111315',
+        marginLeft: 5,
+        marginRight: 8,
+    },
+    LiveRunCont: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 13,
+        marginTop: 11,
+        paddingHorizontal: 14,
+    },
+    RunsCont: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    Runs: {
+        width: 18,
+        height: 18,
+        backgroundColor: '#EAEAEA',
+        marginRight: 6,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignContent: 'center',
+    },
+    RunsTxt: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 10,
+        textAlign: 'center',
+        color: '#111315',
+    },
+    TotalRunsCont: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    PlayersPointCont: {
+        width: '100%',
+        height: 54,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderTopColor: '#EAEAEA',
+        borderTopWidth: 1,
+        borderBottomColor: '#EAEAEA',
+        borderBottomWidth: 1,
+    },
+    PlayersLeftCont: {
+        width: '50%',
+        height: '100%',
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+    },
+    PlayersRightCont: {
+        width: '50%',
+        height: '100%',
+        borderLeftColor: '#EAEAEA',
+        borderLeftWidth: 1,
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+    },
+    PlayerCont: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+        justifyContent: 'space-between',
+    },
+    PlayerName: {
+        fontFamily: 'Jost',
+        fontWeight: '600',
+        fontSize: 12,
+        lineHeight: 17,
+        color: '#111315',
+    },
+    PlayerPoint: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 12,
+        lineHeight: 17,
+        color: '#111315',
+        marginRight: 3,
+    },
+    PlayerNumber: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 10,
+        lineHeight: 14,
+        color: '#959595',
+    },
+    InformationCont: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        padding: 15,
+    },
+    DetailsBigTxt: {
+        fontFamily: 'Jost',
+        fontWeight: '400',
+        fontSize: 12,
+        lineHeight: 14,
+        color: '#111315',
+        marginLeft: 15,
+    },
+    InformationLeftCont: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '15%',
+    },
+    InformationRightCont: {
+        width: '85%',
+    },
+    //LIVE SCREEN
+    //LINEUPS
+    LineUpsCont: {
+        width: 360,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+    },
+    LineUpsTeamLogo: {
+        width: 25,
+        height: 25,
+        backgroundColor: 'gray',
+        borderRadius: 50,
+    },
+    LineUpsTeamsCont: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 22,
+        width: '100%',
+    },
+    LineUpsTeam: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '42%',
+        justifyContent: 'space-between',
+    },
+    LineUpsTeamName: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 13,
+        lineHeight: 18.2,
+        color: '#111315',
+    },
+    LineUpsVs: {
+        fontFamily: 'Jost',
+        fontWeight: '400',
+        fontSize: 12,
+        lineHeight: 16.8,
+        color: '#111315',
+    },
+    PlayersListCont: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    LeftPlayers: {
+        width: '50%',
+        alignItems: 'flex-start',
+    },
+    RightPlayers: {
+        width: '50%',
+        alignItems: 'flex-end',
+        borderLeftColor: '#EAEAEA',
+        borderLeftWidth: 1,
+    },
+    PlayerContL: {},
+    PlayerLName: {
+        fontFamily: 'Jost',
+        fontWeight: '600',
+        fontSize: 13,
+        lineHeight: 18.2,
+        color: '#111315',
+        textDecorationStyle: 'solid',
+        textDecorationColor: '#111315',
+        textDecorationLine: 'underline',
+        paddingTop: 10,
+
+    },
+    PlayerRangL: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 12,
+        lineHeight: 16.8,
+        color: '#959595',
+    },
+    PlayerRang: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 12,
+        lineHeight: 16.8,
+        color: '#959595',
+        textAlign: 'right',
+    },
+    //LINEUPS
+    //MATCH INFO
+    PlayerBioCont: {
+        width: 360,
+        borderRadius: 8,
+        backgroundColor: '#FFFFFF',
+    },
+    BioConts: {
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        borderBottomColor: '#EAEAEA',
+        borderBottomWidth: 1,
+    },
+    BioDesc: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 12,
+        lineHeight: 16.8,
+        color: '#959595',
+    },
+    BioInfo: {
+        fontFamily: 'Jost',
+        fontWeight: '500',
+        fontSize: 15,
+        lineHeight: 21.68,
+        color: '#111315',
+    },
+    //MATCH INFO
 
 })

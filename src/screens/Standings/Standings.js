@@ -120,9 +120,9 @@ const StandingsScreen = ({ navigation }) => {
                         <View style={styles.CompBlock} key={idx}>
                             <Text style={styles.CompTitle}>{id}</Text>
                             <>
-                                {IDS.map((val) => {
+                                {IDS.map((val, idx) => {
                                     return (
-                                        <Card key={val} val={val} />
+                                        <Card key={idx} val={val} />
                                     )
                                 })}
                             </>

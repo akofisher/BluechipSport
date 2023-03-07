@@ -180,8 +180,9 @@ export const NewsScreen = () => {
         if (selectedCategoryNews.length) {
           return (
             <>
-              {selectedCategoryNews.map((category) => (
+              {selectedCategoryNews.map((category, idx) => (
                 <NewsVerticalList
+                  key={idx}
                   isFullSizeItem={false}
                   data={category.data}
                   isLoadingMore={false}

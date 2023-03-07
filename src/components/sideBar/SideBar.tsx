@@ -46,7 +46,7 @@ const SideBar = memo(({ navigation }) => {
     navigation.navigate('UserProfile')
   }, [navigation])
 
-  useEffect(() => {}, [])
+  useEffect(() => { }, [])
 
   const headerRightAction: { onPress: () => void; iconName: SvgICONSType } =
     useMemo(() => {
@@ -74,20 +74,20 @@ const SideBar = memo(({ navigation }) => {
         renderTitle={renderLanguageButton}
       />
       <ScrollView>
-        {sideBarData.map((category) => {
+        {sideBarData.map((category, idx) => {
           return (
             <Accordion
-              key={category.title}
+              key={idx}
               title={
                 <IconWithTitle title={category.title} icon={category.icon} />
               }
               content={
                 <View>
-                  {category.menuOptions.map((option) => (
+                  {category.menuOptions.map((option, idx) => (
                     <MenuItem
                       title={option.title}
                       onPress={() => null}
-                      key={option.title}
+                      key={idx}
                     />
                   ))}
                 </View>

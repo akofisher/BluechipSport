@@ -147,35 +147,14 @@ const PlayerScreen = ({ navigation }) => {
   const PlayerBio = () => {
     return (
       <View style={styles.PlayerBioCont}>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>Full Name</Text>
-          <Text style={styles.BioInfo}>Sachin Ramesh</Text>
-        </View>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>Born</Text>
-          <Text style={styles.BioInfo}>April 24 , 1973 Bombay ( now Mumbai),
-            Maharashtra</Text>
-        </View>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>Age</Text>
-          <Text style={styles.BioInfo}>49 Years, 8 Month, 20 Days</Text>
-        </View>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>National side</Text>
-          <Text style={styles.BioInfo}>India</Text>
-        </View>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>Batting Style</Text>
-          <Text style={styles.BioInfo}>Right Hand</Text>
-        </View>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>Bowling</Text>
-          <Text style={styles.BioInfo}>Off Break</Text>
-        </View>
-        <View style={styles.BioConts}>
-          <Text style={styles.BioDesc}>Sport</Text>
-          <Text style={styles.BioInfo}>Cricket</Text>
-        </View>
+        {PCareerStats.map((val, idx) => {
+          return (
+            <View style={styles.BioConts} key={idx}>
+              <Text style={styles.BioDesc}>{val.Score}</Text>
+              <Text style={styles.BioInfo}>{val.Title}</Text>
+            </View>
+          )
+        })}
       </View>
     )
   }
@@ -333,12 +312,10 @@ const styles = StyleSheet.create({
   //Player Bio
   PlayerBioCont: {
     width: 360,
-    height: 466,
     borderRadius: 8,
     backgroundColor: '#FFFFFF',
   },
   BioConts: {
-    flex: 1,
     padding: 15,
     borderBottomColor: '#EAEAEA',
     borderBottomWidth: 1,
