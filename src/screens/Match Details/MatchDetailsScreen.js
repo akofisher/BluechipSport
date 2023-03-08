@@ -6,6 +6,7 @@ import { cxs } from 'styles'
 import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVerticalList'
 import stadium from "../../../assets/icons/play.png";
 import { ArrowDownSvg, PlayedTimeSvg } from '../../../assets/svgs/AllSvgs'
+import ScoreCard from './ScoreCard'
 
 
 //https://www.npmjs.com/package/react-clamp-lines   თაითლებისთვის ...
@@ -275,13 +276,13 @@ const MatchDetailsScreen = ({ navigation }) => {
         )
     }
 
-    const ScoreCard = ({ id }) => {
-        return (
-            <View style={styles.ScoreCardCont}>
+    // const ScoreCard = ({ id }) => {
+    //     return (
+    //         <View style={styles.ScoreCardCont}>
 
-            </View>
-        )
-    }
+    //         </View>
+    //     )
+    // }
 
 
     return (
@@ -344,12 +345,8 @@ const MatchDetailsScreen = ({ navigation }) => {
                     null
                 )}
                 {activeC == 3 ? (
-                    IDS.map((val, idx) => {
-                        return (
-                            <ScoreCard key={idx} id={val} />
+                    <ScoreCard navigation={navigation} />
 
-                        )
-                    })
                 ) : (
                     null
                 )}
