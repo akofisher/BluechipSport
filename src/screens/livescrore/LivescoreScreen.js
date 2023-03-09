@@ -28,6 +28,24 @@ Entypo.loadFont();
 
 const LivescoreScreen = ({ navigation }) => {
   const IDS = [1, 2, 3, 4, 5, 6]
+  const [leagues, setLeagues] = useState({})
+  const [loading, setLoading] = useState(true)
+
+  const date = new Date().toISOString().slice(0, 10)
+
+  const [year, month, day] = date.split('-')
+
+  const Today = `${day}-${month}-${year}`;
+
+
+  useEffect(() => {
+
+    fetch(`https://cricket.bluechipsport.io/api/fixtures/date/${Today}`)
+      .then(response => response.json())
+      .then(data => setLeagues(data.results))
+      .then(() => setLoading(false))
+
+  }, [Today])
 
   const LiveStreamBtn = () => {
     return (
@@ -47,79 +65,98 @@ const LivescoreScreen = ({ navigation }) => {
     )
   }
 
-  const Cards = ({ id }) => {
+  const Cards = ({ data }) => {
     return (
-      <View style={Styles.CardMainCont}>
-        <View style={Styles.CardMainHeader}>
-          <View style={Styles.HeaderLogo}></View>
-          <Text style={Styles.HeaderTitle}>{id} - Indian Premier League</Text>
-        </View>
-        <View style={Styles.CardBodyCont}>
-          <View style={Styles.TeamsCont}>
+      <>
 
-            <View style={Styles.LiveDateHead}>
-              <View style={Styles.Flexible}>
-                <LiveBtn />
-                <LiveStreamBtn />
+        <View style={Styles.CardMainCont}>
+          <View style={Styles.CardMainHeader}>
+            <View style={Styles.HeaderLogo}></View>
+            <Text style={Styles.HeaderTitle}>{data.league.name}</Text>
+          </View>
+          <View style={Styles.CardBodyCont}>
+            <View style={Styles.TeamsCont}>
+
+              <View style={Styles.LiveDateHead}>
+                <View style={Styles.Flexible}>
+                  <LiveBtn />
+                  <LiveStreamBtn />
+                </View>
+                <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
               </View>
-              <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
+
+              <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
+                <View style={Styles.Team}>
+                  <View style={Styles.Team}>
+                    <View style={Styles.TeamLogo}></View>
+                    <Text style={Styles.TeamName}>{data.home_team.name}</Text>
+                  </View>
+
+                  {data.scoreboards.map((val, idx) => {
+                    if (val.type == 'total' && data.home_team.id == val.team_id)
+                      return (
+
+                        <Text style={Styles.TeamScores} key={idx}>{val.total}/{val.wickets}</Text>
+                      )
+                  })}
+                </View>
+                <View style={Styles.Team}>
+                  <View style={Styles.Team}>
+                    <View style={Styles.TeamLogo}></View>
+                    <Text style={Styles.TeamName}>{data.away_team.name}</Text>
+                  </View>
+                  {data.scoreboards.map((val, idx) => {
+                    if (val.type == 'total' && data.away_team.id == val.team_id)
+                      return (
+
+                        <Text style={Styles.TeamScores} key={idx}>{val.total}/{val.wickets}</Text>
+                      )
+                  })}
+                </View>
+              </TouchableOpacity>
+
             </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
-              <View style={Styles.Team}>
-                <View style={Styles.Team}>
-                  <View style={Styles.TeamLogo}></View>
-                  <Text style={Styles.TeamName}>Gujarat Titaniki</Text>
-                </View>
-                <Text style={Styles.TeamScores}>133/3 (18.1)</Text>
-              </View>
-              <View style={Styles.Team}>
-                <View style={Styles.Team}>
-                  <View style={Styles.TeamLogo}></View>
-                  <Text style={Styles.TeamName}>Rajastan Royals</Text>
-                </View>
-                <Text style={Styles.TeamScores}>130/9 (20.0)</Text>
-              </View>
-            </TouchableOpacity>
+            {/* <View style={Styles.TeamsSecCont}>
 
-          </View>
-          <View style={Styles.TeamsSecCont}>
-
-            <View style={Styles.LiveDateHead}>
-              {id % 2 == 0 ? (
+              <View style={Styles.LiveDateHead}>
+                {id % 2 == 0 ? (
                 <Text style={Styles.TimeTxt}>18:00</Text>
               ) : (
                 <>
-                  <View style={Styles.Flexible}>
-                    <LiveBtn />
-                  </View>
-                  <Text style={Styles.MatchDtTxt}>Break</Text>
+                <View style={Styles.Flexible}>
+                  <LiveBtn />
+                </View>
+                <Text style={Styles.MatchDtTxt}>Break</Text>
                 </>
               )}
 
-            </View>
+              </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
-              <View style={Styles.Team}>
+              <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
                 <View style={Styles.Team}>
-                  <View style={Styles.TeamLogo}></View>
-                  <Text style={Styles.TeamName}>Gujarat Titaniki</Text>
+                  <View style={Styles.Team}>
+                    <View style={Styles.TeamLogo}></View>
+                    <Text style={Styles.TeamName}>Gujarat Titaniki</Text>
+                  </View>
+                  <Text style={Styles.TeamScores}>-</Text>
                 </View>
-                <Text style={Styles.TeamScores}>-</Text>
-              </View>
-              <View style={Styles.Team}>
                 <View style={Styles.Team}>
-                  <View style={Styles.TeamLogo}></View>
-                  <Text style={Styles.TeamName}>Rajastan Royals</Text>
+                  <View style={Styles.Team}>
+                    <View style={Styles.TeamLogo}></View>
+                    <Text style={Styles.TeamName}>Rajastan Royals</Text>
+                  </View>
+                  <Text style={Styles.TeamScores}>-</Text>
                 </View>
-                <Text style={Styles.TeamScores}>-</Text>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+
+            </View> */}
+
 
           </View>
-
         </View>
-      </View>
+
+      </>
     )
   }
 
@@ -153,18 +190,24 @@ const LivescoreScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity style={Styles.DropDownMenuSec} onPress={() => null}>
           <Icon iconName={'Calendar'} style={Styles.DrpIcon} />
-          <Text style={Styles.DropDownTxtSec}>Today - 12 Jan</Text>
+          <Text style={Styles.DropDownTxtSec}>{Today}</Text>
           <ArrowDownSvg width={15} height={8} />
         </TouchableOpacity>
 
       </View>
       <ScrollView contentContainerStyle={Styles.MainCont}>
-        {IDS.map((id, idx) => {
-          return (
+        {loading == false ? (leagues.map((data, idx) => {
 
-            <Cards id={id} key={idx} />
+          return (
+            <Cards data={data} key={idx} />
           )
-        })}
+
+
+
+        })) : (
+          <Spinner />
+        )
+        }
       </ScrollView>
     </View>
   );

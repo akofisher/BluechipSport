@@ -1,5 +1,5 @@
 import { Header } from 'components/header'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native'
 import { API } from 'services'
 import { cxs } from 'styles'
@@ -82,6 +82,10 @@ const MatchDetailsScreen = ({ navigation }) => {
 
 
     ]
+
+
+
+
 
     const Points = {
         first: '133/3',
