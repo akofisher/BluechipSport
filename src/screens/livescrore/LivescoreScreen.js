@@ -11,6 +11,7 @@ import {
   ScrollView,
   FlatList,
   Dimensions,
+  Image,
 } from "react-native";
 import { styles } from "react-native-floating-label-input/src/styles";
 import Entypo from "react-native-vector-icons/dist/Entypo";
@@ -22,6 +23,7 @@ import { cxs, Colors } from "styles";
 import { ArrowDownSvg, LiveStreamSvg } from "../../../assets/svgs/AllSvgs";
 import { SvgICONSType } from '../../../assets/svgs/svgIcons'
 import { Icon } from "../../components/common";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 Entypo.loadFont();
@@ -29,7 +31,30 @@ Entypo.loadFont();
 const LivescoreScreen = ({ navigation }) => {
   const IDS = [1, 2, 3, 4, 5, 6]
   const [leagues, setLeagues] = useState({})
+  const [matches, setMatches] = useState({})
   const [loading, setLoading] = useState(true)
+  const [Time, setTime] = useState(Today)
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = async (date) => {
+    // console.log(date, 'DATE')
+    let STR = JSON.stringify(date)
+    let ind = STR.lastIndexOf('T')
+    let NewTIME = STR.substring(1, ind)
+    const [nYear, nMonth, nDay] = NewTIME.split('-')
+    const NewRealTime = `${nDay}-${nMonth}-${nYear}`
+    await setTime(NewRealTime)
+    await hideDatePicker()
+
+  };
 
   const date = new Date().toISOString().slice(0, 10)
 
@@ -38,14 +63,36 @@ const LivescoreScreen = ({ navigation }) => {
   const Today = `${day}-${month}-${year}`;
 
 
-  useEffect(() => {
 
-    fetch(`https://cricket.bluechipsport.io/api/fixtures/date/${Today}`)
+
+  const removeDuplicates = (arr) => {
+    const ids = arr.map(o => o.league_id)
+    const filtered = arr.filter(({ league_id }, index) => !ids.includes(league_id, index + 1))
+    setLeagues(filtered)
+  }
+
+  const timePicker = (val) => {
+    let fr = val.lastIndexOf(' ');
+    let lst = val.lastIndexOf(':');
+    let str = val.substring(fr, lst)
+    return str
+  }
+
+
+
+
+  useEffect(() => {
+    setLoading(true)
+    fetch(`https://cricket.bluechipsport.io/api/fixtures/date/${Time}`)
       .then(response => response.json())
-      .then(data => setLeagues(data.results))
+      .then(data => {
+        removeDuplicates(data.results)
+        setMatches(data.results)
+      }
+      )
       .then(() => setLoading(false))
 
-  }, [Today])
+  }, [Today, Time])
 
   const LiveStreamBtn = () => {
     return (
@@ -71,53 +118,102 @@ const LivescoreScreen = ({ navigation }) => {
 
         <View style={Styles.CardMainCont}>
           <View style={Styles.CardMainHeader}>
-            <View style={Styles.HeaderLogo}></View>
+            <Image style={Styles.HeaderLogo} source={{ uri: `${data.league.image_path}` }} />
             <Text style={Styles.HeaderTitle}>{data.league.name}</Text>
           </View>
           <View style={Styles.CardBodyCont}>
-            <View style={Styles.TeamsCont}>
+            {matches.map((val, idx) => {
+              if (val.league_id == data.league_id) {
 
-              <View style={Styles.LiveDateHead}>
-                <View style={Styles.Flexible}>
-                  <LiveBtn />
-                  <LiveStreamBtn />
-                </View>
-                <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
-              </View>
 
-              <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
-                <View style={Styles.Team}>
-                  <View style={Styles.Team}>
-                    <View style={Styles.TeamLogo}></View>
-                    <Text style={Styles.TeamName}>{data.home_team.name}</Text>
+                return (
+
+                  <View style={Styles.TeamsCont}>
+
+                    <View style={Styles.LiveDateHead}>
+                      {val.status == "NOT_STARTED" ? (
+                        <Text style={Styles.TimeTxt}>{
+                          timePicker(val.starting_at)
+                        }</Text>
+                      ) : (val.status == "INNINGS_BREAK" ? (
+                        <>
+                          <View style={Styles.Flexible}>
+                            <LiveBtn />
+                          </View>
+                          <Text style={Styles.MatchDtTxt}>Break</Text>
+                        </>
+
+                      ) : (val.status == "FINISHED" ? (
+                        <Text style={Styles.TimeTxt}>FN</Text>
+                      ) : (val.status == "ABANDONED" ? (
+                        <Text style={Styles.TimeTxt}>ABAN.</Text>
+                      ) : (
+                        <>
+                          <View style={Styles.Flexible}>
+                            <LiveBtn />
+                            <LiveStreamBtn />
+                          </View>
+                          <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
+                        </>
+                      )
+                      )
+
+                      )
+
+                      )}
+                    </View>
+
+                    <TouchableOpacity key={idx} onPress={() => navigation.navigate('MatchDetails')}>
+                      <View style={Styles.Team}>
+                        <View style={Styles.Team}>
+                          <Image style={Styles.TeamLogo} source={{ uri: `${val.home_team.image_path}` }} />
+                          <Text style={Styles.TeamName}>{val.home_team.name}</Text>
+                        </View>
+                        {val.status == "INNINGS_BREAK" || val.status !== "NOT_STARTED" ?
+                          (val.scoreboards.map((v, idx) => {
+                            if (v.type == 'total' && val.home_team.id == v.team_id && v.total > 0)
+                              return (
+
+                                <Text style={Styles.TeamScores} key={idx}>{v.total}/{v.wickets}</Text>
+                              )
+                          }))
+                          : (
+                            <Text style={Styles.TeamScores} key={idx}>-</Text>
+                          )}
+
+                      </View>
+                      <View style={Styles.Team}>
+                        <View style={Styles.Team}>
+                          <Image style={Styles.TeamLogo} source={{ uri: `${val.away_team.image_path}` }} />
+                          <Text style={Styles.TeamName}>{val.away_team.name}</Text>
+                        </View>
+
+                        {val.status == "INNINGS_BREAK" || val.status !== "NOT_STARTED" ?
+                          (val.scoreboards.map((v, idx) => {
+                            if (v.type == 'total' && val.away_team.id == v.team_id && v.total > 0)
+                              return (
+
+                                <Text style={Styles.TeamScores} key={idx}>{v.total}/{v.wickets}</Text>
+                              )
+                          }))
+                          : (
+                            <Text style={Styles.TeamScores} key={idx}>-</Text>
+                          )}
+                      </View>
+                    </TouchableOpacity>
+
+
+
+
+
                   </View>
 
-                  {data.scoreboards.map((val, idx) => {
-                    if (val.type == 'total' && data.home_team.id == val.team_id)
-                      return (
 
-                        <Text style={Styles.TeamScores} key={idx}>{val.total}/{val.wickets}</Text>
-                      )
-                  })}
-                </View>
-                <View style={Styles.Team}>
-                  <View style={Styles.Team}>
-                    <View style={Styles.TeamLogo}></View>
-                    <Text style={Styles.TeamName}>{data.away_team.name}</Text>
-                  </View>
-                  {data.scoreboards.map((val, idx) => {
-                    if (val.type == 'total' && data.away_team.id == val.team_id)
-                      return (
 
-                        <Text style={Styles.TeamScores} key={idx}>{val.total}/{val.wickets}</Text>
-                      )
-                  })}
-                </View>
-              </TouchableOpacity>
 
-            </View>
 
-            {/* <View style={Styles.TeamsSecCont}>
+                )
+                {/* <View style={Styles.TeamsSecCont}>
 
               <View style={Styles.LiveDateHead}>
                 {id % 2 == 0 ? (
@@ -152,8 +248,13 @@ const LivescoreScreen = ({ navigation }) => {
 
             </View> */}
 
+              } else {
+                null
+              }
+            })}
 
           </View>
+
         </View>
 
       </>
@@ -188,9 +289,9 @@ const LivescoreScreen = ({ navigation }) => {
           </View>
           <ArrowDownSvg width={15} height={8} />
         </TouchableOpacity>
-        <TouchableOpacity style={Styles.DropDownMenuSec} onPress={() => null}>
+        <TouchableOpacity style={Styles.DropDownMenuSec} onPress={() => showDatePicker()}>
           <Icon iconName={'Calendar'} style={Styles.DrpIcon} />
-          <Text style={Styles.DropDownTxtSec}>{Today}</Text>
+          <Text style={Styles.DropDownTxtSec}>{Time ? Time : Today}</Text>
           <ArrowDownSvg width={15} height={8} />
         </TouchableOpacity>
 
@@ -209,6 +310,12 @@ const LivescoreScreen = ({ navigation }) => {
         )
         }
       </ScrollView>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
     </View>
   );
 };
@@ -272,14 +379,13 @@ const Styles = StyleSheet.create({
   //Cards
   CardBodyCont: {
     width: 360,
-    height: 224,
+
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
   },
   HeaderLogo: {
     width: 24,
     height: 24,
-    backgroundColor: 'blue',
     borderRadius: 50,
     marginRight: 10,
   },
@@ -299,7 +405,7 @@ const Styles = StyleSheet.create({
   },
   TeamsCont: {
     width: '100%',
-    height: '50%',
+    height: 112,
     paddingHorizontal: 15,
     paddingVertical: 14,
     borderBottomColor: '#EAEAEA',
@@ -317,7 +423,6 @@ const Styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 50,
-    backgroundColor: 'black',
     marginBottom: 8,
     marginRight: 10,
   },
