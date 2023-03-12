@@ -1,20 +1,20 @@
-import React, { memo } from 'react'
-import { SvgICONS, SvgICONSType } from '../../../assets/svgs/svgIcons'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import React, {memo} from 'react';
+import {SvgICONS, SvgICONSType} from '../../../assets/svgs/svgIcons';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 
 interface IconProps {
-  iconName: SvgICONSType
-  style?: ViewStyle | null
-  stroke?: string
-  strokeWidth?: number
+  iconName: SvgICONSType;
+  style?: ViewStyle | null;
+  stroke?: string;
+  strokeWidth?: number;
 }
 
-const Icon = memo<IconProps>((props) => {
-  const { iconName, stroke, style, strokeWidth } = props
-  const SvgIcon = SvgICONS[iconName]
+const Icon = memo<IconProps>(props => {
+  const {iconName, stroke, style, strokeWidth} = props;
+  const SvgIcon = SvgICONS[iconName];
 
   if (!SvgIcon) {
-    return null
+    return null;
   }
   return stroke ? (
     <View
@@ -25,14 +25,13 @@ const Icon = memo<IconProps>((props) => {
           width: strokeWidth,
           height: strokeWidth,
         },
-      ]}
-    >
+      ]}>
       <SvgIcon style={style} />
     </View>
   ) : (
     <SvgIcon style={style} />
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -42,6 +41,6 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
   },
-})
+});
 
-export default Icon
+export default Icon;

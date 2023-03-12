@@ -1,3 +1,3 @@
-export * from './appThunks'
-export * from './categoriesThunks'
-export * from './newsThunk'
+export * from './appThunks';
+export * from './categoriesThunks';
+export * from './newsThunk';

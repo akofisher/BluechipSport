@@ -1,40 +1,39 @@
-import { Spinner } from "components/common";
-import { Header } from "components/header";
-import i18next from "i18next";
-import moment from "moment";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import {Spinner} from 'components/common';
+import {Header} from 'components/header';
+import React, {useState, useEffect, useMemo} from 'react';
+
 import {
   View,
   TouchableOpacity,
   Text,
   StyleSheet,
   ScrollView,
-  FlatList,
-  Dimensions,
   Image,
-} from "react-native";
-import { styles } from "react-native-floating-label-input/src/styles";
-import Entypo from "react-native-vector-icons/dist/Entypo";
-// eslint-disable-next-line import/order
-import { API } from "services";
+} from 'react-native';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
 
-import { useFavoriteMatch, useDevice } from "stores";
-import { cxs, Colors } from "styles";
-import { ArrowDownSvg, LiveStreamSvg } from "../../../assets/svgs/AllSvgs";
-import { SvgICONSType } from '../../../assets/svgs/svgIcons'
-import { Icon } from "../../components/common";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-
+import {Colors} from 'styles';
+import {ArrowDownSvg, LiveStreamSvg} from '../../../assets/svgs/AllSvgs';
+import {Icon} from '../../components/common';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {getCricket, getFootball} from '../../../api/livescore';
+import FootballCard from './Cards/FootballCard';
 
 Entypo.loadFont();
 
-const LivescoreScreen = ({ navigation }) => {
-  const IDS = [1, 2, 3, 4, 5, 6]
-  const [leagues, setLeagues] = useState({})
-  const [matches, setMatches] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [Time, setTime] = useState(Today)
+const DROPDOWN = [
+  {label: 'Cricket', icon: 'CricketWhite', id: 1, getData: getCricket},
+  {label: 'Football', icon: 'Football', id: 2, getData: getFootball},
+];
+
+const LivescoreScreen = ({navigation}) => {
+  const [leagues, setLeagues] = useState({});
+  const [matches, setMatches] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [Time, setTime] = useState(Today);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [type, setType] = useState(DROPDOWN[0]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -44,108 +43,113 @@ const LivescoreScreen = ({ navigation }) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = async (date) => {
+  const handleConfirm = async date => {
     // console.log(date, 'DATE')
-    let STR = JSON.stringify(date)
-    let ind = STR.lastIndexOf('T')
-    let NewTIME = STR.substring(1, ind)
-    const [nYear, nMonth, nDay] = NewTIME.split('-')
-    const NewRealTime = `${nDay}-${nMonth}-${nYear}`
-    await setTime(NewRealTime)
-    await hideDatePicker()
-
+    let STR = JSON.stringify(date);
+    let ind = STR.lastIndexOf('T');
+    let NewTIME = STR.substring(1, ind);
+    const [nYear, nMonth, nDay] = NewTIME.split('-');
+    const NewRealTime = `${nDay}-${nMonth}-${nYear}`;
+    await setTime(NewRealTime);
+    await hideDatePicker();
   };
 
-  const date = new Date().toISOString().slice(0, 10)
+  const date = new Date().toISOString().slice(0, 10);
 
-  const [year, month, day] = date.split('-')
+  const [year, month, day] = date.split('-');
 
   const Today = `${day}-${month}-${year}`;
 
+  const removeDuplicates = arr => {
+    if (type.id === 1) {
+      const ids = arr.map(o => o.league_id);
+      const filtered = arr.filter(
+        ({league_id}, index) => !ids.includes(league_id, index + 1),
+      );
+      setLeagues(filtered);
+    } else {
+      setLeagues(arr);
+    }
+  };
 
-
-
-  const removeDuplicates = (arr) => {
-    const ids = arr.map(o => o.league_id)
-    const filtered = arr.filter(({ league_id }, index) => !ids.includes(league_id, index + 1))
-    setLeagues(filtered)
-  }
-
-  const timePicker = (val) => {
+  const timePicker = val => {
     let fr = val.lastIndexOf(' ');
     let lst = val.lastIndexOf(':');
-    let str = val.substring(fr, lst)
-    return str
-  }
-
-
-
+    let str = val.substring(fr, lst);
+    return str;
+  };
 
   useEffect(() => {
-    setLoading(true)
-    fetch(`https://cricket.bluechipsport.io/api/fixtures/date/${Time}`)
-      .then(response => response.json())
+    setLoading(true);
+    type
+      .getData(Time || Today)
       .then(data => {
-        removeDuplicates(data.results)
-        setMatches(data.results)
-      }
-      )
-      .then(() => setLoading(false))
-
-  }, [Today, Time])
+        if (type.id === 1) {
+          removeDuplicates(data.results);
+          setMatches(data.results);
+        } else {
+          removeDuplicates(data);
+          setMatches(data);
+        }
+      })
+      .then(() => setLoading(false));
+  }, [Today, Time, type]);
 
   const LiveStreamBtn = () => {
     return (
       <TouchableOpacity style={Styles.LiveStreamCont}>
-        <LiveStreamSvg width={'11'} height={'11'} fill={'rgba(1, 175, 112, 1)'} />
+        <LiveStreamSvg
+          width={'11'}
+          height={'11'}
+          fill={'rgba(1, 175, 112, 1)'}
+        />
         <Text style={Styles.LiveStreamTxt}>LIVE STREAM</Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   const LiveBtn = () => {
     return (
       <TouchableOpacity style={Styles.LiveCont}>
-        <View style={Styles.LiveDot}></View>
+        <View style={Styles.LiveDot} />
         <Text style={Styles.LiveTxt}>LIVE</Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
-  const Cards = ({ data }) => {
+  const Cards = ({data}) => {
     return (
       <>
-
         <View style={Styles.CardMainCont}>
           <View style={Styles.CardMainHeader}>
-            <Image style={Styles.HeaderLogo} source={{ uri: `${data.league.image_path}` }} />
-            <Text style={Styles.HeaderTitle}>{data.league.name}</Text>
+            <Image
+              style={Styles.HeaderLogo}
+              source={{
+                uri: `${data?.league?.image_path}`,
+              }}
+            />
+            <Text style={Styles.HeaderTitle}>{data?.league?.name}</Text>
           </View>
           <View style={Styles.CardBodyCont}>
             {matches.map((val, idx) => {
-              if (val.league_id == data.league_id) {
-
-
+              if (val?.league_id === data?.league_id) {
                 return (
-
                   <View style={Styles.TeamsCont}>
-
                     <View style={Styles.LiveDateHead}>
-                      {val.status == "NOT_STARTED" ? (
-                        <Text style={Styles.TimeTxt}>{
-                          timePicker(val.starting_at)
-                        }</Text>
-                      ) : (val.status == "INNINGS_BREAK" ? (
+                      {val?.status === 'NOT_STARTED' ? (
+                        <Text style={Styles.TimeTxt}>
+                          {timePicker(val?.starting_at)}
+                        </Text>
+                      ) : val?.status === 'INNINGS_BREAK' ? (
                         <>
                           <View style={Styles.Flexible}>
                             <LiveBtn />
                           </View>
                           <Text style={Styles.MatchDtTxt}>Break</Text>
                         </>
-
-                      ) : (val.status == "FINISHED" ? (
+                      ) : val?.status === 'FINISHED' ? (
                         <Text style={Styles.TimeTxt}>FN</Text>
-                      ) : (val.status == "ABANDONED" ? (
+                      ) : val?.status === 'ABANDONED' ? (
                         <Text style={Styles.TimeTxt}>ABAN.</Text>
                       ) : (
                         <>
@@ -155,186 +159,200 @@ const LivescoreScreen = ({ navigation }) => {
                           </View>
                           <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
                         </>
-                      )
-                      )
-
-                      )
-
                       )}
                     </View>
 
-                    <TouchableOpacity key={idx} onPress={() => navigation.navigate('MatchDetails')}>
+                    <TouchableOpacity
+                      key={idx}
+                      onPress={() => navigation.navigate('MatchDetails')}>
                       <View style={Styles.Team}>
                         <View style={Styles.Team}>
-                          <Image style={Styles.TeamLogo} source={{ uri: `${val.home_team.image_path}` }} />
-                          <Text style={Styles.TeamName}>{val.home_team.name}</Text>
+                          <Image
+                            style={Styles.TeamLogo}
+                            source={{
+                              uri: `${val?.home_team?.image_path}`,
+                            }}
+                          />
+                          <Text style={Styles.TeamName}>
+                            {val?.home_team?.name}
+                          </Text>
                         </View>
-                        {val.status == "INNINGS_BREAK" || val.status !== "NOT_STARTED" ?
-                          (val.scoreboards.map((v, idx) => {
-                            if (v.type == 'total' && val.home_team.id == v.team_id && v.total > 0)
+                        {val?.status == 'INNINGS_BREAK' ||
+                        val?.status !== 'NOT_STARTED' ? (
+                          val?.scoreboards?.map((v, idx) => {
+                            if (
+                              v.type == 'total' &&
+                              val?.home_team.id == v.team_id &&
+                              v.total > 0
+                            ) {
                               return (
-
-                                <Text style={Styles.TeamScores} key={idx}>{v.total}/{v.wickets}</Text>
-                              )
-                          }))
-                          : (
-                            <Text style={Styles.TeamScores} key={idx}>-</Text>
-                          )}
-
+                                <Text style={Styles.TeamScores} key={idx}>
+                                  {v?.total}/{v?.wickets}
+                                </Text>
+                              );
+                            }
+                          })
+                        ) : (
+                          <Text style={Styles.TeamScores} key={idx}>
+                            -
+                          </Text>
+                        )}
                       </View>
                       <View style={Styles.Team}>
                         <View style={Styles.Team}>
-                          <Image style={Styles.TeamLogo} source={{ uri: `${val.away_team.image_path}` }} />
-                          <Text style={Styles.TeamName}>{val.away_team.name}</Text>
+                          <Image
+                            style={Styles.TeamLogo}
+                            source={{uri: `${val?.away_team?.image_path}`}}
+                          />
+                          <Text style={Styles.TeamName}>
+                            {val?.away_team?.name}
+                          </Text>
                         </View>
 
-                        {val.status == "INNINGS_BREAK" || val.status !== "NOT_STARTED" ?
-                          (val.scoreboards.map((v, idx) => {
-                            if (v.type == 'total' && val.away_team.id == v.team_id && v.total > 0)
+                        {val?.status == 'INNINGS_BREAK' ||
+                        val?.status !== 'NOT_STARTED' ? (
+                          val?.scoreboards?.map((v, idx) => {
+                            if (
+                              v.type == 'total' &&
+                              val?.away_team.id == v.team_id &&
+                              v.total > 0
+                            ) {
                               return (
-
-                                <Text style={Styles.TeamScores} key={idx}>{v.total}/{v.wickets}</Text>
-                              )
-                          }))
-                          : (
-                            <Text style={Styles.TeamScores} key={idx}>-</Text>
-                          )}
+                                <Text style={Styles.TeamScores} key={idx}>
+                                  {v?.total}/{v?.wickets}
+                                </Text>
+                              );
+                            }
+                          })
+                        ) : (
+                          <Text style={Styles.TeamScores} key={idx}>
+                            -
+                          </Text>
+                        )}
                       </View>
                     </TouchableOpacity>
-
-
-
-
-
                   </View>
-
-
-
-
-
-                )
-                {/* <View style={Styles.TeamsSecCont}>
-
-              <View style={Styles.LiveDateHead}>
-                {id % 2 == 0 ? (
-                <Text style={Styles.TimeTxt}>18:00</Text>
-              ) : (
-                <>
-                <View style={Styles.Flexible}>
-                  <LiveBtn />
-                </View>
-                <Text style={Styles.MatchDtTxt}>Break</Text>
-                </>
-              )}
-
-              </View>
-
-              <TouchableOpacity onPress={() => navigation.navigate('MatchDetails')}>
-                <View style={Styles.Team}>
-                  <View style={Styles.Team}>
-                    <View style={Styles.TeamLogo}></View>
-                    <Text style={Styles.TeamName}>Gujarat Titaniki</Text>
-                  </View>
-                  <Text style={Styles.TeamScores}>-</Text>
-                </View>
-                <View style={Styles.Team}>
-                  <View style={Styles.Team}>
-                    <View style={Styles.TeamLogo}></View>
-                    <Text style={Styles.TeamName}>Rajastan Royals</Text>
-                  </View>
-                  <Text style={Styles.TeamScores}>-</Text>
-                </View>
-              </TouchableOpacity>
-
-            </View> */}
-
+                );
               } else {
-                null
+                null;
               }
             })}
-
           </View>
-
         </View>
-
       </>
-    )
-  }
+    );
+  };
 
-
-  const onSearchPress = React.useCallback(() => navigation.navigate("searchScreen"), []);
+  const onSearchPress = React.useCallback(
+    () => navigation.navigate('searchScreen'),
+    [],
+  );
   const headerRightActions = useMemo(
     () => [
       {
         onPress: onSearchPress,
-        iconName: "Search",
+        iconName: 'Search',
       },
       {
         onPress: navigation.openDrawer,
-        iconName: "Menu",
+        iconName: 'Menu',
       },
     ],
     [navigation.openDrawer, onSearchPress],
   );
 
   return (
-    <View style={Styles.liveScoreScreenBackground}>
-      <Header rightAction={headerRightActions} />
-      <View style={Styles.tabsContainer}>
-        <TouchableOpacity style={Styles.DropDownMenu} onPress={() => null}>
-          <View style={Styles.SecCont}>
-
-            <Icon iconName={'CricketWhite'} style={Styles.DrpIcon} />
-            <Text style={Styles.DropDownTxt}>Cricket</Text>
-          </View>
-          <ArrowDownSvg width={15} height={8} />
-        </TouchableOpacity>
-        <TouchableOpacity style={Styles.DropDownMenuSec} onPress={() => showDatePicker()}>
-          <Icon iconName={'Calendar'} style={Styles.DrpIcon} />
-          <Text style={Styles.DropDownTxtSec}>{Time ? Time : Today}</Text>
-          <ArrowDownSvg width={15} height={8} />
-        </TouchableOpacity>
-
+    <>
+      <View style={Styles.liveScoreScreenBackground}>
+        <Header rightAction={headerRightActions} />
+        <View style={Styles.tabsContainer}>
+          <TouchableOpacity
+            style={Styles.DropDownMenu}
+            onPress={() => setDropdownVisible(prev => !prev)}>
+            <View style={Styles.SecCont}>
+              <Icon iconName={type.icon} style={Styles.DrpIcon} />
+              <Text style={Styles.DropDownTxt}>{type.label}</Text>
+            </View>
+            <ArrowDownSvg width={15} height={8} />
+            {dropdownVisible ? (
+              <View style={Styles.dropdownContainer}>
+                {DROPDOWN.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setType(item);
+                      setDropdownVisible(false);
+                    }}
+                    style={{
+                      paddingVertical: 4,
+                      borderBottomWidth: 1,
+                      borderBottomColor:
+                        index !== DROPDOWN.length - 1
+                          ? 'rgba(255,255,255,0.3)'
+                          : null,
+                    }}>
+                    <Text style={{color: '#FFF'}}>{item.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : null}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={Styles.DropDownMenuSec}
+            onPress={() => showDatePicker()}>
+            <Icon iconName={'Calendar'} style={Styles.DrpIcon} />
+            <Text style={Styles.DropDownTxtSec}>{Time ? Time : Today}</Text>
+            <ArrowDownSvg width={15} height={8} />
+          </TouchableOpacity>
+        </View>
+        <ScrollView contentContainerStyle={Styles.MainCont}>
+          {loading === false ? (
+            leagues.map((data, idx) => {
+              return type.id === 1 ? (
+                <Cards data={data} key={idx} />
+              ) : (
+                <FootballCard data={data} />
+              );
+            })
+          ) : (
+            <Spinner />
+          )}
+        </ScrollView>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
       </View>
-      <ScrollView contentContainerStyle={Styles.MainCont}>
-        {loading == false ? (leagues.map((data, idx) => {
-
-          return (
-            <Cards data={data} key={idx} />
-          )
-
-
-
-        })) : (
-          <Spinner />
-        )
-        }
-      </ScrollView>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-    </View>
+    </>
   );
 };
 
 export default LivescoreScreen;
 
 const Styles = StyleSheet.create({
+  dropdownContainer: {
+    position: 'absolute',
+    top: 58,
+    width: '100%',
+    backgroundColor: '#101821',
+    padding: 8,
+    zIndex: 99999,
+    borderRadius: 8,
+  },
   liveScoreScreenBackground: {
-    backgroundColor: "#E5E5E5",
+    backgroundColor: '#E5E5E5',
     flex: 1,
   },
   tabsContainer: {
+    zIndex: 9,
     minWidth: '100%',
     height: 55,
     backgroundColor: Colors.darkBlue,
     paddingHorizontal: 20,
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
     borderTopColor: '#1A2631',
     borderTopWidth: 1,
   },
@@ -362,6 +380,7 @@ const Styles = StyleSheet.create({
   },
   SecCont: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   DropDownTxt: {
     color: '#FFFFFF',
@@ -483,7 +502,6 @@ const Styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16.8,
     color: '#111315',
-
   },
   //LIVE
   //LIVE STREAM
@@ -508,7 +526,6 @@ const Styles = StyleSheet.create({
   },
   Flexible: {
     flexDirection: 'row',
-  }
+  },
   //LIVE STREAM
-
 });
