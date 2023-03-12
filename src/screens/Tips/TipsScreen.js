@@ -1,26 +1,18 @@
-import { Header } from "components/header";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import {Header} from 'components/header';
+import React, {useMemo} from 'react';
 import {
   View,
   Text,
-  Image,
   ScrollView,
-  FlatList,
   TouchableOpacity,
   StyleSheet,
-} from "react-native";
-import { DawnStandingSvg, UpStandingSvg } from "../../../assets/svgs/AllSvgs";
-import { ICONS } from "../../../assets/icons";
-import { SvgICONS } from "../../../assets/svgs/svgIcons";
+} from 'react-native';
+import {DawnStandingSvg, UpStandingSvg} from '../../../assets/svgs/AllSvgs';
 
+const IDS = [1, 2, 3, 4, 5, 6];
 
-
-
-export default function TipsScreen({ navigation, route }) {
-  const IDS = [1, 2, 3, 4, 5, 6]
-
-
-  const TeamCards = ({ id }) => {
+export default function TipsScreen({navigation, route}) {
+  const TeamCards = ({id}) => {
     return (
       <View style={styles.CardCont}>
         <View style={styles.CardHead}>
@@ -37,15 +29,14 @@ export default function TipsScreen({ navigation, route }) {
           </View>
         </View>
         <View style={styles.SecTeamBigCont}>
-
           <View style={styles.TeamsLogosCont}>
             <View style={styles.TeamCont}>
-              <View style={styles.TeamLogoCont}></View>
+              <View style={styles.TeamLogoCont} />
               <Text style={styles.TeamNameTxt}>Dinamo</Text>
             </View>
             <Text style={styles.TeamVs}>VS</Text>
             <View style={styles.TeamCont}>
-              <View style={styles.TeamLogoCont}></View>
+              <View style={styles.TeamLogoCont} />
               <Text style={styles.TeamNameTxt}>Torpedo</Text>
             </View>
           </View>
@@ -53,57 +44,52 @@ export default function TipsScreen({ navigation, route }) {
             <TouchableOpacity style={styles.BetsBtn}>
               <Text style={styles.BetsText}>1.16</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.BetsBtn} >
+            <TouchableOpacity style={styles.BetsBtn}>
               <Text style={styles.BetsText}>1.89</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.ButtonCont}>
-            <TouchableOpacity style={styles.AddTeamBtn} onPress={() => navigation.navigate("prediction")}>
+            <TouchableOpacity
+              style={styles.AddTeamBtn}
+              onPress={() => navigation.navigate('prediction')}>
               <Text style={styles.AddBtnTxt}>VIEW PREDICTION</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    )
-  }
+    );
+  };
 
   // const bottomSheetModalRef = useRef(null);
   // const presentLeagueModal = () => bottomSheetModalRef.current.present();
   // const close = () => bottomSheetModalRef.current.close();
   // const snapPoints = useMemo(() => ["10%", "75%"], []);
 
-
-  const onSearchPress = React.useCallback(() => navigation.navigate("searchScreen"), []);
+  const onSearchPress = React.useCallback(
+    () => navigation.navigate('searchScreen'),
+    [],
+  );
   const headerRightActions = useMemo(
     () => [
       {
         onPress: onSearchPress,
-        iconName: "Search",
+        iconName: 'Search',
       },
       {
         onPress: navigation.openDrawer,
-        iconName: "Menu",
+        iconName: 'Menu',
       },
     ],
     [navigation.openDrawer, onSearchPress],
   );
 
-
-
-
-
-
   return (
-    <View style={{ flex: 1, backgroundColor: "#E5E5E5" }}>
+    <View style={{flex: 1, backgroundColor: '#E5E5E5'}}>
       <Header rightAction={headerRightActions} />
       <ScrollView contentContainerStyle={styles.Container}>
-
         {IDS.map((id, idx) => {
-          return (
-            <TeamCards id={id} key={idx} />
-          )
+          return <TeamCards id={id} key={idx} />;
         })}
-
       </ScrollView>
     </View>
   );
@@ -249,7 +235,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFFFFF',
   },
-
-
-
 });
