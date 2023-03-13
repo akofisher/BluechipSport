@@ -1,18 +1,23 @@
 import { Header } from 'components/header'
 import React, { useMemo, useState, useEffect } from 'react'
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Image } from 'react-native'
 import { API } from 'services'
 import { cxs } from 'styles'
 import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVerticalList'
 import stadium from "../../../assets/icons/play.png";
 import { ArrowDownSvg, PlayedTimeSvg } from '../../../assets/svgs/AllSvgs'
 import ScoreCard from './ScoreCard'
+import { getMatchDetails } from '../../../api/livescore'
+import { Spinner } from '../../components/common'
 
 
 //https://www.npmjs.com/package/react-clamp-lines   თაითლებისთვის ...
 
-const MatchDetailsScreen = ({ navigation }) => {
+const MatchDetailsScreen = ({ route, navigation }) => {
+    const { MatchId, Scores } = route.params;
     const [activeC, setActiveC] = useState(0)
+    const [matchInfo, setMatchInfo] = useState()
+    const [loading, setLoading] = useState(true)
     const IDS = [1, 2, 3, 4, 5, 6]
     const SQ = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     const Runs = [2, 2, 0, 1, '1w', 0, 6]
@@ -82,6 +87,18 @@ const MatchDetailsScreen = ({ navigation }) => {
 
 
     ]
+
+
+    useEffect(() => {
+        setLoading(true)
+        getMatchDetails(MatchId)
+            .then(data => {
+                console.log(data, 'MATCH DATA')
+                setMatchInfo(data.results)
+                console.log(data.results.scoreboards[0], 'name')
+            })
+            .then(() => setLoading(false));
+    }, []);
 
 
 
@@ -243,13 +260,23 @@ const MatchDetailsScreen = ({ navigation }) => {
             <View style={styles.LineUpsCont}>
                 <View style={styles.LineUpsTeamsCont}>
                     <View style={styles.LineUpsTeam}>
-                        <View style={styles.LineUpsTeamLogo}></View>
-                        <Text style={styles.LineUpsTeamName}>Gujarateli Titanebi</Text>
+                        <Image
+                            style={styles.LineUpsTeamLogo}
+                            source={{
+                                uri: `${matchInfo?.home_team?.image_path}`,
+                            }}
+                        />
+                        <Text style={styles.LineUpsTeamName}>{matchInfo?.home_team?.name}</Text>
                     </View>
                     <Text style={styles.LineUpsVs}>VS</Text>
                     <View style={styles.LineUpsTeam}>
-                        <Text style={styles.LineUpsTeamName}>Samtrediis Dinamo</Text>
-                        <View style={styles.LineUpsTeamLogo}></View>
+                        <Text style={styles.LineUpsTeamName}>{matchInfo?.away_team?.name}</Text>
+                        <Image
+                            style={styles.LineUpsTeamLogo}
+                            source={{
+                                uri: `${matchInfo?.away_team?.image_path}`,
+                            }}
+                        />
                     </View>
                 </View>
                 <View style={styles.PlayersListCont}>
@@ -293,22 +320,68 @@ const MatchDetailsScreen = ({ navigation }) => {
         <View style={styles.flex}>
             <Header title={'MATCH DETAILS'} leftAction={headerLeftAction} />
             <View style={styles.HeaderCont}>
+                {loading ? (
+                    <Spinner />
+                ) : (
+                    <>
+                        <View style={styles.PScreenHead}>
+                            <Image
+                                style={styles.PlayerImg}
+                                source={{
+                                    uri: `${matchInfo?.home_team?.image_path}`,
+                                }}
+                            />
 
-                <View style={styles.PScreenHead}>
-                    <View style={styles.PlayerImg}></View>
-                    <Text style={styles.PlayerName}>Gujarateli Titani</Text>
-                    {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
-                </View>
-                <View style={styles.PScreenHead}>
-                    <LiveBtn />
-                    <Text style={styles.MatchPoints}>{Points.first} : {Points.second}</Text>
-                    <Text style={styles.MatchDetTxt}>2 INN, 6.0 OV</Text>
-                </View>
-                <View style={styles.PScreenHead}>
-                    <View style={styles.PlayerImg}></View>
-                    <Text style={styles.PlayerName}>Babangida Dev</Text>
-                    {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
-                </View>
+                            <Text style={styles.PlayerName}>{matchInfo?.home_team?.name}</Text>
+                            {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
+                        </View>
+                        <View style={styles.PScreenHead}>
+                            <LiveBtn />
+                            <Text style={styles.MatchPoints}>{Scores?.status == 'INNINGS_BREAK' ||
+                                Scores?.status !== 'NOT_STARTED' ? (
+                                Scores?.map((v, idx) => {
+                                    if (
+                                        v.type == 'total' &&
+                                        matchInfo?.home_team.id == v.team_id &&
+                                        v.total > 0
+                                    ) {
+                                        return (
+                                            `${v?.total}/${v?.wickets}`
+                                        );
+                                    }
+                                })
+                            ) : ('-')
+                            } : {Scores?.status == 'INNINGS_BREAK' ||
+                                Scores?.status !== 'NOT_STARTED' ? (
+                                Scores?.map((v, idx) => {
+                                    if (
+                                        v.type == 'total' &&
+                                        matchInfo?.away_team.id == v.team_id &&
+                                        v.total > 0
+                                    ) {
+                                        return (
+                                            `${v?.total}/${v?.wickets}`
+                                        );
+                                    }
+                                })
+                            ) : ('-')
+                                }</Text>
+                            <Text style={styles.MatchDetTxt}>2 INN, 6.0 OV</Text>
+                        </View>
+                        <View style={styles.PScreenHead}>
+                            <Image
+                                style={styles.PlayerImg}
+                                source={{
+                                    uri: `${matchInfo?.away_team?.image_path}`,
+                                }}
+                            />
+                            <Text style={styles.PlayerName}>{matchInfo.away_team.name}</Text>
+                            {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
+                        </View>
+                    </>
+                )}
+
+
             </View>
             <View style={styles.PScreenNav}>
                 <TouchableOpacity style={activeC == 0 ? actBtn : styles.NavBtn} onPress={() => {
@@ -386,7 +459,6 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 50,
-        backgroundColor: 'blue',
     },
     PlayerName: {
         fontFamily: 'Jost',
@@ -424,6 +496,9 @@ const styles = StyleSheet.create({
     HeaderCont: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        width: '100%',
+        height: 139,
+
     },
     MatchPoints: {
         fontFamily: 'Jost',
@@ -622,7 +697,6 @@ const styles = StyleSheet.create({
     LineUpsTeamLogo: {
         width: 25,
         height: 25,
-        backgroundColor: 'gray',
         borderRadius: 50,
     },
     LineUpsTeamsCont: {
