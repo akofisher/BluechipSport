@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { getScoresForScoreCard } from '../../../api/livescore'
 
 export default function ScoreCard({ navigation }) {
     const IDSS = ['4-166', '19.2']
@@ -9,6 +10,11 @@ export default function ScoreCard({ navigation }) {
     const SQ = ['R', 'B', '4s', '6s', 'SR']
     const SQLL = ['SCORE', 'OVER']
     const [activeTeam, setActiveTeam] = useState(0)
+    const [bowlings, setBowlings] = useState()
+    const [battings, setBattings] = useState()
+    const [home, setHome] = useState()
+    const [away, setAway] = useState()
+    const [scores, setScores] = useState()
 
     const activeCont = {
         flexDirection: 'row',
@@ -28,6 +34,20 @@ export default function ScoreCard({ navigation }) {
         color: '#FF0960',
         marginLeft: 10,
     }
+
+    useEffect(() => {
+        getScoresForScoreCard(navigation.MatchId)
+            .then(async data => {
+                await setHome(data?.results?.home_team_id)
+                await setAway(data?.results?.away_team_id)
+                await setBowlings(data?.results?.bowlings)
+                await setBattings(data?.results?.battings)
+                await setScores(data?.results?.scoreboards)
+
+            })
+
+    }, [])
+
 
 
     const TotalScores = () => {
@@ -233,12 +253,22 @@ export default function ScoreCard({ navigation }) {
         <>
             <View style={styles.TeamSwitchCont}>
                 <TouchableOpacity onPress={() => setActiveTeam(0)} style={activeTeam == 0 ? activeCont : styles.TeamCont}>
-                    <View style={styles.TeamLogo}></View>
-                    <Text style={activeTeam == 0 ? activeName : styles.TeamName}>Gurjaaneli Titanebi</Text>
+                    <Image
+                        style={styles.TeamLogo}
+                        source={{
+                            uri: `${navigation?.matchInfo?.home_team?.image_path}`,
+                        }}
+                    />
+                    <Text style={activeTeam == 0 ? activeName : styles.TeamName}>{navigation?.matchInfo?.home_team?.name}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setActiveTeam(1)} style={activeTeam == 1 ? activeCont : styles.TeamCont}>
-                    <View style={styles.TeamLogo}></View>
-                    <Text style={activeTeam == 1 ? activeName : styles.TeamName}>Telaveli Elfebi</Text>
+                    <Image
+                        style={styles.TeamLogo}
+                        source={{
+                            uri: `${navigation?.matchInfo?.away_team?.image_path}`,
+                        }}
+                    />
+                    <Text style={activeTeam == 1 ? activeName : styles.TeamName}>{navigation?.matchInfo?.away_team?.name}</Text>
                 </TouchableOpacity>
             </View>
             <TotalScores />
@@ -270,7 +300,6 @@ const styles = StyleSheet.create({
     TeamLogo: {
         width: 25,
         height: 25,
-        backgroundColor: 'blue',
         borderRadius: 50,
     },
     TeamName: {

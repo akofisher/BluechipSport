@@ -17,3 +17,15 @@ export function getMatchDetails(id: string) {
     `https://cricket.bluechipsport.io/api/fixtures/${id}/summary`,
   );
 }
+
+export function getMatchLineUps(id: string) {
+  return apiCall.get(
+    `https://cricket.bluechipsport.io/api/fixtures/${id}/lineups`,
+  );
+}
+
+export function getScoresForScoreCard(id: string) {
+  return apiCall.get(
+    `https://cricket.bluechipsport.io/api/fixtures/${id}/scores`,
+  );
+}

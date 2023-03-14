@@ -81,6 +81,7 @@ const LivescoreScreen = ({ navigation }) => {
 
   useEffect(() => {
     setLoading(true);
+    setMatches()
     type
       .getData(Time || Today)
       .then(data => {

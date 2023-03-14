@@ -7,7 +7,7 @@ import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVertical
 import stadium from "../../../assets/icons/play.png";
 import { ArrowDownSvg, PlayedTimeSvg } from '../../../assets/svgs/AllSvgs'
 import ScoreCard from './ScoreCard'
-import { getMatchDetails } from '../../../api/livescore'
+import { getMatchDetails, getMatchLineUps } from '../../../api/livescore'
 import { Spinner } from '../../components/common'
 
 
@@ -18,8 +18,46 @@ const MatchDetailsScreen = ({ route, navigation }) => {
     const [activeC, setActiveC] = useState(0)
     const [matchInfo, setMatchInfo] = useState()
     const [loading, setLoading] = useState(true)
-    const IDS = [1, 2, 3, 4, 5, 6]
-    const SQ = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const [lineUps, setLineUps] = useState()
+    const [Home, setHome] = useState()
+    const [Away, setAway] = useState()
+    const [homeTeamScore, setHomeTeamScore] = useState()
+    const [awayTeamScore, setAwayTeamScore] = useState()
+
+
+    const HomeTeamScores = () => {
+        Scores?.map((v, idx) => {
+            if (
+                v.type == 'total' &&
+                matchInfo?.home_team?.id == v.team_id &&
+                v.total > 0
+            ) {
+                return (
+                    setHomeTeamScore(`${v?.total}/${v?.wickets}`)
+                )
+            }
+        })
+    }
+
+    const AwayTeamScores = () => {
+        Scores?.map((v, idx) => {
+            if (
+                v.type == 'total' &&
+                matchInfo?.away_team?.id == v.team_id &&
+                v.total > 0
+            ) {
+                return (
+                    setAwayTeamScore(`${v?.total}/${v?.wickets}`)
+                )
+            }
+        })
+    }
+
+    useEffect(() => {
+        HomeTeamScores()
+        AwayTeamScores()
+    }, [MatchId, Scores, matchInfo])
+
     const Runs = [2, 2, 0, 1, '1w', 0, 6]
     const Player = [
         {
@@ -93,21 +131,27 @@ const MatchDetailsScreen = ({ route, navigation }) => {
         setLoading(true)
         getMatchDetails(MatchId)
             .then(data => {
-                console.log(data, 'MATCH DATA')
+                // console.log(data, 'MATCH DATA')
                 setMatchInfo(data.results)
-                console.log(data.results.scoreboards[0], 'name')
+                setHome(data.results.home_team.id)
+                setAway(data.results.away_team.id)
+                // console.log(data.results.scoreboards[0], 'name')
+            })
+            .then(() => setLoading(false));
+    }, []);
+
+    useEffect(() => {
+        setLoading(true)
+        getMatchLineUps(MatchId)
+            .then(data => {
+
+                setLineUps(data.results.lineups)
+
             })
             .then(() => setLoading(false));
     }, []);
 
 
-
-
-
-    const Points = {
-        first: '133/3',
-        second: '130/9',
-    }
 
     const actClas = {
         fontFamily: 'Jost',
@@ -125,7 +169,6 @@ const MatchDetailsScreen = ({ route, navigation }) => {
         justifyContent: 'center',
         alignContent: 'center',
     }
-
 
     const actBtn = {
         height: '100%',
@@ -281,23 +324,25 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                 </View>
                 <View style={styles.PlayersListCont}>
                     <View style={styles.LeftPlayers}>
-                        {LinesP.map((val, idx) => {
-                            return (
-                                <View style={styles.PlayerContL} key={idx}>
-                                    <Text style={styles.PlayerLName}>{val.name}</Text>
-                                    <Text style={styles.PlayerRangL}>{val.mich}</Text>
-                                </View>
-                            )
+                        {lineUps.map((val, idx) => {
+                            if (val.team_id == Home)
+                                return (
+                                    <TouchableOpacity style={styles.PlayerContL} key={idx}>
+                                        <Text style={styles.PlayerLName}>{val.player.firstname} {val.player.lastname}</Text>
+                                        <Text style={styles.PlayerRangL}>{val.position.name}</Text>
+                                    </TouchableOpacity>
+                                )
                         })}
                     </View>
                     <View style={styles.RightPlayers}>
-                        {LinesP.map((val, idx) => {
-                            return (
-                                <View style={styles.PlayerContL} key={idx}>
-                                    <Text style={styles.PlayerLName}>{val.name}</Text>
-                                    <Text style={styles.PlayerRang}>{val.mich}</Text>
-                                </View>
-                            )
+                        {lineUps.map((val, idx) => {
+                            if (val.team_id == Away)
+                                return (
+                                    <TouchableOpacity style={styles.PlayerContL} key={idx}>
+                                        <Text style={styles.PlayerLName}>{val.player.firstname} {val.player.lastname}</Text>
+                                        <Text style={styles.PlayerRang}>{val.position.name}</Text>
+                                    </TouchableOpacity>
+                                )
                         })}
                     </View>
 
@@ -332,39 +377,19 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                                 }}
                             />
 
-                            <Text style={styles.PlayerName}>{matchInfo?.home_team?.name}</Text>
+                            <Text style={styles.TeamName}>{matchInfo?.home_team?.name}</Text>
                             {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
                         </View>
                         <View style={styles.PScreenHead}>
                             <LiveBtn />
                             <Text style={styles.MatchPoints}>{Scores?.status == 'INNINGS_BREAK' ||
                                 Scores?.status !== 'NOT_STARTED' ? (
-                                Scores?.map((v, idx) => {
-                                    if (
-                                        v.type == 'total' &&
-                                        matchInfo?.home_team.id == v.team_id &&
-                                        v.total > 0
-                                    ) {
-                                        return (
-                                            `${v?.total}/${v?.wickets}`
-                                        );
-                                    }
-                                })
-                            ) : ('-')
+                                homeTeamScore || '-'
+                            ) : (null)
                             } : {Scores?.status == 'INNINGS_BREAK' ||
                                 Scores?.status !== 'NOT_STARTED' ? (
-                                Scores?.map((v, idx) => {
-                                    if (
-                                        v.type == 'total' &&
-                                        matchInfo?.away_team.id == v.team_id &&
-                                        v.total > 0
-                                    ) {
-                                        return (
-                                            `${v?.total}/${v?.wickets}`
-                                        );
-                                    }
-                                })
-                            ) : ('-')
+                                awayTeamScore || '-'
+                            ) : (null)
                                 }</Text>
                             <Text style={styles.MatchDetTxt}>2 INN, 6.0 OV</Text>
                         </View>
@@ -375,7 +400,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                                     uri: `${matchInfo?.away_team?.image_path}`,
                                 }}
                             />
-                            <Text style={styles.PlayerName}>{matchInfo.away_team.name}</Text>
+                            <Text style={styles.TeamName}>{matchInfo?.away_team?.name}</Text>
                             {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
                         </View>
                     </>
@@ -407,26 +432,17 @@ const MatchDetailsScreen = ({ route, navigation }) => {
             </View>
             <ScrollView contentContainerStyle={styles.PScreenContent}>
                 {activeC == 0 ? (
-
                     <Live />
-                ) : null
-                }
-                {activeC == 1 ?
-                    (
-                        <LineUps />
-                    )
-                    : null}
+                ) : null}
+                {activeC == 1 ? (
+                    <LineUps />
+                ) : null}
                 {activeC == 2 ? (
                     <MatchInfo />
-                ) : (
-                    null
-                )}
+                ) : null}
                 {activeC == 3 ? (
-                    <ScoreCard navigation={navigation} />
-
-                ) : (
-                    null
-                )}
+                    <ScoreCard navigation={{ route, navigation, matchInfo, MatchId }} />
+                ) : null}
             </ScrollView>
 
         </View>
@@ -460,13 +476,13 @@ const styles = StyleSheet.create({
         height: 70,
         borderRadius: 50,
     },
-    PlayerName: {
+    TeamName: {
         fontFamily: 'Jost',
         fontWeight: '500',
         fontSize: 15,
         lineHeight: 21,
         color: '#FFFFFF',
-        marginTop: 15,
+
     },
     PScreenNav: {
         width: '100%',
