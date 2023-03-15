@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getScoresForScoreCard } from '../../../api/livescore'
+import { Spinner } from '../../components/common'
 
 export default function ScoreCard({ navigation }) {
     const IDSS = ['4-166', '19.2']
@@ -14,7 +15,17 @@ export default function ScoreCard({ navigation }) {
     const [battings, setBattings] = useState()
     const [home, setHome] = useState()
     const [away, setAway] = useState()
-    const [scores, setScores] = useState()
+    const [HomeScores, setHomeScores] = useState()
+    const [AwayScores, setAwayScores] = useState()
+    const [loading, setLoading] = useState(true)
+    const [status, setStatus] = useState(false)
+
+    function check(element) {
+        if (Number.isInteger(element)) {
+            return element;
+        }
+        return element.toFixed(2);
+    }
 
     const activeCont = {
         flexDirection: 'row',
@@ -36,14 +47,35 @@ export default function ScoreCard({ navigation }) {
     }
 
     useEffect(() => {
+        setLoading(true)
         getScoresForScoreCard(navigation.MatchId)
             .then(async data => {
                 await setHome(data?.results?.home_team_id)
                 await setAway(data?.results?.away_team_id)
                 await setBowlings(data?.results?.bowlings)
                 await setBattings(data?.results?.battings)
-                await setScores(data?.results?.scoreboards)
+                data?.results?.scoreboards.map((val) => {
+                    if (data?.results?.home_team_id == val.team_id && val.type == 'total')
+                        setHomeScores({
+                            total: val.total,
+                            overs: val.overs,
+                            wickets: val.wickets
+                        })
+                })
+                data?.results?.scoreboards.map((val) => {
+                    if (data?.results?.away_team_id == val.team_id && val.type == 'total')
+                        setAwayScores({
+                            total: val.total,
+                            overs: val.overs,
+                            wickets: val.wickets
+                        })
+                })
+                if (data?.results?.status !== 'NOT_STARTED')
+                    setStatus(true)
 
+            })
+            .then(() => {
+                setLoading(false)
             })
 
     }, [])
@@ -56,15 +88,15 @@ export default function ScoreCard({ navigation }) {
                 <View style={styles.FlexibleHeadCont}>
                     <Text style={styles.HeaderOfTables}>Total Score</Text>
                     <View style={styles.FlexibleHead}>
-                        <Text style={styles.HeaderOfTables}>170</Text>
-                        <Text style={styles.HeaderPoint}>/5(20)</Text>
+                        <Text style={styles.HeaderOfTables}>{activeTeam == 0 ? HomeScores?.total : AwayScores?.total}</Text>
+                        <Text style={styles.HeaderPoint}>{activeTeam == 0 ? (`/${HomeScores?.wickets}(${HomeScores?.overs})`) : (`/${AwayScores?.wickets}(${AwayScores?.overs})`)}</Text>
 
                     </View>
                 </View>
                 <View style={styles.TablesMain}>
                     <View style={styles.TablesHeadCont}>
                         <Text style={styles.TablesMainHead}>
-                            NAME
+                            Batter
                         </Text>
                         <View style={styles.HeadsCont}>
 
@@ -77,25 +109,36 @@ export default function ScoreCard({ navigation }) {
                             })}
                         </View>
                     </View>
-                    {ID.map((id, idx) => {
-                        return (
-                            <TouchableOpacity key={idx + 1} onPress={() => navigation.navigate('TeamScreen')} style={ID.length - 1 == idx ? styles.TotalTeamCont : styles.TablTeamCont}>
-                                <View style={styles.PlayerContL} >
-                                    <Text style={styles.PlayerLName}>Joshua Amirejibi</Text>
-                                    <Text style={ID.length - 1 == idx ? styles.PlayerRangLPink : styles.PlayerRangL}>Fanatikosi</Text>
-                                </View>
-                                <View style={styles.HeadsCont}>
+                    {battings?.map((val, idx) => {
+                        if (activeTeam == 0 && home == val.team_id || activeTeam == 1 && away == val.team_id)
+                            return (
+                                <TouchableOpacity key={idx + 1} onPress={() => navigation.navigate('TeamScreen')} style={styles.TablTeamCont}>
+                                    {/* ID.length - 1 == idx ? styles.TotalTeamCont :  */}
+                                    <View style={styles.PlayerContL} >
+                                        <Text style={styles.PlayerLName}>{val.player.firstname} {val.player.lastname}</Text>
+                                        {/* <Text style={ID.length - 1 == idx ? styles.PlayerRangLPink : styles.PlayerRangL}>Fanatikosi</Text> */}
+                                    </View>
+                                    <View style={styles.HeadsCont}>
 
-                                    {ID.map((id, idx) => {
-                                        return (
-                                            <Text key={idx} style={idx == 0 ? styles.TablesCoinBold : styles.TablesCoin}>
-                                                {id}
-                                            </Text>
-                                        )
-                                    })}
-                                </View>
-                            </TouchableOpacity>
-                        )
+                                        <Text style={styles.TablesCoinBold}>
+                                            {val.rate}
+                                        </Text>
+
+                                        <Text style={styles.TablesCoin}>
+                                            {val.ball}
+                                        </Text>
+                                        <Text style={styles.TablesCoin}>
+                                            {check(val.four_x)}
+                                        </Text>
+                                        <Text style={styles.TablesCoin}>
+                                            {check(val.six_x)}
+                                        </Text>
+                                        <Text style={styles.TablesCoin}>
+                                            {check(val.score)}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )
                     })}
                     <View style={styles.TablTeamCont}>
 
@@ -104,7 +147,7 @@ export default function ScoreCard({ navigation }) {
                         <View style={styles.HeadsCont}>
 
                             <Text style={styles.TablesCoinBold}>
-                                10
+                                0
                             </Text>
                             <Text style={styles.ExtraLightTxt}>
                                 (b 1, lb 1, nb 0, w 8)
@@ -120,7 +163,8 @@ export default function ScoreCard({ navigation }) {
 
                             <Text style={styles.Totals}>TOTALS</Text>
                             <Text style={styles.TotalsLightTxt}>
-                                (20 Ov, RR: 8.65)
+                                ({activeTeam == 0 ? HomeScores?.overs : AwayScores?.overs} OV)
+
                             </Text>
 
                         </View>
@@ -128,18 +172,18 @@ export default function ScoreCard({ navigation }) {
                         <View style={styles.GreenTxtCont}>
 
                             <Text style={styles.Totals}>
-                                175
+                                {activeTeam == 0 ? HomeScores?.total : AwayScores?.total}
                             </Text>
                             <Text style={styles.TotalsLightTxt}>
-                                /5
+                                /{activeTeam == 0 ? HomeScores?.wickets : AwayScores?.wickets}
                             </Text>
 
                         </View>
                     </View>
-                    <View style={styles.BioConts} >
+                    {/* <View style={styles.BioConts} >
                         <Text style={styles.BioDesc}>Did not bat</Text>
                         <Text style={styles.BioInfo}>Joe Clarke, Nathan Coulter-Nile, Luke Wood </Text>
-                    </View>
+                    </View> */}
 
 
                 </View>
@@ -201,7 +245,7 @@ export default function ScoreCard({ navigation }) {
                 <View style={styles.TablesMain}>
                     <View style={styles.TablesHeadCont}>
                         <Text style={styles.TablesMainHead}>
-                            NAME
+                            Name
                         </Text>
                         <View style={styles.HeadsCont}>
 
@@ -214,25 +258,41 @@ export default function ScoreCard({ navigation }) {
                             })}
                         </View>
                     </View>
-                    {IDS.map((id, idx) => {
-                        return (
-                            <TouchableOpacity key={idx + 1} onPress={() => navigation.navigate('TeamScreen')} style={styles.TablTeamCont}>
-                                <Text style={styles.TablesTeam}>
-                                    John Clark
-                                </Text>
-                                <View style={styles.HeadsCont}>
+                    {bowlings?.map((val, idx) => {
+                        if (activeTeam == 0 && home == val.team_id || activeTeam == 1 && away == val.team_id)
+                            return (
+                                <TouchableOpacity key={idx + 1} onPress={() => navigation.navigate('TeamScreen')} style={styles.TablTeamCont}>
+                                    <Text style={styles.TablesTeam}>
+                                        {val.player.firstname} {val.player.lastname}
+                                    </Text>
+                                    <View style={styles.HeadsCont}>
 
-                                    {IDS.map((id, idx) => {
-                                        return (
-                                            <Text key={idx} style={idx == 0 ? styles.TablesCoinBold : styles.TablesCoin}>
-                                                {id}
-                                            </Text>
-                                        )
-                                    })}
-                                </View>
-                            </TouchableOpacity>
-                        )
+
+                                        <Text key={idx} style={styles.TablesCoinBold}>
+                                            {val.overs}
+                                        </Text>
+                                        <Text key={idx} style={styles.TablesCoin}>
+                                            {check(val.medians)}
+                                        </Text>
+                                        <Text key={idx} style={styles.TablesCoin}>
+                                            {check(val.runs)}
+                                        </Text>
+                                        <Text key={idx} style={styles.TablesCoin}>
+                                            {check(val.wickets)}
+                                        </Text>
+                                        <Text key={idx} style={styles.TablesCoin}>
+                                            {check(val.rate)}
+                                        </Text>
+                                        <Text key={idx} style={styles.TablesCoin}>
+                                            {check(val.noball)}
+                                        </Text>
+
+                                    </View>
+                                </TouchableOpacity>
+                            )
                     })}
+
+
 
 
                 </View>
@@ -251,34 +311,57 @@ export default function ScoreCard({ navigation }) {
 
     return (
         <>
-            <View style={styles.TeamSwitchCont}>
-                <TouchableOpacity onPress={() => setActiveTeam(0)} style={activeTeam == 0 ? activeCont : styles.TeamCont}>
-                    <Image
-                        style={styles.TeamLogo}
-                        source={{
-                            uri: `${navigation?.matchInfo?.home_team?.image_path}`,
-                        }}
-                    />
-                    <Text style={activeTeam == 0 ? activeName : styles.TeamName}>{navigation?.matchInfo?.home_team?.name}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setActiveTeam(1)} style={activeTeam == 1 ? activeCont : styles.TeamCont}>
-                    <Image
-                        style={styles.TeamLogo}
-                        source={{
-                            uri: `${navigation?.matchInfo?.away_team?.image_path}`,
-                        }}
-                    />
-                    <Text style={activeTeam == 1 ? activeName : styles.TeamName}>{navigation?.matchInfo?.away_team?.name}</Text>
-                </TouchableOpacity>
-            </View>
-            <TotalScores />
-            <Bowlers />
-            <FallOfWickets />
+            {loading ? (
+                <Spinner />
+            ) : (
+
+                <>
+                    {status ? (
+                        <>
+                            <View style={styles.TeamSwitchCont}>
+                                <TouchableOpacity onPress={() => setActiveTeam(0)} style={activeTeam == 0 ? activeCont : styles.TeamCont}>
+                                    <Image
+                                        style={styles.TeamLogo}
+                                        source={{
+                                            uri: `${navigation?.matchInfo?.home_team?.image_path}`,
+                                        }}
+                                    />
+                                    <Text style={activeTeam == 0 ? activeName : styles.TeamName}>{navigation?.matchInfo?.home_team?.name}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => setActiveTeam(1)} style={activeTeam == 1 ? activeCont : styles.TeamCont}>
+                                    <Image
+                                        style={styles.TeamLogo}
+                                        source={{
+                                            uri: `${navigation?.matchInfo?.away_team?.image_path}`,
+                                        }}
+                                    />
+                                    <Text style={activeTeam == 1 ? activeName : styles.TeamName}>{navigation?.matchInfo?.away_team?.name}</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TotalScores />
+                            <Bowlers />
+                            {/* <FallOfWickets /> */}
+                        </>
+                    ) : (
+                        <Text style={styles.NoRecords}>No records found</Text>
+                    )}
+                </>
+
+            )}
         </>
+
     )
 }
 
 const styles = StyleSheet.create({
+    NoRecords: {
+        alignSelf: 'center',
+        fontFamily: 'Jost',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 18,
+        color: '#111315',
+    },
     //Head
     TeamSwitchCont: {
         width: 360,
@@ -346,7 +429,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     TablesHead: {
-        width: 30,
+        width: 33,
         textAlign: 'center',
         fontFamily: 'Jost',
         fontWeight: '500',
@@ -370,7 +453,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
     TablesCoin: {
-        width: 30,
+        width: 33,
         textAlign: 'center',
         fontFamily: 'Jost',
         fontWeight: '400',

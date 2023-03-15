@@ -35,6 +35,12 @@ const LivescoreScreen = ({ navigation }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [type, setType] = useState(DROPDOWN[0]);
 
+  const removeAllSymbols = (string) => {
+    const letters = string?.replace(/[^a-zA-Z0-9 ]/g, ' ');
+
+    return letters
+  };
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -158,7 +164,7 @@ const LivescoreScreen = ({ navigation }) => {
                             <LiveBtn />
                             <LiveStreamBtn />
                           </View>
-                          <Text style={Styles.MatchDtTxt}>2 INN, 6.0 OV</Text>
+                          <Text style={Styles.MatchDtTxt}>{removeAllSymbols(val?.status)}</Text>
                         </>
                       )}
                     </View>
@@ -188,7 +194,10 @@ const LivescoreScreen = ({ navigation }) => {
                             if (
                               v.type == 'total' &&
                               val?.home_team.id == v.team_id &&
-                              v.total > 0
+                              v.total > 0 && v.scoreboard == "S1" ||
+                              v.type == 'total' &&
+                              val?.home_team.id == v.team_id &&
+                              v.total > 0 && v.scoreboard == "S2"
                             ) {
                               return (
                                 <Text style={Styles.TeamScores} key={idx}>
@@ -220,13 +229,17 @@ const LivescoreScreen = ({ navigation }) => {
                             if (
                               v.type == 'total' &&
                               val?.away_team.id == v.team_id &&
-                              v.total > 0
+                              v.total > 0 && v.scoreboard == "S1" ||
+                              v.type == 'total' &&
+                              val?.away_team.id == v.team_id &&
+                              v.total > 0 && v.scoreboard == "S2"
                             ) {
-                              return (
-                                <Text style={Styles.TeamScores} key={idx}>
-                                  {v?.total}/{v?.wickets}
-                                </Text>
-                              );
+                              if (v.scoreboard !== 'S3')
+                                return (
+                                  <Text style={Styles.TeamScores} key={idx}>
+                                    {v?.total}/{v?.wickets}
+                                  </Text>
+                                );
                             }
                           })
                         ) : (

@@ -15,7 +15,7 @@ import { Spinner } from '../../components/common'
 
 const MatchDetailsScreen = ({ route, navigation }) => {
     const { MatchId, Scores } = route.params;
-    const [activeC, setActiveC] = useState(0)
+    const [activeC, setActiveC] = useState(1)
     const [matchInfo, setMatchInfo] = useState()
     const [loading, setLoading] = useState(true)
     const [lineUps, setLineUps] = useState()
@@ -23,6 +23,12 @@ const MatchDetailsScreen = ({ route, navigation }) => {
     const [Away, setAway] = useState()
     const [homeTeamScore, setHomeTeamScore] = useState()
     const [awayTeamScore, setAwayTeamScore] = useState()
+
+    const removeAllSymbols = (string) => {
+        const letters = string?.replace(/[^a-zA-Z0-9 ]/g, ' ');
+
+        return letters
+    };
 
 
     const HomeTeamScores = () => {
@@ -138,7 +144,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                 // console.log(data.results.scoreboards[0], 'name')
             })
             .then(() => setLoading(false));
-    }, []);
+    }, [MatchId]);
 
     useEffect(() => {
         setLoading(true)
@@ -149,9 +155,9 @@ const MatchDetailsScreen = ({ route, navigation }) => {
 
             })
             .then(() => setLoading(false));
-    }, []);
+    }, [MatchId]);
 
-
+    console.log(matchInfo?.status, 'STATUS')
 
     const actClas = {
         fontFamily: 'Jost',
@@ -324,7 +330,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                 </View>
                 <View style={styles.PlayersListCont}>
                     <View style={styles.LeftPlayers}>
-                        {lineUps.map((val, idx) => {
+                        {loading == false && lineUps?.map((val, idx) => {
                             if (val.team_id == Home)
                                 return (
                                     <TouchableOpacity style={styles.PlayerContL} key={idx}>
@@ -335,7 +341,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                         })}
                     </View>
                     <View style={styles.RightPlayers}>
-                        {lineUps.map((val, idx) => {
+                        {loading == false && lineUps?.map((val, idx) => {
                             if (val.team_id == Away)
                                 return (
                                     <TouchableOpacity style={styles.PlayerContL} key={idx}>
@@ -391,7 +397,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                                 awayTeamScore || '-'
                             ) : (null)
                                 }</Text>
-                            <Text style={styles.MatchDetTxt}>2 INN, 6.0 OV</Text>
+                            <Text style={styles.MatchDetTxt}>{removeAllSymbols(matchInfo?.status)}</Text>
                         </View>
                         <View style={styles.PScreenHead}>
                             <Image
@@ -409,21 +415,21 @@ const MatchDetailsScreen = ({ route, navigation }) => {
 
             </View>
             <View style={styles.PScreenNav}>
-                <TouchableOpacity style={activeC == 0 ? actBtn : styles.NavBtn} onPress={() => {
+                {/* <TouchableOpacity style={activeC == 0 ? actBtn : styles.NavBtn} onPress={() => {
                     setActiveC(0)
                 }}>
                     <Text style={activeC == 0 ? actClas : styles.NavBtnTxt}>LIVE</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={activeC == 1 ? actBtn : styles.NavBtn} onPress={() => {
                     setActiveC(1)
                 }}>
                     <Text style={activeC == 1 ? actClas : styles.NavBtnTxt}>LINEUPS</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={activeC == 2 ? actBtn : styles.NavBtn} onPress={() => {
+                {/* <TouchableOpacity style={activeC == 2 ? actBtn : styles.NavBtn} onPress={() => {
                     setActiveC(2)
                 }}>
                     <Text style={activeC == 2 ? actClas : styles.NavBtnTxt}>MATCH INFO</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={activeC == 3 ? actBtn : styles.NavBtn} onPress={() => {
                     setActiveC(3)
                 }}>
@@ -431,15 +437,15 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                 </TouchableOpacity>
             </View>
             <ScrollView contentContainerStyle={styles.PScreenContent}>
-                {activeC == 0 ? (
+                {/* {activeC == 0 ? (
                     <Live />
-                ) : null}
+                ) : null} */}
                 {activeC == 1 ? (
                     <LineUps />
                 ) : null}
-                {activeC == 2 ? (
+                {/* {activeC == 2 ? (
                     <MatchInfo />
-                ) : null}
+                ) : null} */}
                 {activeC == 3 ? (
                     <ScoreCard navigation={{ route, navigation, matchInfo, MatchId }} />
                 ) : null}
