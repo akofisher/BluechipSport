@@ -47,3 +47,37 @@ export interface League {
   icon: string;
   data: Match[];
 }
+
+export interface TeamType {
+  data: {
+    country_id: number;
+    current_season_id: number;
+    founded: number;
+    id: number;
+    is_placeholder: boolean;
+    legacy_id: number;
+    logo_path: string;
+    name: string;
+    national_team: boolean;
+    short_code: string;
+    twitter: string;
+    venue_id: number;
+  };
+}
+
+export interface ScoresType {
+  et_score: null;
+  ft_score: string;
+  ht_score: string;
+  localteam_pen_score: null;
+  localteam_score: number;
+  ps_score: null;
+  visitorteam_pen_score: null;
+  visitorteam_score: number;
+}
+
+export interface HorizontalItem {
+  id: number;
+  label: string;
+  returnFunc: () => JSX.Element;
+}

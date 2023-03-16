@@ -14,7 +14,11 @@ const FootballCard = ({data}: Props) => {
       <LeagueHeader uri={data.icon} title={data.league_name} />
       <View style={styles.matchesContainer}>
         {data?.data?.map((match, index) => (
-          <Match hasBorder={data?.data?.length - 1 !== index} match={match} />
+          <Match
+            hasBorder={data?.data?.length - 1 !== index}
+            match={match}
+            key={match.id.toString()}
+          />
         ))}
       </View>
     </View>

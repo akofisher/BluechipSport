@@ -1,8 +1,9 @@
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import TeamLine from './TeamLine';
 import {Match} from '../../../../types';
 import Status from './Status';
+import {useNavigation} from '@react-navigation/native';
 
 type Props = {
   match: Match;
@@ -10,8 +11,15 @@ type Props = {
 };
 
 const MatchComponent = ({match, hasBorder}: Props) => {
+  const navigation = useNavigation();
   return (
-    <View style={[styles.container, hasBorder ? styles.border : null]}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('MatchDetailsNew', {
+          matchId: match?.id,
+        })
+      }
+      style={[styles.container, hasBorder ? styles.border : null]}>
       <Status status={match.status} time={match.time} minute={match.minute} />
       <TeamLine
         uri={match.localteam_logo_path}
@@ -23,7 +31,7 @@ const MatchComponent = ({match, hasBorder}: Props) => {
         title={match.visitorteam_name}
         score={match.visitorteam_score}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
