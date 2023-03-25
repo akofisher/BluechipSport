@@ -1,6 +1,6 @@
-import {Spinner} from 'components/common';
-import {Header} from 'components/header';
-import React, {useState, useEffect, useMemo} from 'react';
+import { Spinner } from 'components/common';
+import { Header } from 'components/header';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import {
   View,
@@ -12,21 +12,21 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 
-import {Colors} from 'styles';
-import {ArrowDownSvg, LiveStreamSvg} from '../../../assets/svgs/AllSvgs';
-import {Icon} from '../../components/common';
+import { Colors } from 'styles';
+import { ArrowDownSvg, LiveStreamSvg } from '../../../assets/svgs/AllSvgs';
+import { Icon } from '../../components/common';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {getCricket, getFootball} from '../../../api/livescore';
+import { getCricket, getFootball } from '../../../api/livescore';
 import FootballCard from './Cards/FootballCard';
 
 Entypo.loadFont();
 
 const DROPDOWN = [
-  {label: 'Cricket', icon: 'CricketWhite', id: 1, getData: getCricket},
-  {label: 'Football', icon: 'Football', id: 2, getData: getFootball},
+  { label: 'Cricket', icon: 'CricketWhite', id: 1, getData: getCricket },
+  { label: 'Football', icon: 'Football', id: 2, getData: getFootball },
 ];
 
-const LivescoreScreen = ({navigation}) => {
+const LivescoreScreen = ({ navigation }) => {
   const [leagues, setLeagues] = useState({});
   const [matches, setMatches] = useState({});
   const [loading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ const LivescoreScreen = ({navigation}) => {
     if (type.id === 1) {
       const ids = arr.map(o => o.league_id);
       const filtered = arr.filter(
-        ({league_id}, index) => !ids.includes(league_id, index + 1),
+        ({ league_id }, index) => !ids.includes(league_id, index + 1),
       );
       setLeagues(filtered);
     } else {
@@ -124,7 +124,7 @@ const LivescoreScreen = ({navigation}) => {
     );
   };
 
-  const Cards = ({data}) => {
+  const Cards = ({ data }) => {
     return (
       <>
         <View style={Styles.CardMainCont}>
@@ -192,7 +192,7 @@ const LivescoreScreen = ({navigation}) => {
                           </Text>
                         </View>
                         {val?.status == 'INNINGS_BREAK' ||
-                        val?.status !== 'NOT_STARTED' ? (
+                          val?.status !== 'NOT_STARTED' ? (
                           val?.scoreboards?.map((v, idx) => {
                             if (
                               (v.type == 'total' &&
@@ -221,7 +221,7 @@ const LivescoreScreen = ({navigation}) => {
                         <View style={Styles.Team}>
                           <Image
                             style={Styles.TeamLogo}
-                            source={{uri: `${val?.away_team?.image_path}`}}
+                            source={{ uri: `${val?.away_team?.image_path}` }}
                           />
                           <Text style={Styles.TeamName}>
                             {val?.away_team?.name}
@@ -229,7 +229,7 @@ const LivescoreScreen = ({navigation}) => {
                         </View>
 
                         {val?.status == 'INNINGS_BREAK' ||
-                        val?.status !== 'NOT_STARTED' ? (
+                          val?.status !== 'NOT_STARTED' ? (
                           val?.scoreboards?.map((v, idx) => {
                             if (
                               (v.type == 'total' &&
@@ -315,7 +315,7 @@ const LivescoreScreen = ({navigation}) => {
                           ? 'rgba(255,255,255,0.3)'
                           : null,
                     }}>
-                    <Text style={{color: '#FFF'}}>{item.label}</Text>
+                    <Text style={{ color: '#FFF' }}>{item.label}</Text>
                   </TouchableOpacity>
                 ))}
               </View>

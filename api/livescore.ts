@@ -29,3 +29,9 @@ export function getScoresForScoreCard(id: string) {
     `https://cricket.bluechipsport.io/api/fixtures/${id}/scores`,
   );
 }
+
+export function getPlayerInfo(id: string) {
+  return apiCall.get(
+    `https://cricket.bluechipsport.io/api/players/${id}`,
+  );
+}

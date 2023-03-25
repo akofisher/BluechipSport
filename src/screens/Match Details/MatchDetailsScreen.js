@@ -9,6 +9,7 @@ import { ArrowDownSvg, PlayedTimeSvg } from '../../../assets/svgs/AllSvgs'
 import ScoreCard from './ScoreCard'
 import { getMatchDetails, getMatchLineUps } from '../../../api/livescore'
 import { Spinner } from '../../components/common'
+import bg from '../../../assets/bg.png';
 
 
 //https://www.npmjs.com/package/react-clamp-lines   თაითლებისთვის ...
@@ -333,7 +334,9 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                         {loading == false && lineUps?.map((val, idx) => {
                             if (val.team_id == Home)
                                 return (
-                                    <TouchableOpacity style={styles.PlayerContL} key={idx}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('PlayerScreen', {
+                                        Id: val.player.id,
+                                    })} style={styles.PlayerContL} key={idx}>
                                         <Text style={styles.PlayerLName}>{val.player.firstname} {val.player.lastname}</Text>
                                         <Text style={styles.PlayerRangL}>{val.position.name}</Text>
                                     </TouchableOpacity>
@@ -344,7 +347,9 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                         {loading == false && lineUps?.map((val, idx) => {
                             if (val.team_id == Away)
                                 return (
-                                    <TouchableOpacity style={styles.PlayerContL} key={idx}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('PlayerScreen', {
+                                        Id: val.player.id,
+                                    })} style={styles.PlayerContL} key={idx}>
                                         <Text style={styles.PlayerLName}>{val.player.firstname} {val.player.lastname}</Text>
                                         <Text style={styles.PlayerRang}>{val.position.name}</Text>
                                     </TouchableOpacity>
@@ -370,7 +375,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
     return (
         <View style={styles.flex}>
             <Header title={'MATCH DETAILS'} leftAction={headerLeftAction} />
-            <View style={styles.HeaderCont}>
+            <ImageBackground source={bg} style={styles.HeaderCont}>
                 {loading ? (
                     <Spinner />
                 ) : (
@@ -413,7 +418,7 @@ const MatchDetailsScreen = ({ route, navigation }) => {
                 )}
 
 
-            </View>
+            </ImageBackground>
             <View style={styles.PScreenNav}>
                 {/* <TouchableOpacity style={activeC == 0 ? actBtn : styles.NavBtn} onPress={() => {
                     setActiveC(0)

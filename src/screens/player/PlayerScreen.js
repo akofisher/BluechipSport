@@ -1,73 +1,77 @@
 import { Header } from 'components/header'
-import React, { useMemo, useState } from 'react'
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useMemo, useState, useEffect } from 'react'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Image } from 'react-native'
 import { API } from 'services'
 import { cxs } from 'styles'
 import { NewsVerticalList } from '../../components/NewsVerticalList/NewsVerticalList'
 import stadium from "../../../assets/icons/play.png";
 import { ArrowDownSvg } from '../../../assets/svgs/AllSvgs'
+import bg from '../../../assets/bg.png';
+import { getPlayerInfo } from '../../../api/livescore'
+import moment from 'moment'
 
-const PlayerScreen = ({ navigation }) => {
+
+
+
+const PlayerScreen = ({ route, navigation }) => {
+  const { Id } = route.params;
   const [activeC, setActiveC] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [PlayerInfo, setPlayerInfo] = useState()
+  const [birth, setBirth] = useState()
   const IDS = [1, 2, 3, 4, 5, 6]
+
+  const removeAllSymbols = string => {
+    const letters = string?.replace(/[^a-zA-Z0-9 ]/g, ' ');
+
+    return letters;
+  };
+
+
+
+  useEffect(() => {
+    setLoading(true)
+    getPlayerInfo(Id)
+      .then(data => {
+        setPlayerInfo(data.results)
+        setBirth(data.results.birthdate)
+        console.log(data)
+
+      })
+      .then(() => setLoading(false));
+  }, [Id]);
+
   const PCareerStats = [
     {
-      Title: 'Matches',
-      Score: 2,
+      Title: 'Full Name',
+      Data: `${PlayerInfo?.firstname} ${PlayerInfo?.lastname}`,
     },
     {
-      Title: 'Innings',
-      Score: 2,
+      Title: 'Born',
+      Data: moment(birth).format('MMMM D, YYYY'),
     },
     {
-      Title: 'Runs Scored',
-      Score: 17,
+      Title: 'Age',
+      Data: moment(`${birth}`, "YYYYMMDD").fromNow().replace('ago', ''),
     },
     {
-      Title: 'Not Outs',
-      Score: 0,
+      Title: 'National Side',
+      Data: `${PlayerInfo?.country?.name}`,
     },
     {
-      Title: 'Highest Inning Score',
-      Score: 13,
+      Title: 'Batting Style',
+      Data: `${removeAllSymbols(PlayerInfo?.batting_style)}`,
     },
     {
-      Title: 'Strike Rate',
-      Score: 68,
+      Title: 'Sport',
+      Data: 'Cricket',
     },
-    {
-      Title: 'Balls Faced',
-      Score: 25,
-    },
-    {
-      Title: 'Average',
-      Score: 8.5,
-    },
-    {
-      Title: '4S',
-      Score: 0,
-    },
-    {
-      Title: '6S',
-      Score: 1,
-    },
-    {
-      Title: '50s',
-      Score: 8.5,
-    },
-    {
-      Title: '100S',
-      Score: 0,
-    },
-    {
-      Title: 'Fow Score',
-      Score: 79,
-    },
-    {
-      Title: 'Fow Balls',
-      Score: 11.5,
-    },
+
   ]
+
+
+
+
   const actClas = {
     fontFamily: 'Jost',
     fontWeight: '500',
@@ -150,8 +154,8 @@ const PlayerScreen = ({ navigation }) => {
         {PCareerStats.map((val, idx) => {
           return (
             <View style={styles.BioConts} key={idx}>
-              <Text style={styles.BioDesc}>{val.Score}</Text>
-              <Text style={styles.BioInfo}>{val.Title}</Text>
+              <Text style={styles.BioDesc}>{val.Title}</Text>
+              <Text style={styles.BioInfo}>{val.Data}</Text>
             </View>
           )
         })}
@@ -163,12 +167,17 @@ const PlayerScreen = ({ navigation }) => {
   return (
     <View style={styles.flex}>
       <Header title={'PLAYERS'} leftAction={headerLeftAction} />
-      <View style={styles.PScreenHead}>
-        <View style={styles.PlayerImg}></View>
-        <Text style={styles.PlayerName}>Sachin Tendulkar</Text>
-        <Text style={styles.PlayerCountry}>INDIA</Text>
+      <ImageBackground source={bg} style={styles.PScreenHead}>
+        <Image
+          style={styles.PlayerImg}
+          source={{
+            uri: `${PlayerInfo?.image_path}`,
+          }}
+        />
+        <Text style={styles.PlayerName}>{PlayerInfo?.firstname} {PlayerInfo?.lastname}</Text>
+        <Text style={styles.PlayerCountry}>{PlayerInfo?.country?.name}</Text>
         {/* <ImageBackground style={styles.bgStadiumContainer} source={stadium}></ImageBackground> */}
-      </View>
+      </ImageBackground>
       <View style={styles.PScreenNav}>
         <TouchableOpacity style={activeC == 0 ? actBtn : styles.NavBtn} onPress={() => {
           setActiveC(0)
@@ -232,7 +241,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 50,
-    backgroundColor: 'blue',
   },
   PlayerName: {
     fontFamily: 'Jost',

@@ -1,4 +1,4 @@
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';
 import {
   LivescoreScreen,
@@ -7,9 +7,10 @@ import {
   PlayerScoreDetails,
   LeagueScoreDetails,
 } from 'screens/livescrore';
-import {NewsDetailsScreen} from 'screens/news';
+import { NewsDetailsScreen } from 'screens/news';
 import MatchDetails from '../../components/matchDetails';
 import MatchDetailsScreen from '../../screens/Match Details/MatchDetailsScreen';
+import PlayerScreen from '../../screens/player/PlayerScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,10 +28,11 @@ const LivescoreTabStack = () => {
       <Stack.Screen name="teamScore" component={TeamScoreDetails} />
       <Stack.Screen name="playerScore" component={PlayerScoreDetails} />
       <Stack.Screen name="League" component={LeagueScoreDetails} />
+      <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
       <Stack.Screen
         name="NewsDetails"
         component={NewsDetailsScreen}
-        options={({route}) => ({
+        options={({ route }) => ({
           title: route.params.title,
           animationEnabled: false,
         })}
